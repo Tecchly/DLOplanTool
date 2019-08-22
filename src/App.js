@@ -5,7 +5,7 @@ import Home from "./Home";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import { AuthProvider } from "./Auth";
-import PrivateRoute from "./PrivateRoute";
+import PrivateRoute from "./PrivateRoute.js";
 
 const App = () => {
   return (
