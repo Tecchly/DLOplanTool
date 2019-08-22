@@ -1,54 +1,24 @@
-import React, { Component } from 'react';
-// import logo from './logo.svg';
-import './App.css';
-import firebase from "firebase"
-import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth"
+import React from "react";
+import "./App.css";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Home from "./Home";
+import Login from "./Login";
+import SignUp from "./SignUp";
+import { AuthProvider } from "./Auth";
+import PrivateRoute from "./PrivateRoute";
 
-firebase.initializeApp({
-  apiKey: "AIzaSyCECL6ZgVbIsw0FtRU6iLnI2bpiTQC7Sao",
-  authDomain: "dloplantool.firebaseapp.com"
-})
-
-class App extends Component {
-  state = {isSignedIn:false}
-  uiConfig = {
-    signInFlow: "popup",
-    signInOptions:[
-      firebase.auth.GoogleAuthProvider.PROVIDER_ID
-    ],
-    callbacks: {
-      signInSuccess: () => false
-    }
-  }
-
-  componentDidMount = () => {
-    
-
-    firebase.auth().onAuthStateChanged(user => {
-      this.setState({isSignedIn:!!user})
-      console.log("user", user)
-    })
-  }
-
-  render() {
-    return (
-      <div className="App">
-        {this.state.isSignedIn ? ( 
-          <span>
-            <div>Signed In!</div>
-            <button onClick={()=> firebase.auth().signOut()}>Log Out</button>
-            <h1>Welcome {firebase.auth().currentUser.displayName}</h1>
-            <img alt="profile picture" src={firebase.auth().currentUser.photoURL}/>
-          </span>
-        ):(  
-        // <div>Not Signed In!</div>
-        <StyledFirebaseAuth
-          uiConfig={this.uiConfig}
-          firebaseAuth={firebase.auth()}/>
-    )}
-      </div>
-    );
-  }
-}
+const App = () => {
+  return (
+    <AuthProvider>
+      <Router>
+        <div>
+          <PrivateRoute exact path="/" component={Home} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/signup" component={SignUp} />
+        </div>
+      </Router>
+    </AuthProvider>
+  );
+};
 
 export default App;
