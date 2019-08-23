@@ -1,5 +1,5 @@
 import React from "react";
-import app from "./Firebase";
+import {app} from "./Firebase";
 
 const Home = () => {
   return (

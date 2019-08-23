@@ -1,21 +1,15 @@
-import React, { useCallback, useContext } from "react";
+import React, { useContext } from "react";
 import { withRouter, Redirect } from "react-router";
-import firebase from "./Firebase";
+import {app, provider} from "./Firebase";
 import { AuthContext } from "./Auth.js";
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 
 const Login = ({ history }) => {
-    const uiConfig = {
-        // Popup signin flow rather than redirect flow.
-        signInFlow: 'popup',
-        // We will display Google and Facebook as auth providers.
-        signInOptions: [
-          firebase.auth.GoogleAuthProvider.PROVIDER_ID
-        ],
-        callbacks: {
-            signInSuccessWithAuthResult: () => false
-        }
-      };
+  function handleLogin (){
+    app.auth().signInWithPopup(provider).then(function(result){        
+    history.push("/");}).catch( function (error){
+        alert(error);
+      });
+    };
 
   const { currentUser } = useContext(AuthContext);
 
@@ -25,9 +19,8 @@ const Login = ({ history }) => {
 
   return (
     <div>
-      <h1>My App</h1>
-      <p>Please sign-in:</p>
-      <StyledFirebaseAuth uiConfig={this.uiConfig} firebaseAuth={firebase.auth()}/>
+      <h1>Log in</h1>
+      <button onClick={handleLogin}> Log In</button>
     </div>
   );
 };
