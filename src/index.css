@@ -7,3 +7,40 @@ body {
 html, body, #app, #app>div, #root,#login {
   height: 100%
 }
+
+#login {
+  background-image: url('../assets/images/background2.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  height: 100%;
+}
+.button {
+  font-size: 20px;
+  padding: 15px;
+  background-color: #0886ff;
+  color: #fff;
+  border-radius: 4px;
+}
+
+.button.primary {
+  background-color: #0886ff;
+}
+
+.button.secondary {
+  background-color: #73a800;
+}
+.primary {
+  background-color: #0886ff;
+}
+.warning {
+  background-color: tomato;
+
+}
+.danger { 
+  background-color: salmon;
+
+}
+.success {
+  background-color: #73a800;
+}
