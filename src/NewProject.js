@@ -33,15 +33,14 @@ class NewProjectPopup extends React.Component {
          reader.readAsDataURL(file[0]);
     }
 
+    //@@TODO more general method needed
     handleTitleChange(event) {
         this.setState({projectTitle: event.target.value});
     }
-
-    //@@TODO more general method needed
+    
     handleTopicChange(event) {
         this.setState({projectTopic: event.target.value});
-    }
-    
+    }    
 
     render() {
         var togglePopup = this.props.togglePopup;
@@ -95,10 +94,34 @@ class NewProjectPopup extends React.Component {
                             }}>
 
                             <DragAndDrop handleDrop={this.handleDrop}>
+                                <Icon 
+                                    style = {{
+                                        position:"absolute",
+                                        right: "5px",
+                                        top: "5px"
+                                    }}
+                                    type="close" 
+                                    onClick={()=> {
+                                        var imagePane = document.getElementById("imagePane");
+                                        imagePane.innerHTML = "Drag image here";
+                                        this.setState({image:""});
+                                    }}
+                                />
                                 <div id="imagePane">
-                                    Drag Image here
+                                    Drag image here
                                 </div>
-                                <div class= "projectDetails">
+                                <div
+                                    style ={{
+                                        position:"absolute",
+                                        height:"3em",
+                                        width: "101%",
+                                        textAlign: "left",
+                                        backgroundColor: "#2C3539",
+                                        color: "#fff",
+                                        bottom: -5,
+                                        left: "-0.5%",
+                                    }}
+                                >
                                 <b>
                                     {this.state.projectTitle}
                                 </b>       
