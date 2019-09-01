@@ -56,17 +56,19 @@ class DragAndDrop extends React.Component {
             style={{
                 display: 'inline-block',
                 position: 'relative',
-                height: "100%",
+                height: 250,
+                maxHeight: 250,
                 width: "100%",
+                paddingBottom: "0.2em",
                 marginBottom: "1em",
-                borderStyle:"dotted",
+                border:"dashed grey 1px",
             }}
             ref={this.dropRef}
           >
             {this.state.dragging &&
               <div 
                 style={{
-                  border: 'dashed grey 4px',
+                  border: 'dashed grey 1px',
                   backgroundColor: 'rgba(255,255,255,.8)',
                   position: 'absolute',
                   top: 0,
