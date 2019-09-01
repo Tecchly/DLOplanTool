@@ -1,8 +1,10 @@
 import React from 'react';  
 import { app } from "./Firebase";
 import "./index.css";
-import { Button, Icon, AutoComplete } from "antd";
+import { Button, Icon} from "antd";
 import DragAndDrop from "./DragAndDrop.js"
+import { withRouter, Redirect } from "react-router";
+import history from "./history";
 
 class NewProjectPopup extends React.Component {
     constructor(props) {
@@ -20,7 +22,11 @@ class NewProjectPopup extends React.Component {
         image : "",
     }
 
-    handleDrop = (file) => {        
+    handleDrop = (file) => {     
+        //If what was dragged in was not a image.   
+        if  (!file[0] || file[0]['type'].split('/')[0] !== 'image') {
+            return;
+        }
         var reader  = new FileReader();
         reader.onload = function(e)  {
             var image = document.createElement("img");
@@ -29,7 +35,7 @@ class NewProjectPopup extends React.Component {
             imagePane.innerHTML = "";
             imagePane.appendChild(image);
             this.setState({image:image.src});
-         }
+         }.bind(this)
          reader.readAsDataURL(file[0]);
     }
 
@@ -41,6 +47,16 @@ class NewProjectPopup extends React.Component {
     handleTopicChange(event) {
         this.setState({projectTopic: event.target.value});
     }    
+
+    makeProject() {
+        //@@TODO make this actually redirect
+        /*
+        history.push({
+            pathname:"./project",
+            state:{title:this.state.projectTitle, topic: this.state.projectTopic, image: this.state.image}
+            });
+        */
+    }
 
     render() {
         var togglePopup = this.props.togglePopup;
@@ -136,6 +152,8 @@ class NewProjectPopup extends React.Component {
                                     color: "#fff",
                                     marginTop: "10%"
                                 }}
+                                onClick={()=> this.makeProject()}
+                                disabled = {this.state.projectTitle.length==0||this.state.projectTopic.length==0}
                             >
                             Create
                             </Button>
