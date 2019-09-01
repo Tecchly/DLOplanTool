@@ -66,9 +66,49 @@ const useStyles = makeStyles(theme => ({
 function handleFormReset(e) {
   // Reset some form data
 }
-const Home = () => {
+
+const Home = ({ history }) => {
   // const classes = useStyles();
   const classes = useStyles();
+const IconButton = ({bcolor, icon, text, nav, tcolor}) => (
+  <Col>
+  <Button
+    type="primary"
+    size={"large"}
+    className={classes.button}
+    style={{ backgroundColor: bcolor, color: tcolor }}
+    onClick={() => history.push(nav)}
+  >
+    <Icon type={icon} theme="filled" />
+    {text}
+  </Button>
+</Col>
+)
+
+  const ProjectTile = ({image}) => (
+    <Col
+    className={classes.recentProject}
+    style={{
+      backgroundImage: `url(${image})`,
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: "center",
+      backgroundSize: "cover",
+      padding: 0
+    }}
+  >
+    <Container fluid className={classes.projectOverlay}>
+      <Container style={{ position: "absolute", bottom: 5 }}>
+        <Row>
+          <h2 className={classes.title}>Project Title</h2>
+        </Row>
+        <Row>
+          <h3 className={classes.subtitle}>Project Subtitle</h3>
+        </Row>
+      </Container>
+    </Container>
+  </Col>
+  );
+  
   return (
     <React.Fragment>
       <Navbar
@@ -148,38 +188,18 @@ const Home = () => {
             }}
           >
             <Row style={{ height: 200 }}>
-              <Col sm={4} fluid>
+              <Col sm={4}>
                 <Image
                   src={require("../assets/images/book.svg")}
                   style={{ height: 220 }}
                 />
               </Col>
-              <Col
-                sm={8}
-                fluid
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center"
-                }}
-              >
-                <h2
-                  style={{
-                    color: "#2F4858",
-                    fontFamily: "Montserrat",
-                    fontWeight: "700"
-                  }}
-                >
+              <Col sm={8} style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <h2 style={{color: "#2F4858", fontFamily: "Montserrat", fontWeight: "700" }} >
                   Welcome back,{" "}
                   {app.auth().currentUser.displayName.split(" ")[0]}
                 </h2>
-                <h3
-                  style={{
-                    color: "#FA8231",
-                    fontFamily: "Montserrat",
-                    fontWeight: "600"
-                  }}
-                >
+                <h3 style={{color: "#FA8231",fontFamily: "Montserrat",fontWeight: "600"}}>
                   lets create a project!
                 </h3>
               </Col>
@@ -190,50 +210,10 @@ const Home = () => {
             fluid
           >
             <Row>
-              <Col>
-                <Button
-                  type="primary"
-                  size={"large"}
-                  className={classes.button}
-                  style={{ backgroundColor: "#FA8231" }}
-                >
-                  <Icon type="plus-circle" theme="filled" />
-                  New Project
-                </Button>
-              </Col>
-              <Col>
-                <Button
-                  type="primary"
-                  size={"large"}
-                  className={classes.button}
-                  style={{ backgroundColor: "#fff", color: "#FA8231" }}
-                >
-                  <Icon type="reconciliation" theme="filled" />
-                  Feedback
-                </Button>
-              </Col>
-              <Col>
-                <Button
-                  type="primary"
-                  size={"large"}
-                  className={classes.button}
-                  style={{ backgroundColor: "#fff", color: "#FA8231" }}
-                >
-                  <Icon type="project" theme="filled" />
-                  Your Projects
-                </Button>
-              </Col>
-              <Col>
-                <Button
-                  type="primary"
-                  size={"large"}
-                  className={classes.button}
-                  style={{ backgroundColor: "#fff", color: "#FA8231" }}
-                >
-                  <Icon type="question-circle" theme="filled" />
-                  Help
-                </Button>
-              </Col>
+              <IconButton bcolor="#FA8231" tcolor="#FFF" icon="plus-circle" nav="/" text="New Project" />
+              <IconButton bcolor="#FFF" tcolor="#FA8231" icon="reconciliation" nav="/feedback" text="Feedback" />
+              <IconButton bcolor="#FFF" tcolor="#FA8231" icon="project" nav="/projects" text="Your Projects" />
+              <IconButton bcolor="#FFF" tcolor="#FA8231" icon="question-circle" nav="/" text="Help" />
             </Row>
           </Container>
         </Row>
@@ -242,13 +222,7 @@ const Home = () => {
           fluid
         >
           <Row>
-            <h3
-              style={{
-                color: "#2F4858",
-                fontFamily: "Montserrat",
-                fontWeight: "700"
-              }}
-            >
+            <h3 style={{color: "#2F4858",fontFamily: "Montserrat",fontWeight: "700"}}>
               Recent Projects
             </h3>
           </Row>
@@ -256,103 +230,13 @@ const Home = () => {
 
         <Container style={{ marginTop: 40 }} fluid>
           <Row style={{ marginLeft: 80, marginRight: 80 }}>
-            <Col
-              className={classes.recentProject}
-              style={{
-                backgroundImage: `url(${P1})`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                backgroundSize: "cover",
-                padding: 0
-              }}
-            >
-              <Container fluid className={classes.projectOverlay}>
-                <Container style={{ position: "absolute", bottom: 5 }}>
-                  <Row>
-                    <h2 className={classes.title}>Project Title</h2>
-                  </Row>
-                  <Row>
-                    <h3 className={classes.subtitle}>Project Subtitle</h3>
-                  </Row>
-                </Container>
-              </Container>
-            </Col>
-            <Col
-              className={classes.recentProject}
-              style={{
-                backgroundImage: `url(${P2})`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                backgroundSize: "cover",
-                padding: 0
-              }}
-            >
-              <Container fluid className={classes.projectOverlay}>
-                <Container style={{ position: "absolute", bottom: 5 }}>
-                  <Row>
-                    <h2 className={classes.title}>Project Title</h2>
-                  </Row>
-                  <Row>
-                    <h3 className={classes.subtitle}>Project Subtitle</h3>
-                  </Row>
-                </Container>
-              </Container>
-            </Col>
-            <Col
-              className={classes.recentProject}
-              style={{
-                backgroundImage: `url(${P3})`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                backgroundSize: "cover",
-                padding: 0
-              }}
-            >
-              <Container fluid className={classes.projectOverlay}>
-                <Container style={{ position: "absolute", bottom: 5 }}>
-                  <Row>
-                    <h2 className={classes.title}>Project Title</h2>
-                  </Row>
-                  <Row>
-                    <h3 className={classes.subtitle}>Project Subtitle</h3>
-                  </Row>
-                </Container>
-              </Container>
-            </Col>
-            <Col
-              className={classes.recentProject}
-              style={{
-                backgroundImage: `url(${P4})`,
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                backgroundSize: "cover",
-                padding: 0
-              }}
-            >
-              <Container fluid className={classes.projectOverlay}>
-                <Container style={{ position: "absolute", bottom: 5 }}>
-                  <Row>
-                    <h2 className={classes.title}>Project Title</h2>
-                  </Row>
-                  <Row>
-                    <h3 className={classes.subtitle}>Project Subtitle</h3>
-                  </Row>
-                </Container>
-              </Container>
-            </Col>
+            <ProjectTile image={P1} />
+            <ProjectTile image={P2} />
+            <ProjectTile image={P3} />
+            <ProjectTile image={P4} />
           </Row>
         </Container>
       </Container>
-
-      {/* <div>
-        <div></div>
-      </div>
-      <h1>Home</h1> */}
-      {/* <Ionicon icon="md-basket" fontSize="35px" color="rgb(125, 176, 24)"/> */}
-      {/* <h2>{app.auth().currentUser.displayName}</h2>
-
-      
-      <h3><button onClick={() => app.auth().signOut()}>Sign out</button></h3> */}
     </React.Fragment>
   );
 };
