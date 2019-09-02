@@ -184,15 +184,16 @@ const Home = ({ history }) => {
         </Container>
       </Navbar>
       <div style={{textAlign: "center", height: '100%', width: '100%'}}>
-        <button>button 1</button>
-        <button>button 2</button>
-        <button>button 3</button>
-        <svg height = '100%' width = '80%'>
-          <circle stroke="#000" r="30%" id="svg_1" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
-          <circle stroke="#000" r="22%" id="svg_2" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
-          <circle stroke="#000" r="14%" id="svg_3" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
-        </svg>
-      </div>
+                    <svg height = '100%' width = '80%'>
+                        <circle stroke="#000" r="30%" id="svg_1" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
+                        <circle stroke="#000" r="22%" id="svg_2" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
+                        <circle stroke="#000" r="14%" id="svg_3" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
+                        <clipPath id="myCircle">
+                            <circle cx="50%" cy="50%" r="125" fill="#FFFFFF" />
+                        </clipPath>
+                        <image y="40%" x="40%" width="20%" xlinkHref={P1} clip-path="url(#myCircle)" />
+                    </svg>
+                </div>
     </React.Fragment>
   );
 };
