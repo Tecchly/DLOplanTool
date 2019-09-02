@@ -9,6 +9,7 @@ import HeaderBar from "./HeaderBar.js"
 class Project extends React.Component {
     constructor(props) {
         super(props);
+       
         
     }
 

@@ -4,7 +4,7 @@ import "./index.css";
 import { Button, Icon} from "antd";
 import DragAndDrop from "./DragAndDrop.js"
 import { withRouter, Redirect } from "react-router";
-import history from "./history";
+
 
 class NewProjectPopup extends React.Component {
     constructor(props) {
@@ -12,10 +12,10 @@ class NewProjectPopup extends React.Component {
 
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.handleTopicChange = this.handleTopicChange.bind(this);
-        
+        this.history = history;
     }
+    
     //@@TODO, fix the mix of inline and not inline css. v.dirty
-    //@@Pass in the state as props to the next component
     state = {
         projectTitle : "",
         projectTopic : "",
@@ -50,16 +50,17 @@ class NewProjectPopup extends React.Component {
 
     makeProject() {
         //@@TODO make this actually redirect
-        /*
+        const { history } = this.props;        
         history.push({
             pathname:"./project",
             state:{title:this.state.projectTitle, topic: this.state.projectTopic, image: this.state.image}
             });
-        */
+        
     }
 
     render() {
         var togglePopup = this.props.togglePopup;
+        const { history } = this.props;
         return (
             <React.Fragment>
                 <div className='popup'>
@@ -166,4 +167,4 @@ class NewProjectPopup extends React.Component {
     }
 }
 
-export default NewProjectPopup
+export default withRouter(NewProjectPopup)

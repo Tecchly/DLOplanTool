@@ -15,9 +15,9 @@ const App = () => {
 
           <PrivateRoute exact path="/" component={Home} />
           <Route exact path="/login" component={Login} id="login"/>
-          <Route exact path="/signup" component={SignUp} />
+          <Route exact path="/signup" component={SignUp} />          
+          <PrivateRoute exact path="/project" component={Project}/>
           
-          //<PrivateRoute exact path="/project" component={Project}/>
       </Router>
     </AuthProvider>
   );
