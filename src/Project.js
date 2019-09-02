@@ -9,7 +9,7 @@ import HeaderBar from "./HeaderBar.js"
 class Project extends React.Component {
     constructor(props) {
         super(props);
-       
+        console.log(props);
         
     }
 
@@ -17,6 +17,11 @@ class Project extends React.Component {
         return(
             <React.Fragment>
                 <HeaderBar/>
+                {this.props.location.state.title}
+                <br/>
+                {this.props.location.state.topic}
+                <br/>
+                <img src={this.props.location.state.image}/>
             </React.Fragment>          
         );
     }
