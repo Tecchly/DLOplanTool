@@ -8,6 +8,7 @@ import Login from "./Login";
 import SignUp from "./SignUp";
 import { AuthProvider } from "./Auth";
 import PrivateRoute from "./PrivateRoute.js";
+import Project from "./Project.js";
 
 const App = () => {
   return (
@@ -18,8 +19,9 @@ const App = () => {
           <PrivateRoute exact path="/projects" component={Projects} />
           <PrivateRoute exact path="/feedback" component={Feedback} />
           <Route exact path="/login" component={Login} id="login"/>
-          <Route exact path="/signup" component={SignUp} />
-
+          <Route exact path="/signup" component={SignUp} />          
+          <PrivateRoute exact path="/project" component={Project}/>
+          
       </Router>
     </AuthProvider>
   );
