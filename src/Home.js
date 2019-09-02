@@ -7,10 +7,13 @@ import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import history from "./history";
 import Ionicon from "react-ionicons";
 import "./index.css";
+import NewProjectPopup from "./NewProject"
 import P1 from "../assets/images/poster1.jpg";
 import P2 from "../assets/images/poster2.jpg";
 import P3 from "../assets/images/poster3.png";
 import P4 from "../assets/images/poster4.png";
+import { useState } from 'react';
+
 const useStyles = makeStyles(theme => ({
   button: {
     width: "100%",
@@ -67,9 +70,17 @@ function handleFormReset(e) {
   // Reset some form data
 }
 
+
 const Home = ({ history }) => {
   // const classes = useStyles();
   const classes = useStyles();
+  const [showNewProject,setShowNewProject] = useState(
+    false
+  );
+
+  function togglePopup() {
+    setShowNewProject(!showNewProject);
+  }
 const IconButton = ({bcolor, icon, text, nav, tcolor}) => (
   <Col>
   <Button
@@ -108,7 +119,7 @@ const IconButton = ({bcolor, icon, text, nav, tcolor}) => (
     </Container>
   </Col>
   );
-  
+
   return (
     <React.Fragment>
       <Navbar
@@ -174,6 +185,11 @@ const IconButton = ({bcolor, icon, text, nav, tcolor}) => (
         </Container>
       </Navbar>
       <Container fluid={true}>
+        {showNewProject ?
+          //Popup will live here.
+          <NewProjectPopup togglePopup = {togglePopup}/>
+          :null
+        }
         <Row>
           <Container
             fluid={true}
@@ -214,6 +230,7 @@ const IconButton = ({bcolor, icon, text, nav, tcolor}) => (
               <IconButton bcolor="#FFF" tcolor="#FA8231" icon="reconciliation" nav="/feedback" text="Feedback" />
               <IconButton bcolor="#FFF" tcolor="#FA8231" icon="project" nav="/projects" text="Your Projects" />
               <IconButton bcolor="#FFF" tcolor="#FA8231" icon="question-circle" nav="/" text="Help" />
+
             </Row>
           </Container>
         </Row>
