@@ -183,123 +183,16 @@ const Home = ({ history }) => {
           </Col>
         </Container>
       </Navbar>
-      <Container fluid={true}>
-        {showNewProject ? (
-          //Popup will live here.
-          <NewProjectPopup togglePopup={togglePopup} />
-        ) : null}
-        <Row>
-          <Container
-            fluid={true}
-            style={{
-              backgroundColor: "#F1D0B2",
-              borderRadius: 16,
-              marginLeft: 100,
-              marginRight: 100,
-              marginTop: 40,
-              height: 200,
-              boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)"
-            }}
-          >
-            <Row style={{ height: 200 }}>
-              <Col sm={4}>
-                <Image
-                  src={require("../assets/images/book.svg")}
-                  style={{ height: 220 }}
-                />
-              </Col>
-              <Col
-                sm={8}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center"
-                }}
-              >
-                <h2
-                  style={{
-                    color: "#2F4858",
-                    fontFamily: "Montserrat",
-                    fontWeight: "700"
-                  }}
-                >
-                  Welcome back,{" "}
-                  {app.auth().currentUser.displayName.split(" ")[0]}
-                </h2>
-                <h3
-                  style={{
-                    color: "#FA8231",
-                    fontFamily: "Montserrat",
-                    fontWeight: "600"
-                  }}
-                >
-                  lets create a project!
-                </h3>
-              </Col>
-            </Row>
-          </Container>
-          <Container
-            style={{ marginTop: 80, marginLeft: 100, marginRight: 100 }}
-            fluid
-          >
-            <Row>
-              <IconButton
-                bcolor="#FA8231"
-                tcolor="#FFF"
-                icon="plus-circle"
-                nav="/"
-                text="New Project"
-              />
-              <IconButton
-                bcolor="#FFF"
-                tcolor="#FA8231"
-                icon="reconciliation"
-                nav="/feedback"
-                text="Feedback"
-              />
-              <IconButton
-                bcolor="#FFF"
-                tcolor="#FA8231"
-                icon="project"
-                nav="/projects"
-                text="Your Projects"
-              />
-              <IconButton
-                bcolor="#FFF"
-                tcolor="#FA8231"
-                icon="question-circle"
-                nav="/"
-                text="Help"
-              />
-            </Row>
-          </Container>
-        </Row>
-        <Container
-          style={{ marginTop: 80, marginLeft: 100, marginRight: 100 }}
-          fluid
-        >
-          <Row>
-            <h3
-              style={{
-                color: "#2F4858",
-                fontFamily: "Montserrat",
-                fontWeight: "700"
-              }}
-            >
-              Recent Projects
-            </h3>
-          </Row>
-        </Container>
-
-        <Container style={{ marginTop: 40 }} fluid>
-          <Row style={{ marginLeft: 80, marginRight: 80 }}>
-            <ProjectTile image={P1} />
-            <ProjectTile image={P2} />
-            <ProjectTile image={P3} />
-            <ProjectTile image={P4} />
-          </Row>
-        </Container>
-      </Container>
+      <div style={{textAlign: "center", height: '100%', width: '100%'}}>
+        <button>button 1</button>
+        <button>button 2</button>
+        <button>button 3</button>
+        <svg height = '100%' width = '80%'>
+          <circle stroke="#000" r="30%" id="svg_1" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
+          <circle stroke="#000" r="22%" id="svg_2" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
+          <circle stroke="#000" r="14%" id="svg_3" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
+        </svg>
+      </div>
     </React.Fragment>
   );
 };
