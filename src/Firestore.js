@@ -1,18 +1,16 @@
 import { app } from "./Firebase";
+import firestore from "firebase/firestore";
 
 var db = app.firestore();
 class Firestore {
 
     static saveWithDocID(collection, docID, data) {
-        db.collection(collection).doc(docID).set(data, { merge: true })
-            .then(function() {
-                db.collection(collection).doc(docID).update({
-                    timestamp: Math.floor(Date.now())
-                });
-                console.log("written doc " + docID + " successfully to collection " + collection);
-            }).catch(function (error) {
-                console.error("Error writing document: ", error);
-            })
+        return db.collection(collection).doc(docID).set(data, { merge: true })
+            // .then(function() {
+            //     // console.log("written doc " + docID + " successfully to collection " + collection);
+            // }).catch(function (error) {
+            //     console.error("Error writing document: ", error);
+            // })
     };
 
     static getCollection(collection) {
@@ -32,16 +30,6 @@ class Firestore {
         });
     };
 
-    static toArray(datas) {
-        var array = [];
-        datas.get().then(function (querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-                array[doc.docID] = doc.data();
-            });
-        });
-        return array;
-    };
-
     static getAllProjectsByUser(userID) {
         return db.collection("users").doc(userID).collection("projects"); 
     };
@@ -55,14 +43,12 @@ class Firestore {
     };
 
     static saveToDBWithDocID(collection, docID, data) {
-        collection.doc(docID).set(data, {merge : true})
-        .then(function () {
-            collection.doc(docID).update({
-                timestamp: Math.floor(Date.now())
-            });
-        }).catch(function (error) {
-            console.error("Error writing document: ", error);
-        })
+        return collection.doc(docID).set(data, {merge : true})
+        // .then(function () {
+        //     console.log("written doc " + docID + " successfully");
+        // }).catch(function (error) {
+        //     console.error("Error writing document: ", error);
+        // })
     };
 
     static saveIdeasToProject(userID, projectID, ideas) {
