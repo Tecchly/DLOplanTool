@@ -108,53 +108,66 @@ class NewProjectPopup extends React.Component {
                 textAlign: "center"
               }}
             >
-              <DragAndDrop handleDrop={this.handleDrop}>
-                <Icon
+              <div
+              style={{
+                position: "absolute",
+                height: "30%",
+                width: "50%",
+              }}
+              >              
+                <DragAndDrop handleDrop={this.handleDrop}>
+                  <Icon
+                    style={{
+                      position: "absolute",
+                      right: "5px",
+                      top: "5px"
+                    }}
+                    type="close"
+                    onClick={() => {
+                      var imagePane = document.getElementById("imagePane");
+                      imagePane.innerHTML = "Drag image here";
+                      this.setState({ image: "" });
+                    }}
+                  />
+                  <div className = "draggedImage" 
+                    id="imagePane"
+                  >
+                    Drag image here
+                  </div>
+                  <div
+                    style={{
+                      position: "absolute",
+                      height: "3em",
+                      width: "101%",
+                      textAlign: "left",
+                      backgroundColor: "#2C3539",
+                      color: "#fff",
+                      bottom: -10,
+                      left: "-0.5%",
+                      paddingLeft: "0.5em"
+                    }}
+                  >
+                    <b>{this.state.projectTitle}</b>
+                    <br />
+                    {this.state.projectTopic}
+                  </div>
+                </DragAndDrop>
+                <br />
+                <Button
                   style={{
-                    position: "absolute",
-                    right: "5px",
-                    top: "5px"
-                  }}
-                  type="close"
-                  onClick={() => {
-                    var imagePane = document.getElementById("imagePane");
-                    imagePane.innerHTML = "Drag image here";
-                    this.setState({ image: "" });
-                  }}
-                />
-                <div id="imagePane">Drag image here</div>
-                <div
-                  style={{
-                    position: "absolute",
-                    height: "3em",
-                    width: "101%",
-                    textAlign: "left",
-                    backgroundColor: "#2C3539",
+                    backgroundColor: "#FA8231",
                     color: "#fff",
-                    bottom: -5,
-                    left: "-0.5%"
+                    marginTop: "10%"
                   }}
+                  onClick={() => this.makeProject()}
+                  disabled={
+                    this.state.projectTitle.length == 0 ||
+                    this.state.projectTopic.length == 0
+                  }
                 >
-                  <b>{this.state.projectTitle}</b>
-                  <br />
-                  {this.state.projectTopic}
-                </div>
-              </DragAndDrop>
-              <br />
-              <Button
-                style={{
-                  backgroundColor: "#FA8231",
-                  color: "#fff",
-                  marginTop: "10%"
-                }}
-                onClick={() => this.makeProject()}
-                disabled={
-                  this.state.projectTitle.length == 0 ||
-                  this.state.projectTopic.length == 0
-                }
-              >
-                Create
-              </Button>
+                  Create
+                </Button>
+              </div>
             </div>
           </div>
         </div>
