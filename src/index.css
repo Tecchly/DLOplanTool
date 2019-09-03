@@ -67,6 +67,7 @@ html, body, #app, #app>div, #root,#login {
   border-radius: 20px;  
   background: white;  
   z-index: 3;
+  overflow: auto;
 }
 
 .popup h1 {

@@ -102,7 +102,7 @@ class NewProjectPopup extends React.Component {
             </div>
             <div
               style={{
-                marginTop: "15%",
+                marginTop: "10%",
                 marginLeft: "25%",
                 marginRight: "25%",
                 textAlign: "center"
