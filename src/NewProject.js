@@ -130,7 +130,7 @@ class NewProjectPopup extends React.Component {
                     }}
                   />
                   <div className = "draggedImage" 
-                    id="imagePane"
+                        id="imagePane"
                   >
                     Drag image here
                   </div>
@@ -157,7 +157,7 @@ class NewProjectPopup extends React.Component {
                   style={{
                     backgroundColor: "#FA8231",
                     color: "#fff",
-                    marginTop: "10%"
+                    marginTop: "5%"
                   }}
                   onClick={() => this.makeProject()}
                   disabled={

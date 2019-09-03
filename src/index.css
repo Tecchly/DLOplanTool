@@ -87,7 +87,7 @@ html, body, #app, #app>div, #root,#login {
   outline:none;
 }
 
-.draggedImage {
+.draggedImage{
   width: 100%;
   height: 100%;
 }
