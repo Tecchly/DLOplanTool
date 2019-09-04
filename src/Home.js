@@ -184,7 +184,7 @@ const Home = ({ history }) => {
         </Container>
       </Navbar>
       <div style={{textAlign: "center", height: '100%', width: '100%'}}>
-                    <svg height = '100%' width = '80%'>
+                    <svg height = '100%' width = '100%'>
                         <circle stroke="#000" r="30%" id="svg_1" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
                         <circle stroke="#000" r="22%" id="svg_2" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
                         <circle stroke="#000" r="14%" id="svg_3" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
@@ -192,6 +192,10 @@ const Home = ({ history }) => {
                             <circle cx="50%" cy="50%" r="125" fill="#FFFFFF" />
                         </clipPath>
                         <image y="40%" x="40%" width="20%" xlinkHref={P1} clip-path="url(#myCircle)" />
+                        <circle stroke="#000" r="20" id="svg_3" cy="90%" cx="50" strokeWidth="1.5" fill="red"/>
+                        <circle stroke="#000" r="20" id="svg_3" cy="90%" cx="100" strokeWidth="1.5" fill="pink"/>
+                        <circle stroke="#000" r="20" id="svg_3" cy="90%" cx="150" strokeWidth="1.5" fill="purple"/>
+                        <circle stroke="#000" r="20" id="svg_3" cy="90%" cx="200" strokeWidth="1.5" fill="navy"/>
                     </svg>
                 </div>
     </React.Fragment>
