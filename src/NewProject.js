@@ -8,6 +8,25 @@ import { withRouter, Redirect } from "react-router";
 class NewProjectPopup extends React.Component {
   constructor(props) {
     super(props);
+    //Mock DB with local storage
+    this.database = window.localStorage;
+
+    var title = this.database.getItem("DLOtitle");
+ 
+    if (title){
+      this.state.projectTitle = title
+    }
+
+    var topic = this.database.getItem("DLOtopic");
+    if (topic){
+      this.state.projectTopic = topic;
+    }
+
+    //Issue with image upload being it can get real expensive, probably have to have a loading animation 
+    var image = this.database.getItem("DLOimage");
+    if (image) {
+      this.state.image = image;
+    }
 
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleTopicChange = this.handleTopicChange.bind(this);
@@ -21,30 +40,39 @@ class NewProjectPopup extends React.Component {
     image: ""
   };
 
+  //@@TODO, need to have a limit on file size
   handleDrop = file => {
     //If what was dragged in was not a image.
     if (!file[0] || file[0]["type"].split("/")[0] !== "image") {
       return;
     }
     var reader = new FileReader();
-    reader.onload = function(e) {
-      var image = document.createElement("img");
-      image.src = e.target.result;
-      var imagePane = document.getElementById("imagePane");
-      imagePane.innerHTML = "";
-      imagePane.appendChild(image);
-      this.setState({ image: image.src });
+    reader.onload = function(e) {      
+      this.setState({ image: e.target.result }, function() {
+        try {
+          this.database.setItem("DLOimage",e.target.result);
+        } catch(e) {
+          console.log("File too big");
+        }        
+      });
     }.bind(this);
     reader.readAsDataURL(file[0]);
   };
 
   //@@TODO more general method needed
   handleTitleChange(event) {
-    this.setState({ projectTitle: event.target.value });
+    //Yeah this is gonna cause some perfomrance issues I can feel it in my bones.
+    //More of a trial of one way this could be done.
+    this.setState({ projectTitle: event.target.value }, function() {
+      this.database.setItem("DLOtitle",this.state.projectTitle);
+    });
+    
   }
 
   handleTopicChange(event) {
-    this.setState({ projectTopic: event.target.value });
+    this.setState({ projectTopic: event.target.value }, function() {
+      this.database.setItem("DLOtopic",this.state.projectTopic);
+    });
   }
 
   makeProject() {
@@ -124,15 +152,12 @@ class NewProjectPopup extends React.Component {
                     }}
                     type="close"
                     onClick={() => {
-                      var imagePane = document.getElementById("imagePane");
-                      imagePane.innerHTML = "Drag image here";
-                      this.setState({ image: "" });
+                      this.setState({ image: "" },this.database.setItem("DLOimage",""));
                     }}
                   />
-                  <div className = "draggedImage" 
-                        id="imagePane"
-                  >
-                    Drag image here
+                  <div className = "draggedImage">
+                    {this.state.image === "" && <b>Drag Image Here</b>}
+                    <img src = {this.state.image}/>
                   </div>
                   <div
                     style={{
@@ -159,7 +184,13 @@ class NewProjectPopup extends React.Component {
                     color: "#fff",
                     marginTop: "5%"
                   }}
-                  onClick={() => this.makeProject()}
+                  onClick={() => function() {
+                    this.makeProject();
+                    //also clear the interim from database
+                    this.database.removeItem("DLOtitle");
+                    this.database.removeItem("DLOtopic");
+                    this.database.removeItem("DLOimage");
+                  }}
                   disabled={
                     this.state.projectTitle.length == 0 ||
                     this.state.projectTopic.length == 0
