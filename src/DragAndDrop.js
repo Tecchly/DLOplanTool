@@ -56,12 +56,13 @@ class DragAndDrop extends React.Component {
             style={{
                 display: 'inline-block',
                 position: 'relative',
-                height: 250,
-                maxHeight: 250,
+                height: "100%",
+                maxHeight: "100%",
                 width: "100%",
+                maxWidth: "100%",
                 paddingBottom: "0.2em",
                 marginBottom: "1em",
-                border:"dashed grey 1px",
+                border:"dashed grey 1px"
             }}
             ref={this.dropRef}
           >
