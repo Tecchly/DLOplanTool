@@ -12,13 +12,15 @@ class NewProjectPopup extends React.Component {
 
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleTopicChange = this.handleTopicChange.bind(this);
+
+    this.isProjectCreated = false;
   }
 
   state = {
     projectTitle: "",
     projectTopic: "",
     image: "",
-    imageName: ""
+    file:""
   };
 
   componentDidMount() {
@@ -51,18 +53,52 @@ class NewProjectPopup extends React.Component {
     }
   }
 
-  //@@TODO, need to have a limit on file size
+  componentWillUnmount() {
+    //purge interim database if the project is created.
+    if (!this.isProjectCreated){
+      this.database.setItem("DLOtitle",this.state.projectTitle);
+      this.database.setItem("DLOtopic",this.state.projectTopic);
+    } else {
+      this.database.setItem("DLOtitle","");
+      this.database.setItem("DLOtopic","");
+    }
+
+    if (this.state.file){
+      this.uploadImage(this.state.file);
+    } 
+    //Upload image here to minimize server calls. 
+  }
+
+  /**
+   * Function to handle when a file is dropped into the drag and drop area. 
+   */
   handleDrop = fileList => {
     //If what was dragged in was not a image.
     if (!fileList[0] || fileList[0]["type"].split("/")[0] !== "image") {
       return;
     }   
     var file = fileList[0];
-    this.setState({imageName:file.name});
+    this.setState({file:file});
+
+    var reader = new FileReader();
+    reader.onload = function(e) {      
+      this.setState({ image: e.target.result});
+    }.bind(this);
+    reader.readAsDataURL(file);
+  }
+
+/**
+ * Uploads an image to firestore
+ * @param {File} file: File to be uploaded to firebase. 
+ */
+ uploadImage(file) {
+    if (!file) {
+      return;
+    }
+    //this.setState({imageName:file.name});
     this.database.setItem("DLOimageName",file.name);
 
-    //Uploading image
-    
+    //Uploading image    
     var storageRef = firebase.storage().ref("projectImage/" + file.name);          
     var uploadTask = storageRef.put(file);
 
@@ -74,47 +110,31 @@ class NewProjectPopup extends React.Component {
             console.log("successful upload");
           }
       );
-      
 
-    var reader = new FileReader();
-    reader.onload = function(e) {      
-      this.setState({ image: e.target.result});
-    }.bind(this);
-    reader.readAsDataURL(file);
   }
 
- uploadImage() {
 
- }
-
-  //@@TODO more general method needed
   handleTitleChange(event) {
-    //Yeah this is gonna cause some perfomrance issues I can feel it in my bones.
-    //More of a trial of one way this could be done.
-    this.setState({ projectTitle: event.target.value }, function() {
-      this.database.setItem("DLOtitle",this.state.projectTitle);
-    });
+    this.setState({ projectTitle: event.target.value });
     
   }
 
   handleTopicChange(event) {
-    this.setState({ projectTopic: event.target.value }, function() {
-      this.database.setItem("DLOtopic",this.state.projectTopic);
-    });
+    this.setState({ projectTopic: event.target.value });
   }
 
   makeProject() {
-    //@@TODO make this clear interim data
+    this.isProjectCreated = true;
     const { history } = this.props;
     history.push({
       pathname: "./project",
       state: {
         title: this.state.projectTitle,
         topic: this.state.projectTopic,
-        image: this.state.image,
-        imageName: this.state.imageName
+        image: this.state.image
       }
     });
+    
   }
 
   render() {
@@ -181,8 +201,9 @@ class NewProjectPopup extends React.Component {
                     }}
                     type="close"
                     onClick={() => {
+                      //Could remove image from db too?
                       this.setState({ image: "" });
-                      this.setState({imageName: ""});
+                      this.setState({file:""});
                     }}
                   />
                   <div className = "draggedImage">
