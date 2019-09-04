@@ -4,60 +4,88 @@ import "./index.css";
 import { Button, Icon } from "antd";
 import DragAndDrop from "./DragAndDrop.js";
 import { withRouter, Redirect } from "react-router";
+import firebase from "firebase"
 
 class NewProjectPopup extends React.Component {
   constructor(props) {
     super(props);
+
+    this.handleTitleChange = this.handleTitleChange.bind(this);
+    this.handleTopicChange = this.handleTopicChange.bind(this);
+  }
+
+  state = {
+    projectTitle: "",
+    projectTopic: "",
+    image: "",
+    imageName: ""
+  };
+
+  componentDidMount() {
     //Mock DB with local storage
     this.database = window.localStorage;
 
-    var title = this.database.getItem("DLOtitle");
- 
+    var title = this.database.getItem("DLOtitle"); 
     if (title){
-      this.state.projectTitle = title
+      this.setState({projectTitle:title});
     }
 
     var topic = this.database.getItem("DLOtopic");
     if (topic){
-      this.state.projectTopic = topic;
+      this.setState({projectTopic:topic});
     }
 
-    //Issue with image upload being it can get real expensive, probably have to have a loading animation 
-    var image = this.database.getItem("DLOimage");
-    if (image) {
-      this.state.image = image;
+    var imageName = this.database.getItem("DLOimageName");
+    //Test name
+    imageName ="HONGHONGHONG.PNG"
+    if (imageName) {
+      try {
+        var storage = firebase.storage();
+        storage.ref("projectImage/" + imageName).getDownloadURL()
+          .then(function(url) {
+            this.setState({image:url});
+          }.bind(this));      
+      } catch(e) {
+        this.state.image = "";
+      }
     }
-
-    this.handleTitleChange = this.handleTitleChange.bind(this);
-    this.handleTopicChange = this.handleTopicChange.bind(this);
-    this.history = history;
   }
 
-  //@@TODO, fix the mix of inline and not inline css. v.dirty
-  state = {
-    projectTitle: "",
-    projectTopic: "",
-    image: ""
-  };
-
   //@@TODO, need to have a limit on file size
-  handleDrop = file => {
+  handleDrop = fileList => {
     //If what was dragged in was not a image.
-    if (!file[0] || file[0]["type"].split("/")[0] !== "image") {
+    if (!fileList[0] || fileList[0]["type"].split("/")[0] !== "image") {
       return;
-    }
+    }   
+    var file = fileList[0];
+    this.setState({imageName:file.name});
+    this.database.setItem("DLOimageName",file.name);
+
+    //Uploading image
+    
+    var storageRef = firebase.storage().ref("projectImage/" + file.name);          
+    var uploadTask = storageRef.put(file);
+
+    uploadTask.on('state_changed', 
+          function error(err){
+
+          },
+          function complete(){
+            console.log("successful upload");
+          }
+      );
+      
+
     var reader = new FileReader();
     reader.onload = function(e) {      
-      this.setState({ image: e.target.result }, function() {
-        try {
-          this.database.setItem("DLOimage",e.target.result);
-        } catch(e) {
-          console.log("File too big");
-        }        
-      });
+      this.setState({ image: e.target.result});
     }.bind(this);
-    reader.readAsDataURL(file[0]);
-  };
+    reader.readAsDataURL(file);
+  }
+
+ uploadImage() {
+
+ }
 
   //@@TODO more general method needed
   handleTitleChange(event) {
@@ -76,14 +104,15 @@ class NewProjectPopup extends React.Component {
   }
 
   makeProject() {
-    //@@TODO make this actually redirect
+    //@@TODO make this clear interim data
     const { history } = this.props;
     history.push({
       pathname: "./project",
       state: {
         title: this.state.projectTitle,
         topic: this.state.projectTopic,
-        image: this.state.image
+        image: this.state.image,
+        imageName: this.state.imageName
       }
     });
   }
@@ -152,7 +181,8 @@ class NewProjectPopup extends React.Component {
                     }}
                     type="close"
                     onClick={() => {
-                      this.setState({ image: "" },this.database.setItem("DLOimage",""));
+                      this.setState({ image: "" });
+                      this.setState({imageName: ""});
                     }}
                   />
                   <div className = "draggedImage">
@@ -184,13 +214,9 @@ class NewProjectPopup extends React.Component {
                     color: "#fff",
                     marginTop: "5%"
                   }}
-                  onClick={() => function() {
-                    this.makeProject();
-                    //also clear the interim from database
-                    this.database.removeItem("DLOtitle");
-                    this.database.removeItem("DLOtopic");
-                    this.database.removeItem("DLOimage");
-                  }}
+                  onClick={() => 
+                    this.makeProject()
+                  }
                   disabled={
                     this.state.projectTitle.length == 0 ||
                     this.state.projectTopic.length == 0
