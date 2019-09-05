@@ -17,6 +17,10 @@ class Firestore {
         return db.collection(collection).get();
     };
 
+    static getUserData(userID) {
+        return db.collection("users").doc(userID);
+    }
+
     static getDocData(collection, docID) {
         var docRef = db.collection(collection).doc(docID);
         docRef.get().then(function (doc) {
@@ -64,6 +68,7 @@ class Firestore {
             this.saveToDBWithDocID(projectCollection, project.id, project);
         });
     };
+
 };
 
 export default Firestore;

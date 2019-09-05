@@ -5,6 +5,7 @@ import { Button, Icon } from "antd";
 import DragAndDrop from "./DragAndDrop.js";
 import { withRouter, Redirect } from "react-router";
 import firebase from "firebase"
+import Firestore from "./Firestore.js"
 
 class NewProjectPopup extends React.Component {
   constructor(props) {
@@ -19,56 +20,71 @@ class NewProjectPopup extends React.Component {
   state = {
     projectTitle: "",
     projectTopic: "",
-    image: "",
-    file:""
+    imageName: "", //The name of the image, whether from DB or upload
+    image: "", //represents the source information about the image.
+    file:"" //the uploaded file for the image.
   };
 
   componentDidMount() {
-    //Mock DB with local storage
-    this.database = window.localStorage;
 
-    var title = this.database.getItem("DLOtitle"); 
-    if (title){
-      this.setState({projectTitle:title});
-    }
+    var uid = firebase.auth().currentUser.uid;
+    Firestore.getUserData(uid).get().then(function(doc){
+      if (doc) {
+        var fields = doc.data();
+        this.setState({projectTitle:fields.title});
+        this.setState({projectTopic:fields.subtitle});
 
-    var topic = this.database.getItem("DLOtopic");
-    if (topic){
-      this.setState({projectTopic:topic});
-    }
-
-    var imageName = this.database.getItem("DLOimageName");
-    //Test name
-    imageName ="HONGHONGHONG.PNG"
-    if (imageName) {
-      try {
-        var storage = firebase.storage();
-        storage.ref("projectImage/" + imageName).getDownloadURL()
-          .then(function(url) {
-            this.setState({image:url});
-          }.bind(this));      
-      } catch(e) {
-        this.state.image = "";
+        var imageName =fields.image;
+        if (imageName) {
+          try {
+            var storage = firebase.storage();
+            storage.ref("projectImage/" + imageName).getDownloadURL()
+              .then(function(url) {
+                this.setState({image:url});
+                this.setState({imageName:imageName});
+              }.bind(this));      
+          } catch(e) {
+            //Bad image load
+            this.state.image = "";
+          }
+        }
+        
       }
-    }
+    }.bind(this));
   }
 
   componentWillUnmount() {
     //purge interim database if the project is created.
-    if (!this.isProjectCreated){
-      this.database.setItem("DLOtitle",this.state.projectTitle);
-      this.database.setItem("DLOtopic",this.state.projectTopic);
-    } else {
-      this.database.setItem("DLOtitle","");
-      this.database.setItem("DLOtopic","");
+    var data = {
+      title:  "",
+      subtitle: "",
+      file: ""
     }
+
+    if (!this.isProjectCreated){
+      data.title=this.state.projectTitle;
+      data.subtitle = this.state.projectTopic;
+
+      if (this.state.imageName) {
+        data.file = this.state.imageName;
+      }
+    } 
+
+    //If the project is created the fields will default to empty.
+    console.log(data);
+    var uid = firebase.auth().currentUser.uid;
+    Firestore.saveWithDocID("users",uid,{
+      "title": data.title,
+      "subtitle" : data.subtitle,
+      "image" : data.file
+    });
 
     if (this.state.file){
       this.uploadImage(this.state.file);
     } 
-    //Upload image here to minimize server calls. 
+  
   }
-
+  
   /**
    * Function to handle when a file is dropped into the drag and drop area. 
    */
@@ -78,13 +94,16 @@ class NewProjectPopup extends React.Component {
       return;
     }   
     var file = fileList[0];
-    this.setState({file:file});
-
-    var reader = new FileReader();
-    reader.onload = function(e) {      
-      this.setState({ image: e.target.result});
-    }.bind(this);
-    reader.readAsDataURL(file);
+    if (file) {
+      this.setState({file:file});
+      this.setState({imageName:file.name});
+  
+      var reader = new FileReader();
+      reader.onload = function(e) {      
+        this.setState({ image: e.target.result});
+      }.bind(this);
+      reader.readAsDataURL(file);
+    } 
   }
 
 /**
@@ -95,8 +114,6 @@ class NewProjectPopup extends React.Component {
     if (!file) {
       return;
     }
-    //this.setState({imageName:file.name});
-    this.database.setItem("DLOimageName",file.name);
 
     //Uploading image    
     var storageRef = firebase.storage().ref("projectImage/" + file.name);          
@@ -110,7 +127,6 @@ class NewProjectPopup extends React.Component {
             console.log("successful upload");
           }
       );
-
   }
 
 
@@ -133,8 +149,7 @@ class NewProjectPopup extends React.Component {
         topic: this.state.projectTopic,
         image: this.state.image
       }
-    });
-    
+    });    
   }
 
   render() {
@@ -204,6 +219,7 @@ class NewProjectPopup extends React.Component {
                       //Could remove image from db too?
                       this.setState({ image: "" });
                       this.setState({file:""});
+                      this.setState({imageName:""});
                     }}
                   />
                   <div className = "draggedImage">
