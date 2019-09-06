@@ -11,6 +11,8 @@ class NewProjectPopup extends React.Component {
   constructor(props) {
     super(props);
 
+    this.localCache = window.localStorage;
+
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleTopicChange = this.handleTopicChange.bind(this);
 
@@ -26,7 +28,32 @@ class NewProjectPopup extends React.Component {
   };
 
   componentDidMount() {
-    //Debateable whether loading the image here is needed.
+
+    //Local storage variant
+    var title = this.localCache.getItem("title");
+    if (title) {
+      this.setState({projectTitle:title});
+    }
+
+    var topic = this.localCache.getItem("topic");
+    if (topic) {
+      this.setState({projectTopic:topic});
+    }
+
+    var image = this.localCache.getItem("image");
+    if (image) {
+      this.setState({image:image});
+    }
+
+    var imageName = this.localCache.getItem("imageName");
+    if (imageName) {
+      this.setState({imageName:imageName});
+    }
+
+    
+
+    //Get from the database, not sure if needed.
+    /*
     var uid = firebase.auth().currentUser.uid;
     Firestore.getUserData(uid).get().then(function(doc){
       if (doc) {
@@ -51,10 +78,23 @@ class NewProjectPopup extends React.Component {
         
       }
     }.bind(this));
+    */
   }
 
   componentWillUnmount() {
+
+    //If a project is made, the local cache empties
+    if (this.isProjectCreated) {
+      this.localCache.removeItem("title");
+      this.localCache.removeItem("topic");
+      this.localCache.removeItem("image");
+      this.localCache.removeItem("imageName");
+    }
+
+
+    //Save To database variant, not sure if needed
     //purge interim database if the project is created.
+    /*
     var data = {
       title:  "",
       subtitle: "",
@@ -72,17 +112,13 @@ class NewProjectPopup extends React.Component {
     } 
 
     //If the project is created the fields will default to empty.
-    console.log(data);
     var uid = firebase.auth().currentUser.uid;
     Firestore.saveWithDocID("users",uid,{
       "title": data.title,
       "subtitle" : data.subtitle,
       "image" : data.file
     });
-
-    if (this.state.file){
-      this.uploadImage(this.state.file);
-    } 
+    */
   
   }
   
@@ -94,13 +130,21 @@ class NewProjectPopup extends React.Component {
     if (!fileList[0] || fileList[0]["type"].split("/")[0] !== "image") {
       return;
     }   
+
     var file = fileList[0];
     if (file) {
       this.setState({file:file});
       this.setState({imageName:file.name});
-  
+
+      this.localCache.setItem("imageName", file.name);
+
       var reader = new FileReader();
       reader.onload = function(e) {      
+        try {
+          this.localCache.setItem("image", e.target.result);
+        } catch (e){
+          //Image exceeds local storage.
+        }
         this.setState({ image: e.target.result});
       }.bind(this);
       reader.readAsDataURL(file);
@@ -132,31 +176,41 @@ class NewProjectPopup extends React.Component {
 
 
   handleTitleChange(event) {
-    this.setState({ projectTitle: event.target.value });
+    this.setState({ projectTitle: event.target.value },function()
+    {
+      //Local cache variant
+      this.localCache.setItem("title",this.state.projectTitle);
+    });
     
   }
 
   handleTopicChange(event) {
-    this.setState({ projectTopic: event.target.value });
+    this.setState({ projectTopic: event.target.value }, function()
+    {
+      this.localCache.setItem("topic",this.state.projectTopic);
+    });
   }
 
   makeProject() {
+    //Make upload image here too.
     this.isProjectCreated = true;
 
     var data = {
       title:  this.state.projectTitle,
       subtitle: this.state.projectTopic,
-      file: ""
+      image: ""
     }
 
     if (this.state.imageName) {
-      data.file = this.state.imageName;
+      data.image = this.state.imageName;
     }
 
     var uid = firebase.auth().currentUser.uid;
-    
-    
     Firestore.saveNewProject(uid,data);
+    if (this.state.file){
+      this.uploadImage(this.state.file);
+    } 
+
     const { history } = this.props;
     history.push({
       pathname: "./project",
@@ -233,6 +287,8 @@ class NewProjectPopup extends React.Component {
                     type="close"
                     onClick={() => {
                       //Could remove image from db too?
+                      this.localCache.removeItem("image");
+                      this.localCache.removeItem("imageName");
                       this.setState({ image: "" });
                       this.setState({file:""});
                       this.setState({imageName:""});
