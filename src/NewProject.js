@@ -26,7 +26,7 @@ class NewProjectPopup extends React.Component {
   };
 
   componentDidMount() {
-
+    //Debateable whether loading the image here is needed.
     var uid = firebase.auth().currentUser.uid;
     Firestore.getUserData(uid).get().then(function(doc){
       if (doc) {
@@ -61,6 +61,7 @@ class NewProjectPopup extends React.Component {
       file: ""
     }
 
+    //Debatable whether to push to firebase here
     if (!this.isProjectCreated){
       data.title=this.state.projectTitle;
       data.subtitle = this.state.projectTopic;
@@ -141,6 +142,21 @@ class NewProjectPopup extends React.Component {
 
   makeProject() {
     this.isProjectCreated = true;
+
+    var data = {
+      title:  this.state.projectTitle,
+      subtitle: this.state.projectTopic,
+      file: ""
+    }
+
+    if (this.state.imageName) {
+      data.file = this.state.imageName;
+    }
+
+    var uid = firebase.auth().currentUser.uid;
+    
+    
+    Firestore.saveNewProject(uid,data);
     const { history } = this.props;
     history.push({
       pathname: "./project",

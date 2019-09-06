@@ -69,6 +69,10 @@ class Firestore {
         });
     };
 
+    static saveNewProject(userID, projectData) {
+        return db.collection("users").doc(userID).collection("project").add(projectData);
+    }
+
 };
 
 export default Firestore;
