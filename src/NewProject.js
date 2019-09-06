@@ -198,7 +198,8 @@ class NewProjectPopup extends React.Component {
     var data = {
       title:  this.state.projectTitle,
       subtitle: this.state.projectTopic,
-      image: ""
+      image: "",
+      creationTime: + new Date()
     }
 
     if (this.state.imageName) {
@@ -217,7 +218,8 @@ class NewProjectPopup extends React.Component {
       state: {
         title: this.state.projectTitle,
         topic: this.state.projectTopic,
-        image: this.state.image
+        image: this.state.image,
+        creationTime: + new Date()
       }
     });    
   }
