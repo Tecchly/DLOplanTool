@@ -1,5 +1,7 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { app } from "./Firebase";
+import firebase from "firebase"
+import Firestore from "./Firestore.js"
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Icon } from "antd";
 // import * as Button from './components/button';
@@ -74,6 +76,20 @@ const Home = ({ history }) => {
   // const classes = useStyles();
   const classes = useStyles();
   const [showNewProject, setShowNewProject] = useState(false);
+
+  useEffect(() => {
+    var uid = firebase.auth().currentUser.uid;
+    var recents = Firestore.getRecentProjectsByUser(uid);
+
+    recents.get().then(function(doc) {
+      
+      doc.forEach(x => {
+        console.log(x.data())
+      })
+  }).catch(function(error) {
+      console.log("Error getting document:", error);
+  });
+  })
 
   function togglePopup() {
     setShowNewProject(!showNewProject);

@@ -38,6 +38,10 @@ class Firestore {
         return db.collection("users").doc(userID).collection("projects"); 
     };
 
+    static getRecentProjectsByUser(userID) {
+        return db.collection("users").doc(userID).collection("project").orderBy('creationTime', 'desc').limit(4); 
+    };
+
     static getProjectById(userID, projectID) {
         return this.getAllProjectsByUser(userID).doc(projectID);
     };
