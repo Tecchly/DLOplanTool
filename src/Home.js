@@ -1,4 +1,5 @@
 import React from "react";
+import interact from 'interactjs'
 import { app } from "./Firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Icon } from "antd";
@@ -13,6 +14,40 @@ import P2 from "../assets/images/poster2.jpg";
 import P3 from "../assets/images/poster3.png";
 import P4 from "../assets/images/poster4.png";
 import { useState } from "react";
+
+interact('.mode')
+  .draggable({
+    // enable inertial throwing
+    inertia: true,
+    // keep the element within the area of it's parent
+    modifiers: [
+      interact.modifiers.restrictRect({
+        restriction: 'parent',
+        endOnly: true
+      })
+    ],
+    // enable autoScroll
+    autoScroll: true,
+
+    // call this function on every dragmove event
+    onmove: dragMoveListener
+  });
+
+function dragMoveListener (event) {
+  var target = event.target
+  // keep the dragged position in the data-x/data-y attributes
+  var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
+  var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
+
+  // translate the element
+  target.style.webkitTransform =
+    target.style.transform =
+      'translate(' + x + 'px, ' + y + 'px)'
+
+  // update the posiion attributes
+  target.setAttribute('data-x', x)
+  target.setAttribute('data-y', y)
+}
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -192,10 +227,10 @@ const Home = ({ history }) => {
                             <circle cx="50%" cy="50%" r="125" fill="#FFFFFF" />
                         </clipPath>
                         <image y="40%" x="40%" width="20%" xlinkHref={P1} clip-path="url(#myCircle)" />
-                        <circle stroke="#000" r="2%" id="svg_3" cy="90%" cx="3%" strokeWidth="1.5" fill="red"/>
-                        <circle stroke="#000" r="2%" id="svg_3" cy="90%" cx="8%" strokeWidth="1.5" fill="pink"/>
-                        <circle stroke="#000" r="2%" id="svg_3" cy="90%" cx="13%" strokeWidth="1.5" fill="purple"/>
-                        <circle stroke="#000" r="2%" id="svg_3" cy="90%" cx="18%" strokeWidth="1.5" fill="navy"/>
+                        <circle class="mode" stroke="#000" r="2%" id="svg_3" cy="90%" cx="3%" strokeWidth="1.5" fill="red"/>
+                        <circle class="mode" stroke="#000" r="2%" id="svg_3" cy="90%" cx="8%" strokeWidth="1.5" fill="pink"/>
+                        <circle class="mode" stroke="#000" r="2%" id="svg_3" cy="90%" cx="13%" strokeWidth="1.5" fill="purple"/>
+                        <circle class="mode" stroke="#000" r="2%" id="svg_3" cy="90%" cx="18%" strokeWidth="1.5" fill="navy"/>
                     </svg>
                 </div>
     </React.Fragment>
