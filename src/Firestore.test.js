@@ -8,6 +8,19 @@ describe("saveWithDocID", () => {
         num: 3.14,
         bool: true
     };
+    let data2 = {
+        str: "def",
+        num: 1.00,
+        bool: false
+    };
+
+    afterAll(() => {
+        return Firestore.deleteDocument(collectionName, documentName).then(() => {
+            console.log("cleanup success: " + collectionName + "." + documentName + " deleted");
+        }).catch(error => {
+            console.error("cleanup fail, please manually delete " + collectionName + "." + documentName + ", causing error: " + error);
+        });
+    });
 
     it("saves new document", () => {
         return Firestore.saveWithDocID(collectionName, documentName, data).then(() => {
@@ -17,13 +30,6 @@ describe("saveWithDocID", () => {
                     expect(retrieved.str).toEqual(data.str);
                     expect(retrieved.num).toEqual(data.num);
                     expect(retrieved.bool).toEqual(data.bool);
-
-                    // cleanup
-                    return Firestore.deleteDocument(collectionName, documentName).then(() => {
-                        console.log("saveWithDocID:saves new document cleanup success");
-                    }).catch(error => {
-                        console.error("saveWithDocID:saves new document cleanup fail, please cleanup manually: " + error);
-                    });
                 } else {
                     fail("document not found")
                 }
@@ -33,6 +39,24 @@ describe("saveWithDocID", () => {
         }).catch(error => {
             fail("error saving document: " + error);
         });
-
+    });
+    
+    it("overrides existing document", () => {
+        return Firestore.saveWithDocID(collectionName, documentName, data2).then(() => {
+            return Firestore.getDocData(collectionName, documentName).then(doc => {
+                if (doc.exists) {
+                    let retrieved = doc.data();
+                    expect(retrieved.str).toEqual(data2.str);
+                    expect(retrieved.num).toEqual(data2.num);
+                    expect(retrieved.bool).toEqual(data2.bool);
+                } else {
+                    fail("document not found")
+                }
+            }).catch(error => {
+                fail("error retrieving document: " + error);
+            });
+        }).catch(error => {
+            fail("error saving document: " + error);
+        });
     });
 });
