@@ -21,7 +21,7 @@ describe("saveWithDocID", () => {
         });
     });
 
-    it("saves new document", () => {
+    it("saves document", () => {
         return Firestore.saveWithDocID(collectionName, documentName, data).then(() => {
             return Firestore.getDocument(collectionName, documentName).then(doc => {
                 if (doc.exists) {
@@ -40,7 +40,7 @@ describe("saveWithDocID", () => {
         });
     });
     
-    it("overrides existing document", () => {
+    it("overrides document", () => {
         return Firestore.saveWithDocID(collectionName, documentName, data2).then(() => {
             return Firestore.getDocument(collectionName, documentName).then(doc => {
                 if (doc.exists) {
@@ -63,7 +63,7 @@ describe("saveWithDocID", () => {
 describe("deleteDocument", () => {
     let collectionName = "testCollection";
     let documentName = "testDocument";
-    it("deletes existing document", () => {
+    it("deletes document", () => {
         return Firestore.saveWithDocID(collectionName, documentName, {x: "x"}).then(() => {
             return Firestore.deleteDocument(collectionName, documentName).then(() => {
             }).catch(error => {
@@ -91,7 +91,7 @@ describe("getCollection", () => {
         });
     });
 
-    it("gets existing collection", () => {
+    it("gets collection", () => {
         return Firestore.saveWithDocID(collectionName, documentName, data).then(() => {
             return Firestore.getCollection(collectionName).then(col => {
                 expect(col.size).toEqual(1);
@@ -128,7 +128,7 @@ describe("getDocument", () => {
         });
     });
 
-    it("gets existing document", () => {
+    it("gets document", () => {
         return Firestore.saveWithDocID(collectionName, documentName, data).then(() => {
             return Firestore.getDocument(collectionName, documentName).then(doc => {
                 if (doc.exists) {
@@ -160,7 +160,7 @@ describe("saveUser", () => {
         });
     });
 
-    it("saves new user", () => {
+    it("saves user", () => {
         let beforeSave = Date.now();
         return Firestore.saveUser(email, username).then(doc => {
             let afterSave = Date.now();
@@ -198,7 +198,7 @@ describe("getAllProjectsByUser", () => {
         });
     });
 
-    it("gets existing user projects", () => {
+    it("gets user projects", () => {
         return Firestore.saveUser("test@gmail.com", "test").then(doc => {
             userId = doc.id;
             return Firestore.saveProjectToUser(userId, project).then(() => {
@@ -209,6 +209,45 @@ describe("getAllProjectsByUser", () => {
                         let retrieved = projects.docs[0].data();
                         expect(retrieved.id).toEqual(project.id);
                         expect(retrieved.name).toEqual(project.name);
+                    } else {
+                        fail("project data missing");
+                    }
+                }).catch(error => {
+                    fail("error retrieving projects: " + error);
+                });
+            }).catch(error => {
+                fail("error saving project: " + error);
+            });
+        }).catch(error => {
+            fail("error saving user: " + error);
+        });
+    });
+});
+
+describe("getProjectById", () => {
+    let userId = "";
+    let project = {
+        id: "1",
+        val: "x"
+    };
+
+    afterAll(() => {
+        return Firestore.deleteDocument("users", userId).then(() => {
+        }).catch(error => {
+            console.error("cleanup fail, please manually delete user" + userId + ", causing error: " + error);
+        });
+    });
+
+    it("retrieves user project", () => {
+        return Firestore.saveUser("test@gmail.com", "test").then(doc => {
+            userId = doc.id;
+            return Firestore.saveProjectToUser(userId, project).then(() => {
+                return Firestore.getProjectById(userId, project.id).get().then(retrieved => {
+                    expect(retrieved.id).toEqual(project.id);
+                    if (retrieved.exists) {
+                        let retrievedData = retrieved.data();
+                        expect(retrievedData.id).toEqual(project.id);
+                        expect(retrievedData.val).toEqual(project.val);
                     } else {
                         fail("project data missing");
                     }
