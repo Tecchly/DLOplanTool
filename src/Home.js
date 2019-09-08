@@ -330,10 +330,30 @@ const Home = ({ history }) => {
         <Container style={{ marginTop: 40 }} fluid>
           <Row style={{ marginLeft: 80, marginRight: 80 }}>
             {recentProjects.length == 0 ? (
-              <Row style={{ width: "100%" }}>
-                <ProjectPlaceholder /> <ProjectPlaceholder />{" "}
-                <ProjectPlaceholder /> <ProjectPlaceholder />
-              </Row>
+              <Container class="d-flex align-items-center">
+                <Row className="justify-content-md-center">
+                  <Image
+                    src={require("../assets/images/void.svg")}
+                    style={{ height: 180 }}
+                  />
+                </Row>
+                <Row className="justify-content-md-center">
+                  <h1
+                    className="imageTitle"
+                    style={{color: "#3A4A56"}}
+                  >
+                    No Recent Projects!
+                  </h1>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <h2
+                  className="imageSubtitle"
+                    style={{color: "#8fa5b5"}}
+                  >
+                    Click the 'New Project' button to create your first project!
+                  </h2>
+                </Row>
+              </Container>
             ) : null}
             {recentProjects
               .sort((a, b) => a.creationTime - b.creationTime)
