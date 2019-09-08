@@ -34,6 +34,14 @@ class Firestore {
             //});
     };
 
+    static saveUser(email, username) {
+        return db.collection("users").add({
+            email: email,
+            timestamp: Date.now(),
+            username: username
+        });
+    }
+
     static getAllProjectsByUser(userID) {
         return db.collection("users").doc(userID).collection("projects"); 
     };

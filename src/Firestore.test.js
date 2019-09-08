@@ -87,7 +87,7 @@ describe("getCollection", () => {
     afterAll(() => {
         return Firestore.deleteDocument(collectionName, documentName).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete " + collectionName + "." + documentName + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete collection " + collectionName + ", causing error: " + error);
         });
     });
 
@@ -124,7 +124,7 @@ describe("getDocument", () => {
     afterAll(() => {
         return Firestore.deleteDocument(collectionName, documentName).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete " + collectionName + "." + documentName + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete collection" + collectionName + ", causing error: " + error);
         });
     });
 
@@ -144,6 +144,42 @@ describe("getDocument", () => {
             });
         }).catch(error => {
             fail("error saving document: " + error);
+        });
+    });
+});
+
+describe("saveUser", () => {
+    let id = "";
+    let email = "testuser@gmail.com";
+    let username = "testUser";
+    
+    afterAll(() => {
+        return Firestore.deleteDocument("users", id).then(() => {
+        }).catch(error => {
+            console.error("cleanup fail, please manually delete user" + id + ", causing error: " + error);
+        });
+    });
+
+    it("saves new user", () => {
+        let beforeSave = Date.now();
+        return Firestore.saveUser(email, username).then(doc => {
+            let afterSave = Date.now();
+            id = doc.id;
+            return doc.get().then(doc => {
+                if (doc.exists) {
+                    let user = doc.data();
+                    expect(user.email).toEqual(email);
+                    expect(user.timestamp).toBeGreaterThan(beforeSave);
+                    expect(afterSave).toBeGreaterThan(user.timestamp);
+                    expect(user.username).toEqual(username);                    
+                } else {
+                    fail("document data missing");
+                }
+            }).catch(error => {
+                fail("error retrieving user: " + error);
+            });
+        }).catch(error => {
+            fail("error saving user: " + error);
         });
     });
 });
