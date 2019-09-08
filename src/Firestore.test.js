@@ -262,3 +262,50 @@ describe("getProjectById", () => {
         });
     });
 });
+
+describe("getAllIdeasByProject", () => {
+    let userId = "";
+    let project = {
+        id: "1",
+        val: "x"
+    };
+    let idea = {
+        id: "2",
+        name: "abc"
+    };
+
+    afterAll(() => {
+        return Firestore.deleteDocument("users", userId).then(() => {
+        }).catch(error => {
+            console.error("cleanup fail, please manually delete user" + userId + ", causing error: " + error);
+        });
+    });
+
+    it("gets project ideas", () => {
+        return Firestore.saveUser("test@gmail.com", "test").then(doc => {
+            userId = doc.id;
+            return Firestore.saveProjectToUser(userId, project).then(() => {
+                return Firestore.saveIdeaToProject(userId, project.id, idea).then(() => {
+                    return Firestore.getAllIdeasByProject(userId, project.id).get().then(ideas => {
+                        expect(ideas.size).toEqual(1);
+                        if (ideas.docs[0].exists) {
+                            let retrieved = ideas.docs[0].data();
+                            expect(retrieved.id).toEqual(idea.id);
+                            expect(retrieved.name).toEqual(idea.name);
+                        } else {
+                            fail("idea data missing");
+                        }
+                    }).catch(error => {
+                        fail("error retrieving ideas: " + error);
+                    });
+                }).catch(error => {
+                    fail("error saving idea: " + error);
+                });
+            }).catch(error => {
+                fail("error saving project: " + error);
+            });
+        }).catch(error => {
+            fail("error saving user: " + error);
+        });
+    });
+});

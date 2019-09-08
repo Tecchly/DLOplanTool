@@ -63,11 +63,12 @@ class Firestore {
         // })
     };
 
-    static saveIdeasToProject(userID, projectID, ideas) {
-        var ideaCollection = this.getAllIdeasByProject(userID, projectID);
-        ideas.forEach(function(idea) {
-            this.saveToDBWithDocID(ideaCollection, idea.id, idea);
-        });
+    static saveIdeaToProject(userID, projectID, idea) {
+        return this.saveToDBWithDocID(
+            this.getAllIdeasByProject(userID, projectID),
+            idea.id,
+            idea
+        );
     };
 
     static saveProjectToUser(userID, project) {
