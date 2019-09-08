@@ -21,7 +21,7 @@ class Firestore {
         return db.collection(collection).get();
     };
 
-    static getDocData(collection, docID) {
+    static getDocument(collection, docID) {
         return db.collection(collection).doc(docID).get()
             //.then(function (doc) {
             //    if (doc.exists) {
