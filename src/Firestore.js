@@ -13,21 +13,25 @@ class Firestore {
             // })
     };
 
+    static deleteDocument(collection, docID) {
+        return db.collection(collection).doc(docID).delete();
+    }
+
     static getCollection(collection) {
         return db.collection(collection).get();
     };
 
     static getDocData(collection, docID) {
-        var docRef = db.collection(collection).doc(docID);
-        docRef.get().then(function (doc) {
-            if (doc.exists) {
-                return doc.data();
-            } else {
-                console.log("No such document!");
-            }
-        }).catch(function (error) {
-            console.log("Error getting document:", error);
-        });
+        return db.collection(collection).doc(docID).get()
+            //.then(function (doc) {
+            //    if (doc.exists) {
+            //        return doc.data();
+            //    } else {
+            //        console.log("No such document!");
+            //    }
+            //}).catch(function (error) {
+            //    console.log("Error getting document:", error);
+            //});
     };
 
     static getAllProjectsByUser(userID) {
