@@ -80,7 +80,7 @@ html, body, #app, #app>div, #root,#login {
   width: 100%;
   border-style: none;  
   border-bottom: solid;
-  border-bottom-width: 1px;
+  border-bottom-width: 1px; 
   margin-bottom: 1.5em;
 }
 
@@ -99,3 +99,9 @@ html, body, #app, #app>div, #root,#login {
   object-fit: scale-down;
 }
 
+.imageTitle {
+  font: 700 30px "Montserrat", sans-serif;
+}
+.imageSubtitle {
+  font: 600 15px "Montserrat", sans-serif;
+}
