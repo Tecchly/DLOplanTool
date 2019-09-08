@@ -156,7 +156,7 @@ describe("saveUser", () => {
     afterAll(() => {
         return Firestore.deleteDocument("users", id).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user" + id + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete user " + id + ", causing error: " + error);
         });
     });
 
@@ -194,7 +194,7 @@ describe("getAllProjectsByUser", () => {
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user" + userId + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + ", causing error: " + error);
         });
     });
 
@@ -234,7 +234,7 @@ describe("getProjectById", () => {
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user" + userId + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + ", causing error: " + error);
         });
     });
 
@@ -277,7 +277,7 @@ describe("getAllIdeasByProject", () => {
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user" + userId + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + ", causing error: " + error);
         });
     });
 
@@ -306,6 +306,76 @@ describe("getAllIdeasByProject", () => {
             });
         }).catch(error => {
             fail("error saving user: " + error);
+        });
+    });
+});
+
+describe("saveToDBWithDocID", () => {
+    let userId = "";
+    let project = {
+        id: "1",
+        val: "x"
+    };
+    let project2 = {
+        id: "1",
+        val: "y"
+    };
+
+    afterAll(() => {
+        return Firestore.deleteDocument(collectionName, documentName).then(() => {
+        }).catch(error => {
+            console.error("cleanup fail, please manually delete user " + userId + ", causing error: " + error);
+        });
+    });
+
+    it("saves document", () => {
+        return Firestore.saveUser("test@gmail.com", "test").then(doc => {
+            userId = doc.id;
+            return Firestore.saveToDBWithDocID(
+                Firestore.getAllProjectsByUser(userId),
+                project.id,
+                project
+            ).then(() => {
+                return Firestore.getProjectById(userId, project.id).get().then(retrieved => {
+                    expect(retrieved.id).toEqual(project.id);
+                    if (retrieved.exists) {
+                        let retrievedData = retrieved.data();
+                        expect(retrievedData.id).toEqual(project.id);
+                        expect(retrievedData.val).toEqual(project.val);
+                    } else {
+                        fail("missing project data");
+                    }
+                }).catch(error => {
+                    fail("error retrieving project: " + error);
+                });
+            }).catch(error => {
+                fail("error saving project: " + error);
+            });
+        }).catch(error => {
+            fail("error saving user: " + error);
+        });
+    });
+ 
+    it("overrides document", () => {
+        return Firestore.saveToDBWithDocID(
+            Firestore.getAllProjectsByUser(userId),
+            project2.id,
+            project2
+        ).then(() => {
+            return Firestore.getProjectById(userId, project2.id).get().then(retrieved => {
+                expect(retrieved.id).toEqual(project2.id);
+                if (retrieved.exists) {
+                    let retrievedData = retrieved.data();
+                    expect(retrievedData.id).toEqual(project2.id);
+                    expect(retrievedData.val).toEqual(project2.val);
+                } else {
+                    fail("missing project data");
+                }
+            }).catch(error => {
+                fail("error retrieving project: " + error);
+            });
+        }).catch(error => {
+            fail("error saving project: " + error);
         });
     });
 });
