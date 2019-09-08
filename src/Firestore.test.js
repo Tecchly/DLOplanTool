@@ -169,14 +169,54 @@ describe("saveUser", () => {
                 if (doc.exists) {
                     let user = doc.data();
                     expect(user.email).toEqual(email);
-                    expect(user.timestamp).toBeGreaterThan(beforeSave);
-                    expect(afterSave).toBeGreaterThan(user.timestamp);
+                    expect(user.timestamp).toBeGreaterThanOrEqual(beforeSave);
+                    expect(afterSave).toBeGreaterThanOrEqual(user.timestamp);
                     expect(user.username).toEqual(username);                    
                 } else {
-                    fail("document data missing");
+                    fail("user data missing");
                 }
             }).catch(error => {
                 fail("error retrieving user: " + error);
+            });
+        }).catch(error => {
+            fail("error saving user: " + error);
+        });
+    });
+});
+
+describe("getAllProjectsByUser", () => {
+    let userId = "";
+    let project = {
+        id: "1",
+        val: "x"
+    };
+
+    afterAll(() => {
+        return Firestore.deleteDocument("users", userId).then(() => {
+        }).catch(error => {
+            console.error("cleanup fail, please manually delete user" + userId + ", causing error: " + error);
+        });
+    });
+
+    it("gets existing user projects", () => {
+        return Firestore.saveUser("test@gmail.com", "test").then(doc => {
+            userId = doc.id;
+            return Firestore.saveProjectToUser(userId, project).then(() => {
+                return Firestore.getAllProjectsByUser(userId).get().then(projects => {
+                    expect(projects.size).toEqual(1);
+                    expect(projects.docs[0].id).toEqual(project.id);
+                    if (projects.docs[0].exists) {
+                        let retrieved = projects.docs[0].data();
+                        expect(retrieved.id).toEqual(project.id);
+                        expect(retrieved.name).toEqual(project.name);
+                    } else {
+                        fail("project data missing");
+                    }
+                }).catch(error => {
+                    fail("error retrieving projects: " + error);
+                });
+            }).catch(error => {
+                fail("error saving project: " + error);
             });
         }).catch(error => {
             fail("error saving user: " + error);

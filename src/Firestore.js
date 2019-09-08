@@ -70,11 +70,12 @@ class Firestore {
         });
     };
 
-    static saveProjectsToUser(userID, projects) {
-        var projectCollection = this.getAllProjectsByUser(userID);
-        projects.forEach(function (project) {
-            this.saveToDBWithDocID(projectCollection, project.id, project);
-        });
+    static saveProjectToUser(userID, project) {
+        return this.saveToDBWithDocID(
+            this.getAllProjectsByUser(userID),
+            project.id,
+            project
+        );
     };
 };
 
