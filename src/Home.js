@@ -226,11 +226,11 @@ const Home = ({ history }) => {
                         <clipPath id="myCircle">
                             <circle cx="50%" cy="50%" r="125" fill="#FFFFFF" />
                         </clipPath>
-                        <image y="40%" x="40%" width="20%" xlinkHref={P1} clip-path="url(#myCircle)" />
-                        <circle class="mode" stroke="#000" r="2%" id="svg_3" cy="90%" cx="3%" strokeWidth="1.5" fill="red"/>
-                        <circle class="mode" stroke="#000" r="2%" id="svg_3" cy="90%" cx="8%" strokeWidth="1.5" fill="pink"/>
-                        <circle class="mode" stroke="#000" r="2%" id="svg_3" cy="90%" cx="13%" strokeWidth="1.5" fill="purple"/>
-                        <circle class="mode" stroke="#000" r="2%" id="svg_3" cy="90%" cx="18%" strokeWidth="1.5" fill="navy"/>
+                        <image y="40%" x="40%" width="20%" xlinkHref={P1} clipPath="url(#myCircle)" />
+                        <circle className="mode" stroke="#000" r="2%" id="svg_3" cy="90%" cx="3%" strokeWidth="1.5" fill="red"/>
+                        <circle className="mode" stroke="#000" r="2%" id="svg_3" cy="90%" cx="8%" strokeWidth="1.5" fill="pink"/>
+                        <circle className="mode" stroke="#000" r="2%" id="svg_3" cy="90%" cx="13%" strokeWidth="1.5" fill="purple"/>
+                        <circle className="mode" stroke="#000" r="2%" id="svg_3" cy="90%" cx="18%" strokeWidth="1.5" fill="navy"/>
                     </svg>
                 </div>
     </React.Fragment>
