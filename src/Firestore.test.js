@@ -17,7 +17,7 @@ describe("saveWithDocID", () => {
     afterAll(() => {
         return Firestore.deleteDocument(collectionName, documentName).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete collection " + collectionName + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete collection " + collectionName + ", error: " + error);
         });
     });
 
@@ -63,11 +63,12 @@ describe("saveWithDocID", () => {
 describe("deleteDocument", () => {
     let collectionName = "testCollection";
     let documentName = "testDocument";
+
     it("deletes document", () => {
         return Firestore.saveWithDocID(collectionName, documentName, {x: "x"}).then(() => {
             return Firestore.deleteDocument(collectionName, documentName).then(() => {
             }).catch(error => {
-                fail("delete fail, please manually delete " + collectionName + "." + documentName + ", causing error: " + error);
+                fail("delete fail, please manually delete " + collectionName + "." + documentName + ", error: " + error);
             });
         }).catch(error => {
             fail("error saving document: " + error);
@@ -87,7 +88,7 @@ describe("getCollection", () => {
     afterAll(() => {
         return Firestore.deleteDocument(collectionName, documentName).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete collection " + collectionName + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete collection " + collectionName + ", error: " + error);
         });
     });
 
@@ -124,7 +125,7 @@ describe("getDocument", () => {
     afterAll(() => {
         return Firestore.deleteDocument(collectionName, documentName).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete collection" + collectionName + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete collection" + collectionName + ", error: " + error);
         });
     });
 
@@ -148,6 +149,39 @@ describe("getDocument", () => {
     });
 });
 
+describe("getUserData", () => {
+    let id = "";
+    let email = "testuser@gmail.com";
+    let username = "testUser";
+    
+    afterAll(() => {
+        return Firestore.deleteDocument("users", id).then(() => {
+        }).catch(error => {
+            console.error("cleanup fail, please manually delete user " + id + ", error: " + error);
+        });
+    });
+
+    it("gets user data", () => {
+        return Firestore.saveUser(email, username).then(doc => {
+            id = doc.id;
+            return Firestore.getUserData(id).get().then(doc => {
+                expect(doc.id).toEqual(id);
+                if (doc.exists) {
+                    let user = doc.data();
+                    expect(user.email).toEqual(email);
+                    expect(user.username).toEqual(username); 
+                } else {
+                    fail("user data missing");
+                }
+            }).catch(error => {
+                fail("error retrieving user: " + error);
+            });
+        }).catch(error => {
+            fail("error saving user: " + error);
+        });
+    });
+});
+
 describe("saveUser", () => {
     let id = "";
     let email = "testuser@gmail.com";
@@ -156,7 +190,7 @@ describe("saveUser", () => {
     afterAll(() => {
         return Firestore.deleteDocument("users", id).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + id + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete user " + id + ", error: " + error);
         });
     });
 
@@ -166,12 +200,13 @@ describe("saveUser", () => {
             let afterSave = Date.now();
             id = doc.id;
             return doc.get().then(doc => {
+                expect(doc.id).toEqual(id);
                 if (doc.exists) {
                     let user = doc.data();
                     expect(user.email).toEqual(email);
                     expect(user.timestamp).toBeGreaterThanOrEqual(beforeSave);
                     expect(afterSave).toBeGreaterThanOrEqual(user.timestamp);
-                    expect(user.username).toEqual(username);                    
+                    expect(user.username).toEqual(username); 
                 } else {
                     fail("user data missing");
                 }
@@ -194,7 +229,7 @@ describe("getAllProjectsByUser", () => {
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + userId + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
         });
     });
 
@@ -224,6 +259,70 @@ describe("getAllProjectsByUser", () => {
     });
 });
 
+describe("getRecentProjectsByUser", () => {
+    let userId = "";
+    let time = Date.now();
+    let project = {
+        id: "1",
+        val: "x",
+        creationTime: time + 2
+    };
+    let project2 = {
+        id: "2",
+        val: "y",
+        creationTime: time + 1
+    };
+    let project3 = {
+        id: "3",
+        val: "z",
+        creationTime: time
+    };
+
+    afterAll(() => {
+        return Firestore.deleteDocument("users", userId).then(() => {
+        }).catch(error => {
+            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
+        });
+    });
+
+    it("gets most recent user project", () => {
+        return Firestore.saveUser("test@gmail.com", "test").then(doc => {
+            userId = doc.id;
+            return Firestore.saveProjectToUser(userId, project).then(() => {
+                return Firestore.saveProjectToUser(userId, project2).then(() => {
+                    return Firestore.saveProjectToUser(userId, project3).then(() => {
+                        return Firestore.getRecentProjectsByUser(userId, 2).get().then(projects => {
+                            expect(projects.size).toEqual(2);
+                            expect(projects.docs[0].id).toEqual(project.id);
+                            expect(projects.docs[1].id).toEqual(project2.id);
+                            if (projects.docs[0].exists && projects.docs[1].exists) {
+                                let retrieved = projects.docs[0].data();
+                                let retrieved2 = projects.docs[1].data();
+                                expect(retrieved.id).toEqual(project.id);
+                                expect(retrieved.val).toEqual(project.val);
+                                expect(retrieved.id).toEqual(project.id);
+                                expect(retrieved.val).toEqual(project.val);
+                            } else {
+                                fail("project data missing");
+                            }
+                        }).catch(error => {
+                            fail("error retrieving projects: " + error);
+                        });
+                    }).catch(error => {
+                        fail("error saving project3: " + error);
+                    });
+                }).catch(error => {
+                    fail("error saving project2: " + error);
+                });
+            }).catch(error => {
+                fail("error saving project: " + error);
+            });
+        }).catch(error => {
+            fail("error saving user: " + error);
+        });
+    });
+});
+
 describe("getProjectById", () => {
     let userId = "";
     let project = {
@@ -234,7 +333,7 @@ describe("getProjectById", () => {
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + userId + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
         });
     });
 
@@ -277,7 +376,7 @@ describe("getAllIdeasByProject", () => {
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + userId + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
         });
     });
 
@@ -288,6 +387,7 @@ describe("getAllIdeasByProject", () => {
                 return Firestore.saveIdeaToProject(userId, project.id, idea).then(() => {
                     return Firestore.getAllIdeasByProject(userId, project.id).get().then(ideas => {
                         expect(ideas.size).toEqual(1);
+                        expect(ideas.docs[0].id).toEqual(idea.id);
                         if (ideas.docs[0].exists) {
                             let retrieved = ideas.docs[0].data();
                             expect(retrieved.id).toEqual(idea.id);
@@ -324,7 +424,7 @@ describe("saveToDBWithDocID", () => {
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + userId + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
         });
     });
 
@@ -355,7 +455,7 @@ describe("saveToDBWithDocID", () => {
             fail("error saving user: " + error);
         });
     });
- 
+
     it("overrides document", () => {
         return Firestore.saveToDBWithDocID(
             Firestore.getAllProjectsByUser(userId),
@@ -394,7 +494,7 @@ describe("saveIdeaToProject", () => {
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + userId + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
         });
     });
 
@@ -405,6 +505,7 @@ describe("saveIdeaToProject", () => {
                 return Firestore.saveIdeaToProject(userId, project.id, idea).then(() => {
                     return Firestore.getAllIdeasByProject(userId, project.id).get().then(ideas => {
                         expect(ideas.size).toEqual(1);
+                        expect(ideas.docs[0].id).toEqual(idea.id);
                         if (ideas.docs[0].exists) {
                             let retrieved = ideas.docs[0].data();
                             expect(retrieved.id).toEqual(idea.id);
@@ -427,7 +528,7 @@ describe("saveIdeaToProject", () => {
     });
 });
 
-describe("saveProjectByUser", () => {
+describe("saveProjectToUser", () => {
     let userId = "";
     let project = {
         id: "1",
@@ -437,7 +538,7 @@ describe("saveProjectByUser", () => {
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + userId + ", causing error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
         });
     });
 
@@ -456,6 +557,44 @@ describe("saveProjectByUser", () => {
                     }
                 }).catch(error => {
                     fail("error retrieving projects: " + error);
+                });
+            }).catch(error => {
+                fail("error saving project: " + error);
+            });
+        }).catch(error => {
+            fail("error saving user: " + error);
+        });
+    });
+});
+
+describe("saveNewProject", () => {
+    let userId = "";
+    let project = {
+        id: "1",
+        val: "x"
+    };
+
+    afterAll(() => {
+        return Firestore.deleteDocument("users", userId).then(() => {
+        }).catch(error => {
+            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
+        });
+    });
+
+    it("saves project", () => {
+        return Firestore.saveUser("test@gmail.com", "test").then(doc => {
+            userId = doc.id;
+            return Firestore.saveNewProject(userId, project).then(projectRef => {
+                return projectRef.get().then(retrieved => {
+                    if (retrieved.exists) {
+                        let data = retrieved.data();
+                        expect(data.id).toEqual(project.id);
+                        expect(data.val).toEqual(project.val);
+                    } else {
+                        fail("project data missing");
+                    }
+                }).catch(error => {
+                    fail("error retrieving project: " + error);
                 });
             }).catch(error => {
                 fail("error saving project: " + error);

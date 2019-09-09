@@ -5,12 +5,7 @@ var db = app.firestore();
 class Firestore {
 
     static saveWithDocID(collection, docID, data) {
-        return db.collection(collection).doc(docID).set(data, { merge: true })
-            // .then(function() {
-            //     // console.log("written doc " + docID + " successfully to collection " + collection);
-            // }).catch(function (error) {
-            //     console.error("Error writing document: ", error);
-            // })
+        return db.collection(collection).doc(docID).set(data, { merge: true });
     };
 
     static deleteDocument(collection, docID) {
@@ -23,7 +18,11 @@ class Firestore {
 
     static getDocument(collection, docID) {
         return db.collection(collection).doc(docID).get();
-    };
+    }
+     
+    static getUserData(userID) {
+        return db.collection("users").doc(userID);
+    }
 
     static saveUser(email, username) {
         return db.collection("users").add({
@@ -34,7 +33,11 @@ class Firestore {
     }
 
     static getAllProjectsByUser(userID) {
-        return db.collection("users").doc(userID).collection("projects"); 
+        return db.collection("users").doc(userID).collection("project"); 
+    };
+
+    static getRecentProjectsByUser(userID, number) {
+        return db.collection("users").doc(userID).collection("project").orderBy('creationTime', 'desc').limit(number); 
     };
 
     static getProjectById(userID, projectID) {
@@ -64,6 +67,10 @@ class Firestore {
             project
         );
     };
+
+    static saveNewProject(userID, projectData) {
+        return db.collection("users").doc(userID).collection("project").add(projectData);
+    }
 };
 
 export default Firestore;

@@ -1,16 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { app } from "./Firebase";
+import firebase from "firebase";
+import Firestore from "./Firestore.js";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Icon } from "antd";
-// import * as Button from './components/button';
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import history from "./history";
 import Ionicon from "react-ionicons";
 import "./index.css";
-import P1 from "../assets/images/poster1.jpg";
-import P2 from "../assets/images/poster2.jpg";
-import P3 from "../assets/images/poster3.png";
-import P4 from "../assets/images/poster4.png";
+import NewProjectPopup from "./NewProject";
+import { useState } from "react";
+
 const useStyles = makeStyles(theme => ({
   button: {
     width: "100%",
@@ -63,52 +63,98 @@ const useStyles = makeStyles(theme => ({
     cursor: "pointer"
   }
 }));
-function handleFormReset(e) {
-  // Reset some form data
-}
 
 const Home = ({ history }) => {
-  // const classes = useStyles();
   const classes = useStyles();
-const IconButton = ({bcolor, icon, text, nav, tcolor}) => (
-  <Col>
-  <Button
-    type="primary"
-    size={"large"}
-    className={classes.button}
-    style={{ backgroundColor: bcolor, color: tcolor }}
-    onClick={() => history.push(nav)}
-  >
-    <Icon type={icon} theme="filled" />
-    {text}
-  </Button>
-</Col>
-)
+  const [showNewProject, setShowNewProject] = useState(false);
+  const [recentProjects, pushRecentProjects] = useState([]);
+  const RecentProject = ({ project }) => <ProjectTile x={project} />;
+  var storage = firebase.storage().ref();
 
-  const ProjectTile = ({image}) => (
-    <Col
-    className={classes.recentProject}
-    style={{
-      backgroundImage: `url(${image})`,
-      backgroundRepeat: "no-repeat",
-      backgroundPosition: "center",
-      backgroundSize: "cover",
-      padding: 0
-    }}
-  >
-    <Container fluid className={classes.projectOverlay}>
-      <Container style={{ position: "absolute", bottom: 5 }}>
-        <Row>
-          <h2 className={classes.title}>Project Title</h2>
-        </Row>
-        <Row>
-          <h3 className={classes.subtitle}>Project Subtitle</h3>
-        </Row>
-      </Container>
-    </Container>
-  </Col>
+  const addRecentProject = project => {
+    pushRecentProjects(oldArray => [...oldArray, project]);
+  };
+
+  useEffect(() => {
+    var uid = firebase.auth().currentUser.uid;
+    var recents = Firestore.getRecentProjectsByUser(uid);
+
+    recents
+      .get()
+      .then(function(doc) {
+        doc.forEach(x => {
+          var proj = x.data();
+          storage
+            .child("projectImage/" + x.data().image)
+            .getDownloadURL()
+            .then(function(url) {
+              proj.image = url;
+              addRecentProject(proj);
+              console.log(proj);
+            });
+        });
+      })
+      .catch(function(error) {
+        console.log("Error getting document:", error);
+      });
+  }, []);
+
+  function togglePopup() {
+    setShowNewProject(!showNewProject);
+  }
+  const IconButton = ({ bcolor, icon, text, nav, tcolor }) => (
+    <Col>
+      <Button
+        type="primary"
+        size={"large"}
+        className={classes.button}
+        style={{ backgroundColor: bcolor, color: tcolor }}
+        onClick={() => {
+          nav === "/" ? setShowNewProject(true) : history.push(nav);
+        }}
+      >
+        <Icon type={icon} theme="filled" />
+        {text}
+      </Button>
+    </Col>
   );
-  
+
+  const ProjectTile = ({ x }) => (
+    <Col
+      key={x.creationTime}
+      className={classes.recentProject}
+      style={{
+        backgroundImage: `url(${x.image})`,
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        padding: 0
+      }}
+    >
+      <Container fluid className={classes.projectOverlay}>
+        <Container style={{ position: "absolute", bottom: 5 }}>
+          <Row>
+            <h2 className={classes.title}>{x.title}</h2>
+          </Row>
+          <Row>
+            <h3 className={classes.subtitle}>{x.subtitle}</h3>
+          </Row>
+        </Container>
+      </Container>
+    </Col>
+  );
+
+  const ProjectPlaceholder = () => (
+    <Col
+      className={classes.recentProject}
+      style={{ backgroundColor: "#d6d6d6", padding: 0 }}
+    >
+      <Container fluid className={classes.projectOverlay}>
+        <Container style={{ position: "absolute", bottom: 5 }}></Container>
+      </Container>
+    </Col>
+  );
+
   return (
     <React.Fragment>
       <Navbar
@@ -174,6 +220,10 @@ const IconButton = ({bcolor, icon, text, nav, tcolor}) => (
         </Container>
       </Navbar>
       <Container fluid={true}>
+        {showNewProject ? (
+          //Popup will live here.
+          <NewProjectPopup togglePopup={togglePopup} />
+        ) : null}
         <Row>
           <Container
             fluid={true}
@@ -194,12 +244,31 @@ const IconButton = ({bcolor, icon, text, nav, tcolor}) => (
                   style={{ height: 220 }}
                 />
               </Col>
-              <Col sm={8} style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                <h2 style={{color: "#2F4858", fontFamily: "Montserrat", fontWeight: "700" }} >
+              <Col
+                sm={8}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center"
+                }}
+              >
+                <h2
+                  style={{
+                    color: "#2F4858",
+                    fontFamily: "Montserrat",
+                    fontWeight: "700"
+                  }}
+                >
                   Welcome back,{" "}
                   {app.auth().currentUser.displayName.split(" ")[0]}
                 </h2>
-                <h3 style={{color: "#FA8231",fontFamily: "Montserrat",fontWeight: "600"}}>
+                <h3
+                  style={{
+                    color: "#FA8231",
+                    fontFamily: "Montserrat",
+                    fontWeight: "600"
+                  }}
+                >
                   lets create a project!
                 </h3>
               </Col>
@@ -210,10 +279,34 @@ const IconButton = ({bcolor, icon, text, nav, tcolor}) => (
             fluid
           >
             <Row>
-              <IconButton bcolor="#FA8231" tcolor="#FFF" icon="plus-circle" nav="/" text="New Project" />
-              <IconButton bcolor="#FFF" tcolor="#FA8231" icon="reconciliation" nav="/feedback" text="Feedback" />
-              <IconButton bcolor="#FFF" tcolor="#FA8231" icon="project" nav="/projects" text="Your Projects" />
-              <IconButton bcolor="#FFF" tcolor="#FA8231" icon="question-circle" nav="/" text="Help" />
+              <IconButton
+                bcolor="#FA8231"
+                tcolor="#FFF"
+                icon="plus-circle"
+                nav="/"
+                text="New Project"
+              />
+              <IconButton
+                bcolor="#FFF"
+                tcolor="#FA8231"
+                icon="reconciliation"
+                nav="/feedback"
+                text="Feedback"
+              />
+              <IconButton
+                bcolor="#FFF"
+                tcolor="#FA8231"
+                icon="project"
+                nav="/projects"
+                text="Your Projects"
+              />
+              <IconButton
+                bcolor="#FFF"
+                tcolor="#FA8231"
+                icon="question-circle"
+                nav="/"
+                text="Help"
+              />
             </Row>
           </Container>
         </Row>
@@ -222,7 +315,13 @@ const IconButton = ({bcolor, icon, text, nav, tcolor}) => (
           fluid
         >
           <Row>
-            <h3 style={{color: "#2F4858",fontFamily: "Montserrat",fontWeight: "700"}}>
+            <h3
+              style={{
+                color: "#2F4858",
+                fontFamily: "Montserrat",
+                fontWeight: "700"
+              }}
+            >
               Recent Projects
             </h3>
           </Row>
@@ -230,10 +329,37 @@ const IconButton = ({bcolor, icon, text, nav, tcolor}) => (
 
         <Container style={{ marginTop: 40 }} fluid>
           <Row style={{ marginLeft: 80, marginRight: 80 }}>
-            <ProjectTile image={P1} />
-            <ProjectTile image={P2} />
-            <ProjectTile image={P3} />
-            <ProjectTile image={P4} />
+            {recentProjects.length == 0 ? (
+              <Container class="d-flex align-items-center">
+                <Row className="justify-content-md-center">
+                  <Image
+                    src={require("../assets/images/void.svg")}
+                    style={{ height: 180 }}
+                  />
+                </Row>
+                <Row className="justify-content-md-center">
+                  <h1
+                    className="imageTitle"
+                    style={{color: "#3A4A56"}}
+                  >
+                    No Recent Projects!
+                  </h1>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <h2
+                  className="imageSubtitle"
+                    style={{color: "#8fa5b5"}}
+                  >
+                    Click the 'New Project' button to create your first project!
+                  </h2>
+                </Row>
+              </Container>
+            ) : null}
+            {recentProjects
+              .sort((a, b) => a.creationTime - b.creationTime)
+              .map((project, index) => (
+                <RecentProject key={index} index={index} project={project} />
+              ))}
           </Row>
         </Container>
       </Container>
