@@ -237,11 +237,7 @@ class NewProjectPopup extends React.Component {
                     }}
                     type="close"
                     onClick={() => {
-<<<<<<< HEAD
                       //Remove image from dropdown
-=======
-                      //Could remove image from db too?
->>>>>>> d011f1ef64a4372e71cf0080563ade2a97afc987
                       this.localCache.removeItem("image");
                       this.localCache.removeItem("imageName");
                       this.setState({ image: "" });
