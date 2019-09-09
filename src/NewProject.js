@@ -49,36 +49,6 @@ class NewProjectPopup extends React.Component {
     if (imageName) {
       this.setState({imageName:imageName});
     }
-
-    
-
-    //Get from the database, not sure if needed.
-    /*
-    var uid = firebase.auth().currentUser.uid;
-    Firestore.getUserData(uid).get().then(function(doc){
-      if (doc) {
-        var fields = doc.data();
-        this.setState({projectTitle:fields.title});
-        this.setState({projectTopic:fields.subtitle});
-
-        var imageName =fields.image;
-        if (imageName) {
-          try {
-            var storage = firebase.storage();
-            storage.ref("projectImage/" + imageName).getDownloadURL()
-              .then(function(url) {
-                this.setState({image:url});
-                this.setState({imageName:imageName});
-              }.bind(this));      
-          } catch(e) {
-            //Bad image load
-            this.state.image = "";
-          }
-        }
-        
-      }
-    }.bind(this));
-    */
   }
 
   componentWillUnmount() {
@@ -89,37 +59,7 @@ class NewProjectPopup extends React.Component {
       this.localCache.removeItem("topic");
       this.localCache.removeItem("image");
       this.localCache.removeItem("imageName");
-    }
-
-
-    //Save To database variant, not sure if needed
-    //purge interim database if the project is created.
-    /*
-    var data = {
-      title:  "",
-      subtitle: "",
-      file: ""
-    }
-
-    //Debatable whether to push to firebase here
-    if (!this.isProjectCreated){
-      data.title=this.state.projectTitle;
-      data.subtitle = this.state.projectTopic;
-
-      if (this.state.imageName) {
-        data.file = this.state.imageName;
-      }
-    } 
-
-    //If the project is created the fields will default to empty.
-    var uid = firebase.auth().currentUser.uid;
-    Firestore.saveWithDocID("users",uid,{
-      "title": data.title,
-      "subtitle" : data.subtitle,
-      "image" : data.file
-    });
-    */
-  
+    }  
   }
   
   /**
