@@ -22,16 +22,7 @@ class Firestore {
     };
 
     static getDocument(collection, docID) {
-        return db.collection(collection).doc(docID).get()
-            //.then(function (doc) {
-            //    if (doc.exists) {
-            //        return doc.data();
-            //    } else {
-            //        console.log("No such document!");
-            //    }
-            //}).catch(function (error) {
-            //    console.log("Error getting document:", error);
-            //});
+        return db.collection(collection).doc(docID).get();
     };
 
     static saveUser(email, username) {
@@ -55,12 +46,7 @@ class Firestore {
     };
 
     static saveToDBWithDocID(collection, docID, data) {
-        return collection.doc(docID).set(data, {merge : true})
-        // .then(function () {
-        //     console.log("written doc " + docID + " successfully");
-        // }).catch(function (error) {
-        //     console.error("Error writing document: ", error);
-        // })
+        return collection.doc(docID).set(data, {merge : true});
     };
 
     static saveIdeaToProject(userID, projectID, idea) {
