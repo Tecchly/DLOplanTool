@@ -33,11 +33,11 @@ class Firestore {
     }
 
     static getAllProjectsByUser(userID) {
-        return db.collection("users").doc(userID).collection("project"); 
+        return db.collection("users").doc(userID).collection("projects"); 
     };
 
     static getRecentProjectsByUser(userID, number) {
-        return db.collection("users").doc(userID).collection("project").orderBy('creationTime', 'desc').limit(number); 
+        return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'desc').limit(number); 
     };
 
     static getProjectById(userID, projectID) {
@@ -69,7 +69,7 @@ class Firestore {
     };
 
     static saveNewProject(userID, projectData) {
-        return db.collection("users").doc(userID).collection("project").add(projectData);
+        return db.collection("users").doc(userID).collection("projects").add(projectData);
     }
 };
 
