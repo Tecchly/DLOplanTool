@@ -17,6 +17,10 @@ class Firestore {
         return db.collection(collection).get();
     };
 
+    static getUserData(userID) {
+        return db.collection("users").doc(userID);
+    }
+
     static getDocData(collection, docID) {
         var docRef = db.collection(collection).doc(docID);
         docRef.get().then(function (doc) {
@@ -31,7 +35,11 @@ class Firestore {
     };
 
     static getAllProjectsByUser(userID) {
-        return db.collection("users").doc(userID).collection("projects"); 
+        return db.collection("users").doc(userID).collection("project").orderBy('creationTime', 'asc'); 
+    };
+
+    static getRecentProjectsByUser(userID) {
+        return db.collection("users").doc(userID).collection("project").orderBy('creationTime', 'desc').limit(4); 
     };
 
     static getProjectById(userID, projectID) {
@@ -64,6 +72,11 @@ class Firestore {
             this.saveToDBWithDocID(projectCollection, project.id, project);
         });
     };
+
+    static saveNewProject(userID, projectData) {
+        return db.collection("users").doc(userID).collection("project").add(projectData);
+    }
+
 };
 
 export default Firestore;
