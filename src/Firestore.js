@@ -35,7 +35,7 @@ class Firestore {
     };
 
     static getAllProjectsByUser(userID) {
-        return db.collection("users").doc(userID).collection("projects"); 
+        return db.collection("users").doc(userID).collection("project").orderBy('creationTime', 'asc'); 
     };
 
     static getRecentProjectsByUser(userID) {
