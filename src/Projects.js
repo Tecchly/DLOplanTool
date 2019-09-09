@@ -1,13 +1,164 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { app } from "./Firebase";
+import firebase from "firebase";
+import Firestore from "./Firestore.js";
 import { makeStyles } from "@material-ui/core/styles";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+import withWidth, { isWidthUp } from "@material-ui/core/withWidth";
 import { Button, Icon } from "antd";
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import history from "./history";
 import Ionicon from "react-ionicons";
-import "./index.css";
 
-const Projects = ({ history }) => {
+import "./index.css";
+import { useState } from "react";
+
+const useStyles = makeStyles(theme => ({
+  button: {
+    width: "100%",
+    boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
+
+    border: "none",
+    fontFamily: "Montserrat",
+    borderRadius: 17,
+    height: 50,
+    fontWeight: "400"
+  },
+  root_test: {
+    height: "100%"
+  },
+  leftIcon: {
+    left: 0
+  },
+  recentProject: {
+    width: "100vh",
+    boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
+    backgroundColor: "#fff",
+    border: "none",
+    fontFamily: "Montserrat",
+    borderRadius: 17,
+    height: 400,
+    fontWeight: "400",
+    marginLeft: 10,
+    marginRight: 10
+  },
+  title: {
+    color: "#fff",
+    fontFamily: "Montserrat",
+    fontWeight: "700",
+    fontSize: 20
+  },
+  subtitle: {
+    color: "#fff",
+    fontFamily: "Montserrat",
+    fontWeight: "400",
+    fontSize: 17
+  },
+  rightIcon: {
+    marginLeft: theme.spacing(1)
+  },
+  iconSmall: {
+    fontSize: 20
+  },
+  projectOverlay: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0,0,0,0.7)",
+    borderRadius: 17,
+    cursor: "pointer"
+  }
+}));
+const Projects = (props) => {
+  const getGridListCols = () => {
+    if (isWidthUp("xl", props.width)) {
+      return 4;
+    }
+
+    if (isWidthUp("lg", props.width)) {
+      return 3;
+    }
+
+    if (isWidthUp("md", props.width)) {
+      return 2;
+    }
+
+    return 1;
+  };
+  const classes = useStyles();
+  const [allProjects, pushProjects] = useState([]);
+
+  const AllProjects = ({ project, size }) => (
+    <ProjectTile x={project} size={size} />
+  );
+  var storage = firebase.storage().ref();
+
+  const addProject = project => {
+    pushProjects(oldArray => [...oldArray, project]);
+  };
+
+  useEffect(() => {
+    var uid = firebase.auth().currentUser.uid;
+    var recents = Firestore.getAllProjectsByUser(uid);
+
+    recents
+      .get()
+      .then(function(doc) {
+        doc.forEach(x => {
+          var proj = x.data();
+          storage
+            .child("projectImage/" + x.data().image)
+            .getDownloadURL()
+            .then(function(url) {
+              proj.image = url;
+
+              addProject(proj);
+              console.log(proj);
+            });
+        });
+      })
+      .catch(function(error) {
+        console.log("Error getting document:", error);
+      });
+  }, []);
+
+  const ProjectTile = ({ x, size }) => (
+    <Col
+      xl
+      key={x.creationTime}
+      className={classes.recentProject}
+      style={{
+        backgroundImage: `url(${x.image})`,
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        padding: 0,
+        marginBottom: 10
+      }}
+    >
+      <Container fluid className={classes.projectOverlay}>
+        <Container style={{ position: "absolute", bottom: 5 }}>
+          <Row>
+            <h2 className={classes.title}>{x.title}</h2>
+          </Row>
+          <Row>
+            <h3 className={classes.subtitle}>{x.subtitle}</h3>
+          </Row>
+        </Container>
+      </Container>
+    </Col>
+  );
+
+  const ProjectPlaceholder = () => (
+    <Col
+      className={classes.recentProject}
+      style={{ backgroundColor: "#d6d6d6", padding: 0 }}
+    >
+      <Container fluid className={classes.projectOverlay}>
+        <Container style={{ position: "absolute", bottom: 5 }}></Container>
+      </Container>
+    </Col>
+  );
   return (
     <React.Fragment>
       <Navbar
@@ -65,7 +216,7 @@ const Projects = ({ history }) => {
                 onClick={() => {
                   localStorage.setItem("user", null);
                   app.auth().signOut();
-                  history.push("/login");
+                  props.history.push("/login");
                 }}
               />
             </Nav>
@@ -80,7 +231,7 @@ const Projects = ({ history }) => {
           <Row>
             <Icon
               type="arrow-left"
-              onClick={() => history.push("/")}
+              onClick={() => props.history.push("/")}
               style={{
                 fontSize: 30,
                 marginRight: 10,
@@ -99,50 +250,67 @@ const Projects = ({ history }) => {
             </h3>
           </Row>
         </Container>
-        <Container
-          class="d-flex align-items-center"
-          style={{ marginTop: "20vh" }}
-        >
-          <Row></Row>
-          <Row className="justify-content-md-center">
-            <Image
-              src={require("../assets/images/void.svg")}
-              style={{ height: 220 }}
-            />
-          </Row>
-          <Row className="justify-content-md-center">
-            <h1
-              style={{
-                textAlign: "center",
-                color: "#3A4A56",
-                fontFamily: "Montserrat",
-                fontWeight: "700",
-                textAlign: "center",
-                fontSize: 30
-              }}
-            >
-              No projects... yet!
-            </h1>
-          </Row>
-          <Row className="justify-content-md-center">
-            <h2
-              style={{
-                textAlign: "center",
-                color: "#8fa5b5",
-                fontFamily: "Montserrat",
-                fontWeight: "600",
-                textAlign: "center",
-                fontSize: 15
-              }}
-            >
-              Your new projects will be shown here
-            </h2>
+        <Container style={{ marginTop: 40 }} fluid>
+          <Row style={{ marginLeft: 80, marginRight: 80 }}>
+            {allProjects.length == 0 ? (
+              <Container style={{ marginTop: "20vh" }}>
+                <Row className="justify-content-md-center">
+                  <Image
+                    src={require("../assets/images/void.svg")}
+                    style={{ height: 180 }}
+                  />
+                </Row>
+                <Row className="justify-content-md-center">
+                  <h1 className="imageTitle" style={{ color: "#3A4A56" }}>
+                    No Projects!
+                  </h1>
+                </Row>
+                <Row className="justify-content-md-center">
+                  <h2 className="imageSubtitle" style={{ color: "#8fa5b5" }}>
+                    Click the 'New Project' button to create your first project!
+                  </h2>
+                </Row>
+              </Container>
+            ) : null}
+            <GridList cols={getGridListCols()}>
+              {allProjects
+                .sort((a, b) => a.creationTime - b.creationTime)
+                .map((project, index) => (
+                  <GridListTile
+                    key={project.creationTime}
+                    classes={
+                      getGridListCols() == 2
+                        ? {
+                            root: "rootsm",
+                            tile: "tile"
+                          }
+                        : getGridListCols() == 1
+                        ? {
+                            root: "rootxs",
+                            tile: "tile"
+                          }
+                        : getGridListCols() == 4
+                        ? { root: "rootlg", tile: "tile" }
+                        : {
+                            root: "root",
+                            tile: "tile"
+                          }
+                    }
+                  >
+                    <AllProjects
+                      key={index}
+                      index={index}
+                      project={project}
+                      size={allProjects.length}
+                    />
+                  </GridListTile>
+                ))}
+            </GridList>
           </Row>
         </Container>
-      
       </Container>
     </React.Fragment>
   );
 };
 
-export default Projects;
+export default withWidth()(Projects);

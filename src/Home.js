@@ -330,7 +330,7 @@ const Home = ({ history }) => {
         <Container style={{ marginTop: 40 }} fluid>
           <Row style={{ marginLeft: 80, marginRight: 80 }}>
             {recentProjects.length == 0 ? (
-              <Container class="d-flex align-items-center">
+              <Container >
                 <Row className="justify-content-md-center">
                   <Image
                     src={require("../assets/images/void.svg")}

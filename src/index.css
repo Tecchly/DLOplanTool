@@ -105,3 +105,26 @@ html, body, #app, #app>div, #root,#login {
 .imageSubtitle {
   font: 600 15px "Montserrat", sans-serif;
 }
+.rootxs {
+  height: 14% !important;
+  padding: 7px !important;
+}
+.rootsm {
+  height: 25% !important;
+  padding: 7px !important;
+}
+
+
+.root {
+  height: 33% !important;
+  padding: 7px !important;
+}
+
+.tile {
+  border-radius: 17px !important;
+  display: flex !important;
+}
+.rootlg {
+  height: 50% !important;
+  padding: 7px !important;
+}
