@@ -10,7 +10,7 @@ import Ionicon from "react-ionicons";
 import "./index.css";
 import NewProjectPopup from "./NewProject";
 import { useState } from "react";
-
+import ProjectLoader from "./ProjectLoader";
 const useStyles = makeStyles(theme => ({
   button: {
     width: "100%",
@@ -63,10 +63,12 @@ const useStyles = makeStyles(theme => ({
     cursor: "pointer"
   }
 }));
+const emptyImages = ["void.svg","empty.svg","empty_1.svg","empty_2.svg","empty_3.svg"]
 
 const Home = ({ history }) => {
   const classes = useStyles();
   const [showNewProject, setShowNewProject] = useState(false);
+  const [noProjects, setNoProjects] = useState(false);
   const [recentProjects, pushRecentProjects] = useState([]);
   const RecentProject = ({ project }) => <ProjectTile x={project} />;
   var storage = firebase.storage().ref();
@@ -82,6 +84,7 @@ const Home = ({ history }) => {
     recents
       .get()
       .then(function(doc) {
+        if (doc.empty) toggleNoProjects()
         doc.forEach(x => {
           var proj = x.data();
           storage
@@ -91,16 +94,24 @@ const Home = ({ history }) => {
               proj.image = url;
               addRecentProject(proj);
               console.log(proj);
+
             });
         });
       })
       .catch(function(error) {
         console.log("Error getting document:", error);
+        toggleNoProjects()
       });
+
   }, []);
 
   function togglePopup() {
     setShowNewProject(!showNewProject);
+  }
+
+  function toggleNoProjects() {
+    setNoProjects(!noProjects);
+
   }
   const IconButton = ({ bcolor, icon, text, nav, tcolor }) => (
     <Col>
@@ -140,17 +151,6 @@ const Home = ({ history }) => {
             <h3 className={classes.subtitle}>{x.subtitle}</h3>
           </Row>
         </Container>
-      </Container>
-    </Col>
-  );
-
-  const ProjectPlaceholder = () => (
-    <Col
-      className={classes.recentProject}
-      style={{ backgroundColor: "#d6d6d6", padding: 0 }}
-    >
-      <Container fluid className={classes.projectOverlay}>
-        <Container style={{ position: "absolute", bottom: 5 }}></Container>
       </Container>
     </Col>
   );
@@ -311,7 +311,7 @@ const Home = ({ history }) => {
           </Container>
         </Row>
         <Container
-          style={{ marginTop: 80, marginLeft: 100, marginRight: 100 }}
+          style={{ marginTop: 80, paddingLeft: 100, marginRight: 100 }}
           fluid
         >
           <Row>
@@ -329,11 +329,14 @@ const Home = ({ history }) => {
 
         <Container style={{ marginTop: 40 }} fluid>
           <Row style={{ marginLeft: 80, marginRight: 80 }}>
-            {recentProjects.length == 0 ? (
+            {recentProjects.length == 0 &&  !noProjects? 
+              <ProjectLoader />: null}
+              {
+              noProjects ? (
               <Container >
                 <Row className="justify-content-md-center">
                   <Image
-                    src={require("../assets/images/void.svg")}
+                    src={require("../assets/images/" + emptyImages[Math.floor(Math.random()*emptyImages.length)])}
                     style={{ height: 180 }}
                   />
                 </Row>
