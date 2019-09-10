@@ -62,15 +62,18 @@ class DragAndDrop extends React.Component {
                 maxWidth: "100%",
                 paddingBottom: "0.2em",
                 marginBottom: "1em",
-                border:"dashed grey 1px"
+                borderRadius:17,
+                backgroundColor: '#FA8231',
+                overflow: 'hidden',
             }}
             ref={this.dropRef}
           >
             {this.state.dragging &&
               <div 
                 style={{
-                  border: 'dashed grey 1px',
-                  backgroundColor: 'rgba(255,255,255,.8)',
+                  // border: 'dashed grey 1px',
+                  borderRadius:17,
+                  backgroundColor: '#FA8231',
                   position: 'absolute',
                   top: 0,
                   bottom: 0,
@@ -87,7 +90,7 @@ class DragAndDrop extends React.Component {
                     left: 0,
                     textAlign: 'center',
                     color: 'grey',
-                    fontSize: 36
+                    fontSize: 36,
                   }}
                 >
                   <div>drop here :)</div>
