@@ -69,7 +69,7 @@ const useStyles = makeStyles(theme => ({
     cursor: "pointer"
   }
 }));
-const Projects = (props) => {
+const Projects = props => {
   const getGridListCols = () => {
     if (isWidthUp("xl", props.width)) {
       return 4;
@@ -123,8 +123,7 @@ const Projects = (props) => {
   }, []);
 
   const ProjectTile = ({ x, size }) => (
-    <Col
-      xl
+    <div
       key={x.creationTime}
       className={classes.recentProject}
       style={{
@@ -146,7 +145,7 @@ const Projects = (props) => {
           </Row>
         </Container>
       </Container>
-    </Col>
+    </div>
   );
 
   const ProjectPlaceholder = () => (
@@ -280,21 +279,12 @@ const Projects = (props) => {
                     key={project.creationTime}
                     classes={
                       getGridListCols() == 2
-                        ? {
-                            root: "rootsm",
-                            tile: "tile"
-                          }
+                        ? { root: "rootsm", tile: "tile" }
                         : getGridListCols() == 1
-                        ? {
-                            root: "rootxs",
-                            tile: "tile"
-                          }
+                        ? { root: "rootxs", tile: "tile" }
                         : getGridListCols() == 4
                         ? { root: "rootlg", tile: "tile" }
-                        : {
-                            root: "root",
-                            tile: "tile"
-                          }
+                        : { root: "root", tile: "tile" }
                     }
                   >
                     <AllProjects
