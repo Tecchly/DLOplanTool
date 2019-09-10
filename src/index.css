@@ -148,7 +148,8 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
 .dragText {
   top: 34%;
   position: relative;
-  left: 27%;
+  left: 25%;
+  right: 25%;
   font: 600 15px "Montserrat", sans-serif;
   text-align: center;
   align-items: center;
