@@ -139,7 +139,7 @@ class NewProjectPopup extends React.Component {
     var data = {
       title:  this.state.projectTitle,
       subtitle: this.state.projectTopic,
-      image: "",
+      image: "marae.jpg", //Default image.
       creationTime: + new Date()
     }
 
