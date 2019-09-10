@@ -10,10 +10,10 @@ import { Button, Icon } from "antd";
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import history from "./history";
 import Ionicon from "react-ionicons";
-
+import ProjectLoader from "./ProjectLoader";
 import "./index.css";
 import { useState } from "react";
-
+const emptyImages = ["void.svg","empty.svg","empty_1.svg","empty_2.svg","empty_3.svg"]
 const useStyles = makeStyles(theme => ({
   button: {
     width: "100%",
@@ -87,6 +87,7 @@ const Projects = props => {
   };
   const classes = useStyles();
   const [allProjects, pushProjects] = useState([]);
+  const [noProjects, setNoProjects] = useState(false);
 
   const AllProjects = ({ project, size }) => (
     <ProjectTile x={project} size={size} />
@@ -104,6 +105,7 @@ const Projects = props => {
     recents
       .get()
       .then(function(doc) {
+        if (doc.empty) toggleNoProjects()
         doc.forEach(x => {
           var proj = x.data();
           storage
@@ -121,7 +123,10 @@ const Projects = props => {
         console.log("Error getting document:", error);
       });
   }, []);
+  function toggleNoProjects() {
+    setNoProjects(!noProjects);
 
+  }
   const ProjectTile = ({ x, size }) => (
     <div
       key={x.creationTime}
@@ -224,7 +229,7 @@ const Projects = props => {
       </Navbar>
       <Container fluid={true}>
         <Container
-          style={{ marginTop: 40, marginLeft: 100, marginRight: 100 }}
+          style={{ marginTop: 40, paddingLeft: 100, marginRight: 100 }}
           fluid
         >
           <Row>
@@ -251,11 +256,14 @@ const Projects = props => {
         </Container>
         <Container style={{ marginTop: 40 }} fluid>
           <Row style={{ marginLeft: 80, marginRight: 80 }}>
-            {allProjects.length == 0 ? (
+          {allProjects.length == 0 &&  !noProjects? 
+              <ProjectLoader />: null}
+              {
+              noProjects ? (
               <Container style={{ marginTop: "20vh" }}>
                 <Row className="justify-content-md-center">
                   <Image
-                    src={require("../assets/images/void.svg")}
+                    src={require("../assets/images/" + emptyImages[Math.floor(Math.random()*emptyImages.length)])}
                     style={{ height: 180 }}
                   />
                 </Row>
