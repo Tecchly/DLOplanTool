@@ -134,7 +134,7 @@ class NewProjectPopup extends React.Component {
       subtitle: this.state.projectTopic,
       image: "marae.jpg", //Default image.
       creationTime: + new Date()
-    }
+    };
 
     if (this.state.imageName) {
       data.image = this.state.imageName;
