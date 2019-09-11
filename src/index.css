@@ -77,19 +77,7 @@ html, body, #app, #app>div, #root,#login {
 -moz-box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
 box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
 }
-/* @media only screen and (min-height: 1200px) {
-  .popup .inner {  
-    height: 40%;
-    top: 20%;
-  }
-} */
 
-/* @media only screen and (min-height: 1000px) {
-  .popup .inner {  
-    height: 60%;
-    top: 20%;
-  }
-} */
   .dropDiv {
     margin-top: 5% !important;
   }
@@ -139,12 +127,7 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
     margin-bottom: 0.7em !important;
   }
 }
-/* @media only screen and (min-height: 800px) {
-  .popup .inner {  
-    height: 70%;
-    top: 20%;
-  }
-} */
+
 .popup .inner::-webkit-scrollbar {
   width: 0px;
   background: transparent; /* Chrome/Safari/Webkit */
