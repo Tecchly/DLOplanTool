@@ -90,7 +90,15 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
     top: 20%;
   }
 } */
+  .dropDiv {
+    margin-top: 5% !important;
+  }
 
+  @media only screen and (min-width: 1800px) {
+    .popup .inner {  
+      width: 25% !important;
+    }
+  }
 @media only screen and (min-height: 1200px) {
   .popup .inner {  
     height: 50%;
