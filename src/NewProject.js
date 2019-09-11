@@ -22,7 +22,7 @@ class NewProjectPopup extends React.Component {
   state = {
     projectTitle: "",
     projectTopic: "",
-    imageName: "", //The name of the image, whether from DB or upload
+    imageName: "", //The ID of the image, whether from DB or upload
     image: "", //represents the source information about the image.
     file: "" //the uploaded file for the image.
   };
@@ -71,10 +71,11 @@ class NewProjectPopup extends React.Component {
 
     var file = fileList[0];
     if (file) {
-      this.setState({ file: file });
-      this.setState({ imageName: file.name });
+      this.setState({file:file});
 
-      this.localCache.setItem("imageName", file.name);
+      var uniqueName = this.uuidv4();      
+      this.setState({imageName:uniqueName});
+      this.localCache.setItem("imageName", uniqueName);
 
       var reader = new FileReader();
       reader.onload = function(e) {
@@ -98,8 +99,8 @@ class NewProjectPopup extends React.Component {
       return;
     }
 
-    //Uploading image
-    var storageRef = firebase.storage().ref("projectImage/" + file.name);
+    //Uploading image    
+    var storageRef = firebase.storage().ref("projectImage/" + this.state.imageName);          
     var uploadTask = storageRef.put(file);
 
     uploadTask.on(
@@ -131,8 +132,8 @@ class NewProjectPopup extends React.Component {
     var data = {
       title: this.state.projectTitle,
       subtitle: this.state.projectTopic,
-      image: "",
-      creationTime: +new Date()
+      image: "marae.jpg", //Default image.
+      creationTime: + new Date()
     };
 
     if (this.state.imageName) {
@@ -156,6 +157,14 @@ class NewProjectPopup extends React.Component {
       }
     });
   }
+
+  //Generate a uuid
+  uuidv4() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    )
+  }
+  
 
   render() {
     var togglePopup = this.props.togglePopup;
@@ -225,7 +234,7 @@ class NewProjectPopup extends React.Component {
                     }}
                     icon="md-close"
                     onClick={() => {
-                      //Could remove image from db too?
+                      //Remove image from dropdown
                       this.localCache.removeItem("image");
                       this.localCache.removeItem("imageName");
                       this.setState({ image: "" });
