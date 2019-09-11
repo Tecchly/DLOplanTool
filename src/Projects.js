@@ -191,12 +191,15 @@ const Projects = props => {
             <Navbar.Brand
               style={{
                 textAlign: "center",
-                color: "#FA8231",
+                color: "#FFF",
                 fontFamily: "Montserrat",
                 fontWeight: "600",
-                fontSize: 22
+                fontSize: 22,
+                cursor: 'pointer'
               }}
-              href="#"
+              onClick={() => {
+                history.push("/");
+              }}
             >
               <Image
                 src={require("../assets/images/orange_logop.png")}
