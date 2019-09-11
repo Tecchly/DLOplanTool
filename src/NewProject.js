@@ -4,9 +4,9 @@ import "./index.css";
 import { Button, Icon } from "antd";
 import DragAndDrop from "./DragAndDrop.js";
 import { withRouter, Redirect } from "react-router";
-import firebase from "firebase"
-import Firestore from "./Firestore.js"
-
+import firebase from "firebase";
+import Firestore from "./Firestore.js";
+import Ionicon from "react-ionicons";
 class NewProjectPopup extends React.Component {
   constructor(props) {
     super(props);
@@ -24,110 +24,103 @@ class NewProjectPopup extends React.Component {
     projectTopic: "",
     imageName: "", //The name of the image, whether from DB or upload
     image: "", //represents the source information about the image.
-    file:"" //the uploaded file for the image.
+    file: "" //the uploaded file for the image.
   };
 
   componentDidMount() {
-
     //Local storage variant
     var title = this.localCache.getItem("title");
     if (title) {
-      this.setState({projectTitle:title});
+      this.setState({ projectTitle: title });
     }
 
     var topic = this.localCache.getItem("topic");
     if (topic) {
-      this.setState({projectTopic:topic});
+      this.setState({ projectTopic: topic });
     }
 
     var image = this.localCache.getItem("image");
     if (image) {
-      this.setState({image:image});
+      this.setState({ image: image });
     }
 
     var imageName = this.localCache.getItem("imageName");
     if (imageName) {
-      this.setState({imageName:imageName});
+      this.setState({ imageName: imageName });
     }
   }
 
   componentWillUnmount() {
-
     //If a project is made, the local cache empties
     if (this.isProjectCreated) {
       this.localCache.removeItem("title");
       this.localCache.removeItem("topic");
       this.localCache.removeItem("image");
       this.localCache.removeItem("imageName");
-    }  
+    }
   }
-  
+
   /**
-   * Function to handle when a file is dropped into the drag and drop area. 
+   * Function to handle when a file is dropped into the drag and drop area.
    */
   handleDrop = fileList => {
     //If what was dragged in was not a image.
     if (!fileList[0] || fileList[0]["type"].split("/")[0] !== "image") {
       return;
-    }   
+    }
 
     var file = fileList[0];
     if (file) {
-      this.setState({file:file});
-      this.setState({imageName:file.name});
+      this.setState({ file: file });
+      this.setState({ imageName: file.name });
 
       this.localCache.setItem("imageName", file.name);
 
       var reader = new FileReader();
-      reader.onload = function(e) {      
+      reader.onload = function(e) {
         try {
           this.localCache.setItem("image", e.target.result);
-        } catch (e){
+        } catch (e) {
           //Image exceeds local storage.
         }
-        this.setState({ image: e.target.result});
+        this.setState({ image: e.target.result });
       }.bind(this);
       reader.readAsDataURL(file);
-    } 
-  }
+    }
+  };
 
-/**
- * Uploads an image to firestore
- * @param {File} file: File to be uploaded to firebase. 
- */
- uploadImage(file) {
+  /**
+   * Uploads an image to firestore
+   * @param {File} file: File to be uploaded to firebase.
+   */
+  uploadImage(file) {
     if (!file) {
       return;
     }
 
-    //Uploading image    
-    var storageRef = firebase.storage().ref("projectImage/" + file.name);          
+    //Uploading image
+    var storageRef = firebase.storage().ref("projectImage/" + file.name);
     var uploadTask = storageRef.put(file);
 
-    uploadTask.on('state_changed', 
-          function error(err){
-
-          },
-          function complete(){
-            console.log("successful upload");
-          }
-      );
+    uploadTask.on(
+      "state_changed",
+      function error(err) {},
+      function complete() {
+        console.log("successful upload");
+      }
+    );
   }
 
-
   handleTitleChange(event) {
-    this.setState({ projectTitle: event.target.value },function()
-    {
+    this.setState({ projectTitle: event.target.value }, function() {
       //Local cache variant
-      this.localCache.setItem("title",this.state.projectTitle);
+      this.localCache.setItem("title", this.state.projectTitle);
     });
-    
   }
 
   handleTopicChange(event) {
-    this.setState({ projectTopic: event.target.value }, function()
-    {
-      this.localCache.setItem("topic",this.state.projectTopic);
+    this.setState({ projectTopic: event.target.value }, function() {
+      this.localCache.setItem("topic", this.state.projectTopic);
     });
   }
 
@@ -136,21 +129,21 @@ class NewProjectPopup extends React.Component {
     this.isProjectCreated = true;
 
     var data = {
-      title:  this.state.projectTitle,
+      title: this.state.projectTitle,
       subtitle: this.state.projectTopic,
       image: "",
-      creationTime: + new Date()
-    }
+      creationTime: +new Date()
+    };
 
     if (this.state.imageName) {
       data.image = this.state.imageName;
     }
 
     var uid = firebase.auth().currentUser.uid;
-    Firestore.saveNewProject(uid,data);
-    if (this.state.file){
+    Firestore.saveNewProject(uid, data);
+    if (this.state.file) {
       this.uploadImage(this.state.file);
-    } 
+    }
 
     const { history } = this.props;
     history.push({
@@ -159,9 +152,9 @@ class NewProjectPopup extends React.Component {
         title: this.state.projectTitle,
         topic: this.state.projectTopic,
         image: this.state.image,
-        creationTime: + new Date()
+        creationTime: +new Date()
       }
-    });    
+    });
   }
 
   render() {
@@ -171,31 +164,33 @@ class NewProjectPopup extends React.Component {
       <React.Fragment>
         <div className="popup">
           <div className="inner">
-            <Icon
+            <Ionicon
               style={{
                 position: "absolute",
                 right: "15px",
-                top: "15px"
+                top: "15px",
+                cursor: 'pointer',
               }}
-              type="close"
+              icon="md-close"
               onClick={() => togglePopup()}
             />
-            <h1>New Project</h1>
+
+            <h1 className="newProjectTitle">New Project</h1>
             <div
               style={{
-                marginLeft: "35%",
-                marginRight: "35%"
+                marginLeft: "25%",
+                marginRight: "25%"
               }}
             >
               <form>
-                <div>Project Title</div>
+                <div className="inputTitle">Project Title</div>
                 <input
                   type="text"
                   className="textInput"
                   value={this.state.projectTitle}
                   onChange={this.handleTitleChange}
                 />
-                <div>Project Topic</div>
+                <div className="inputTitle">Project Topic</div>
                 <input
                   type="text"
                   className="textInput"
@@ -205,6 +200,7 @@ class NewProjectPopup extends React.Component {
               </form>
             </div>
             <div
+            className='dropDiv'
               style={{
                 marginTop: "10%",
                 marginLeft: "25%",
@@ -213,44 +209,52 @@ class NewProjectPopup extends React.Component {
               }}
             >
               <div
-              style={{
-                position: "absolute",
-                height: "30%",
-                width: "50%",
-              }}
-              >              
+                style={{
+                  position: "absolute",
+                  height: "30%",
+                  width: "50%"
+                }}
+              >
                 <DragAndDrop handleDrop={this.handleDrop}>
-                  <Icon
+                  <Ionicon
                     style={{
                       position: "absolute",
-                      right: "5px",
-                      top: "5px"
+                      right: "15px",
+                      top: "15px",
+                      cursor: 'pointer',
                     }}
-                    type="close"
+                    icon="md-close"
                     onClick={() => {
                       //Could remove image from db too?
                       this.localCache.removeItem("image");
                       this.localCache.removeItem("imageName");
                       this.setState({ image: "" });
-                      this.setState({file:""});
-                      this.setState({imageName:""});
+                      this.setState({ file: "" });
+                      this.setState({ imageName: "" });
                     }}
                   />
-                  <div className = "draggedImage">
-                    {this.state.image === "" && <b>Drag Image Here</b>}
-                    <img src = {this.state.image}/>
+                  <div className="draggedImage">
+                    {this.state.image === "" && (
+                      <b className="dragText" style={{ color: "#fff" }}>
+                        Drag Image Here
+                      </b>
+                    )}
+                    <img src={this.state.image} />
                   </div>
                   <div
                     style={{
                       position: "absolute",
-                      height: "3em",
+                      height: "4.5em",
                       width: "101%",
                       textAlign: "left",
                       backgroundColor: "#2C3539",
                       color: "#fff",
                       bottom: -10,
                       left: "-0.5%",
-                      paddingLeft: "0.5em"
+                      paddingLeft: 12,
+                      paddingTop: 3,
+                      borderBottomLeftRadius: 17,
+                      borderBottomRightRadius: 17
                     }}
                   >
                     <b>{this.state.projectTitle}</b>
@@ -263,11 +267,16 @@ class NewProjectPopup extends React.Component {
                   style={{
                     backgroundColor: "#FA8231",
                     color: "#fff",
-                    marginTop: "5%"
+                    marginTop: "5%",
+                    borderRadius: 11,
+                    width: "50%",
+                    boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
+                    border: "none",
+                    fontFamily: "Montserrat",
+                    height: 45,
+                    fontWeight: "600"
                   }}
-                  onClick={() => 
-                    this.makeProject()
-                  }
+                  onClick={() => this.makeProject()}
                   disabled={
                     this.state.projectTitle.length == 0 ||
                     this.state.projectTopic.length == 0
