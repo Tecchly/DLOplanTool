@@ -200,6 +200,7 @@ class NewProjectPopup extends React.Component {
               </form>
             </div>
             <div
+            className='dropDiv'
               style={{
                 marginTop: "10%",
                 marginLeft: "25%",

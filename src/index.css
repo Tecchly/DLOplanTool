@@ -62,9 +62,9 @@ html, body, #app, #app>div, #root,#login {
   position: absolute;
   left: 30%;
   width: 50%;
-  height: 60%;
+  height: 75%;
   right: 30%;
-  top: 18%;
+  top: 10%;
   /* bottom: 30%; */
   margin: auto;
   border-radius: 20px;
@@ -77,6 +77,66 @@ html, body, #app, #app>div, #root,#login {
 -moz-box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
 box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
 }
+/* @media only screen and (min-height: 1200px) {
+  .popup .inner {  
+    height: 40%;
+    top: 20%;
+  }
+} */
+
+/* @media only screen and (min-height: 1000px) {
+  .popup .inner {  
+    height: 60%;
+    top: 20%;
+  }
+} */
+
+@media only screen and (min-height: 1200px) {
+  .popup .inner {  
+    height: 50%;
+    top: 20%;
+  }
+}
+@media only screen and (max-height: 1200px) {
+  .popup .inner {  
+    height: 60%;
+    top: 20%;
+  }
+}
+
+@media only screen and (max-height: 1000px) {
+  .popup .inner {  
+    height: 70% !important;
+    top: 20%;
+  }
+}
+
+@media only screen and (max-height: 850px) {
+  .popup .inner {  
+    height: 80% !important;
+    top: 10%;
+  }
+
+  .dropDiv {
+    margin-top: 5% !important;
+  }
+}
+@media only screen and (max-height: 750px) {
+  .popup .inner {  
+    height: 85% !important;
+    top: 8%;
+  }
+  .popup h1 {
+
+    margin-bottom: 0.7em !important;
+  }
+}
+/* @media only screen and (min-height: 800px) {
+  .popup .inner {  
+    height: 70%;
+    top: 20%;
+  }
+} */
 .popup .inner::-webkit-scrollbar {
   width: 0px;
   background: transparent; /* Chrome/Safari/Webkit */
