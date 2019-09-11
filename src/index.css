@@ -196,6 +196,7 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
   padding: 7px !important;
 }
 
+
 .dragText {
   top: 34%;
   position: relative;
@@ -217,3 +218,4 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
   font: 600 15px "Montserrat", sans-serif;
 
 }
+
