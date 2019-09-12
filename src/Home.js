@@ -5,10 +5,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button, Icon } from "antd";
 // import * as Button from './components/button';
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
+import IdeaNode from "./IdeaNode.js"
 import history from "./history";
 import Ionicon from "react-ionicons";
 import "./index.css";
-import NewProjectPopup from "./NewProject";
+import useEffect from "react";
 import P1 from "../assets/images/poster1.jpg";
 import P2 from "../assets/images/poster2.jpg";
 import P3 from "../assets/images/poster3.png";
@@ -92,6 +93,7 @@ const Home = ({ history }) => {
   // const classes = useStyles();
   const classes = useStyles();
   var mainIdeas = [];
+  var ideaCenter = null;
   var startPos = null;
   var testStuff = null;      
 
@@ -237,31 +239,38 @@ const Home = ({ history }) => {
     ondragenter: function (event) {
       var draggableElement = event.relatedTarget;
       var dropzoneElement = event.target;
-      console.log(dropzoneElement.id);
+      
+      //Main ideas
+      if (dropzoneElement.id === "main" && mainIdeas.length < 6) {
+        var dropRect  = interact.getElementRect(dropzoneElement);
+        var dropPoint = {
+          x: dropRect.left + dropRect.width / 2,
+          y: dropRect.top  + dropRect.height
+        };
 
-      var dropRect  = interact.getElementRect(dropzoneElement);
-      var dropPoint = {
-        x: dropRect.left + dropRect.width / 2,
-        y: dropRect.top  + dropRect.height
-      };
+        event.draggable.draggable({
+          snap: {
+            targets: [dropPoint],
+          }
+        });
+      }
 
-      event.draggable.draggable({
-        snap: {
-          targets: [dropPoint],
-        }
-      });
     },
 
     ondragleave: function(event) {
       //Not needed yet.
       //@@TODO state when dragged out of outer ring and not in any rings, should delete.  
     },  
+
     ondrop: function (event) {
       //Get the dropped item and set a flag to what ring its in.
-      event.relatedTarget.setAttribute("parentLayer", event.target.id);
-      console.log(event.target.id);      
+      event.relatedTarget.setAttribute("parentLayer", event.target.id); 
 
-      if (event.target.id === "main") {
+      //Cursed
+      event.relatedTarget.setAttribute("class", "setMode");
+      interact(".setMode").unset(); 
+
+      if (event.target.id === "main" && mainIdeas.length < 6) {
         mainIdeas.push(event.relatedTarget);
 
         //change position of all so its nicely distributed
@@ -270,11 +279,15 @@ const Home = ({ history }) => {
         var dropRect = interact.getElementRect(event.target);
         var radius = dropRect.width / 2;
 
+        ideaCenter = {
+          x: dropRect.left + radius,
+          y:dropRect.top - radius
+        }
+
         var center = {
           x: parseFloat(event.relatedTarget.getAttribute('data-x')) || 0, 
           y: parseFloat(event.relatedTarget.getAttribute('data-y')) - radius || 0
         }
-
         //Each node has a reference of its transformation to the centre
         event.relatedTarget.setAttribute("centerX",center.x); 
         event.relatedTarget.setAttribute("centerY",center.y);
@@ -285,7 +298,6 @@ const Home = ({ history }) => {
           var newX = radius * Math.sin (angle * ideaIndex) + parseFloat(element.getAttribute("centerX"));
           var newY = radius * Math.cos (angle * ideaIndex) + parseFloat(element.getAttribute("centerY"));
 
-          console.log(newX);
           ideaIndex++;
           element.setAttribute('data-x', newX);
           element.setAttribute('data-y', newY);        
@@ -295,7 +307,6 @@ const Home = ({ history }) => {
             'translate(' + newX + 'px, ' + newY + 'px)'
         });
       }
-
       console.log(event.relatedTarget.id
           + ' was dropped into '
           + event.target.id)
@@ -305,6 +316,18 @@ const Home = ({ history }) => {
       event.target.classList.add('drop-activated');
   }.bind(this));
 
+  const distributeNodes = ()=> {
+    if (mainIdeas.length === 0) {
+      return;
+    }
+  }
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      distributeNodes();
+    }
+    window.addEventListener('resize', handleResize);
+  });
 
   const ProjectTile = ({ image }) => (
     <Col
@@ -394,16 +417,17 @@ const Home = ({ history }) => {
           </Col>
         </Container>
       </Navbar>
-      <div style={{textAlign: "center", height: '100%', width: '100%'}}>
+      <div style={{textAlign: "center", height: '750px', maxWidth: '1200px', minWidth: '1200px', overflow:'auto',overlowX:'auto',marginLeft:'100px',marginTop:"100px"}}>
         <svg height = '100%' width = '100%'>
-            <circle className="droppable" stroke="#000" r="45%" id="tertiary" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
-            <circle className="droppable" stroke="#000" r="30%" id="secondary" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
+            <circle className="droppable" stroke="#000" r="35%" id="tertiary" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
+            <circle className="droppable" stroke="#000" r="25%" id="secondary" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
             <circle className="droppable" stroke="#000" r="15%" id="main" cy="50%" cx="50%" strokeWidth="1.5" fill="#fff"/>
             {/* <clipPath id="myCircle">
                 <circle cx="50%" cy="50%" r="125" fill="#FFFFFF" />
             </clipPath> */}
             {/* <image y="40%" x="40%" width="20%" xlinkHref={P1} clip-path="url(#myCircle)" /> */}
-            //@@TODO, might need to remap these to screen side 
+            
+            
             <circle className="mode" stroke="#000" r="2%" id="video" cy="90%" cx="3%" strokeWidth="1.5" fill="red" clonable = "true"/>
             <circle className="mode" stroke="#000" r="2%" id="sound" cy="90%" cx="8%" strokeWidth="1.5" fill="pink" clonable = "true"/>
             <circle className="mode" stroke="#000" r="2%" id="image" cy="90%" cx="13%" strokeWidth="1.5" fill="purple" clonable = "true"/>
