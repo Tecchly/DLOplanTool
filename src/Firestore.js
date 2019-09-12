@@ -1,5 +1,6 @@
 import { app } from "./Firebase";
 import firestore from "firebase/firestore";
+import firebase from "firebase";
 
 var db = app.firestore();
 class Firestore {
@@ -74,7 +75,16 @@ class Firestore {
     };
 
     static saveNewProject(userID, projectData) {
+        this.updateUserDetails();
         return db.collection("users").doc(userID).collection("projects").add(projectData);
+    }
+
+    static updateUserDetails(){
+        var user = firebase.auth().currentUser;
+        return db.collection('users').doc(user.uid).set({
+            Name:user.displayName, 
+            email:user.email, 
+            uid:user.uid}, {merge: true});
     }
 
 };
