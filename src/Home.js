@@ -15,175 +15,6 @@ import P3 from "../assets/images/poster3.png";
 import P4 from "../assets/images/poster4.png";
 import { useState } from "react";
 
-    var startPos = null;
-    var testStuff = null;
-
-    interact('.mode')
-        .draggable({
-            // enable inertial throwing
-            // inertia: false,
-            // // keep the element within the area of it's parent
-            // modifiers: [
-            //     interact.modifiers.restrictRect({
-            //     restriction: 'parent',
-            //     endOnly: true
-            //     }),
-            //     interact.modifiers.snap({
-            //         // snap to the corners of a grid
-            //         targets: [(x, y) => {
-            //             return {
-            //                 x: 500,
-            //                 y,
-            //             };
-            //           }]
-            //     })
-            snap: {
-                targets: [startPos],
-                range: Infinity,
-                relativePoints: [ { x: 0.5, y: 0.5 } ],
-                endOnly: true
-            },
-            onstart: function (event) {
-                var original = event.target;
-                
-                if (original.getAttribute("clonable")==="true") {
-                  var clone = event.target.cloneNode(true);
-                  var x = clone.offsetLeft;
-                  var y = clone.offsetTop;
-                  clone.setAttribute('clonable',true);
-                  original.setAttribute('clonable', false);
-                  
-                  clone.style.position = "absolute";
-                  clone.style.left = original.offsetLeft+"px";
-                  clone.style.top = original.offsetTop+"px";
-                  original.parentElement.appendChild(clone);
-                }
-
-                var rect = interact.getElementRect(event.target);
-                var el   = document.getElementById(event.target.id); // or other selector like querySelector()
-                var rect2 = el.getBoundingClientRect(); // get the bounding rectangle
-                var width = rect2.width;
-                var height = rect2.height;
-                // console.log( parseInt(width ));
-                // console.log( parseInt(height ));
-
-                // console.log( parseInt(width / 2 ));
-                // console.log( parseInt(height / 2 ));
-
-                // console.log( parseInt(rect2.left ));
-                // console.log( parseInt(rect2.top ));
-                // var cx = rect2
-                // var cx = rect2.left + rect2.width/2, cy = rect2.top + rect2.height/2;
-                // console.log( parseInt(cx ));
-                // console.log( parseInt(cy ));
-
-                // var radius = width / 2;
-
-                // x2 + y2 = radius
-                startPos = {
-                    x: rect.left + rect.width  / 2,
-                    y: rect.top  + rect.height / 2
-                    // x: cx,
-                    // y: cy
-                }
-                testStuff = {
-                    x: rect2.left + (width),
-                    y: rect2.top + height
-                }
-                var dropzoneElement  = event.target,
-                    dropRect         = interact.getElementRect(dropzoneElement),
-                    dropCenter       = {
-                    x: dropRect.left + dropRect.width  / 2,
-                    y: dropRect.top  + dropRect.height / 2
-                };
-                // event.draggable.draggable({
-                //     snap: {
-                //       targets: [dropCenter]
-                //     }
-                // });
-                // dropzoneElement.classList.add('can--catch');
-                // draggableElement.classList.add('drop--me');
-                console.log(dropCenter);
-                // console.log(testStuff);
-                // console.log("Y:", y);
-        
-                event.interactable.draggable({
-                snap: {
-                    targets: [dropCenter]
-                }
-                });
-            },
-            // call this function on every dragmove event
-            onmove: function (event) {
-                console.log("Moving!" + event.target.id);
-                var target = event.target,
-                    // keep the dragged position in the data-x/data-y attributes
-                    x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-                    y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-        
-                // translate the element
-                target.style.webkitTransform =
-                target.style.transform =
-                'translate(' + x + 'px, ' + y + 'px)';
-        
-                // update the posiion attributes
-                target.setAttribute('data-x', x);
-                target.setAttribute('data-y', y);
-                target.classList.add('getting--dragged');
-            },
-            onend: function (event) {
-                console.log("Stopped!");
-                
-                event.interactable.draggable({
-                    snap: {
-                        targets: [startPos]
-                    }
-                });
-                event.target.classList.remove('getting--dragged')
-                // console.log(interact.getElementRect(event.target));
-            },
-            // ondrop:
-            // ],
-            // enable autoScroll
-            // autoScroll: true,
-
-            // call this function on every dragmove event
-            // onmove: dragMoveListener
-        });
-
-        interact(".droppable").dropzone({
-          accept:".mode",
-          overlap: 0.1,
-          ondragenter: function (event) {
-            var draggableElement = event.relatedTarget,
-            dropzoneElement  = event.target,
-            dropRect         = interact.getElementRect(dropzoneElement),
-            dropPoint       = {
-              //@@TODO Calculate the drop point based on how many ideas.
-              x: dropRect.left,
-              y: dropRect.top  + dropRect.height / 2
-            };
-
-            event.draggable.draggable({
-              snap: {
-                targets: [dropPoint],
-              }
-            });
-          },
-          ondrop: function (event) {
-                        
-            console.log(event.relatedTarget.id
-                + ' was dropped into '
-                + event.target.id)
-            }
-          })
-          .on('dropactivate', function (event) {
-            console.log("activated");
-            event.target.classList.add('drop-activated');
-        });
-        
-
-
 function dragMoveListener (event) {
   var target = event.target
   // keep the dragged position in the data-x/data-y attributes
@@ -260,7 +91,220 @@ function handleFormReset(e) {
 const Home = ({ history }) => {
   // const classes = useStyles();
   const classes = useStyles();
-  const [mainIdeas, setMainIdeas] = useState(0);
+  var mainIdeas = [];
+  var startPos = null;
+  var testStuff = null;      
+
+  interact('.mode')
+  .draggable({
+      // enable inertial throwing
+      // inertia: false,
+      // // keep the element within the area of it's parent
+      // modifiers: [
+      //     interact.modifiers.restrictRect({
+      //     restriction: 'parent',
+      //     endOnly: true
+      //     }),
+      //     interact.modifiers.snap({
+      //         // snap to the corners of a grid
+      //         targets: [(x, y) => {
+      //             return {
+      //                 x: 500,
+      //                 y,
+      //             };
+      //           }]
+      //     })
+      snap: {
+          targets: [startPos],
+          range: Infinity,
+          relativePoints: [ { x: 0.5, y: 0.5 } ],
+          endOnly: true
+      },
+      onstart: function (event) {
+          var original = event.target;
+          
+          if (original.getAttribute("clonable")==="true") {
+            var clone = event.target.cloneNode(true);
+            var x = clone.offsetLeft;
+            var y = clone.offsetTop;
+            clone.setAttribute('clonable',true);
+            original.setAttribute('clonable', false);
+            
+            clone.style.position = "absolute";
+            clone.style.left = original.offsetLeft+"px";
+            clone.style.top = original.offsetTop+"px";
+            original.parentElement.appendChild(clone);
+          }
+
+          var rect = interact.getElementRect(event.target);
+          var el   = document.getElementById(event.target.id); // or other selector like querySelector()
+          var rect2 = el.getBoundingClientRect(); // get the bounding rectangle
+          var width = rect2.width;
+          var height = rect2.height;
+          // console.log( parseInt(width ));
+          // console.log( parseInt(height ));
+
+          // console.log( parseInt(width / 2 ));
+          // console.log( parseInt(height / 2 ));
+
+          // console.log( parseInt(rect2.left ));
+          // console.log( parseInt(rect2.top ));
+          // var cx = rect2
+          // var cx = rect2.left + rect2.width/2, cy = rect2.top + rect2.height/2;
+          // console.log( parseInt(cx ));
+          // console.log( parseInt(cy ));
+
+          // var radius = width / 2;
+
+          // x2 + y2 = radius
+          startPos = {
+              x: rect.left + rect.width  / 2,
+              y: rect.top  + rect.height / 2
+              // x: cx,
+              // y: cy
+          }
+          testStuff = {
+              x: rect2.left + (width),
+              y: rect2.top + height
+          }
+          var dropzoneElement  = event.target,
+              dropRect         = interact.getElementRect(dropzoneElement),
+              dropCenter       = {
+              x: dropRect.left + dropRect.width  / 2,
+              y: dropRect.top  + dropRect.height / 2
+          };
+          // event.draggable.draggable({
+          //     snap: {
+          //       targets: [dropCenter]
+          //     }
+          // });
+          // dropzoneElement.classList.add('can--catch');
+          // draggableElement.classList.add('drop--me');
+          //console.log(dropCenter);
+          // console.log(testStuff);
+          // console.log("Y:", y);
+  
+          event.interactable.draggable({
+          snap: {
+              targets: [dropCenter]
+          }
+          });
+      },
+      // call this function on every dragmove event
+      onmove: function (event) {
+          console.log("Moving!" + event.target.id);
+          var target = event.target,
+              // keep the dragged position in the data-x/data-y attributes
+              x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+              y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+  
+          // translate the element
+          target.style.webkitTransform =
+          target.style.transform =
+          'translate(' + x + 'px, ' + y + 'px)';
+  
+          // update the posiion attributes
+          target.setAttribute('data-x', x);
+          target.setAttribute('data-y', y);
+          target.classList.add('getting--dragged');
+      },
+      onend: function (event) {
+          if (event.relatedTarget === null) {
+            event.target.parentElement.removeChild(event.target);
+          }       
+          
+          event.interactable.draggable({
+              snap: {
+                  targets: [startPos]
+              }
+          });
+          event.target.classList.remove('getting--dragged')
+          // console.log(interact.getElementRect(event.target));
+      },
+      // ondrop:
+      // ],
+      // enable autoScroll
+      // autoScroll: true,
+
+      // call this function on every dragmove event
+      // onmove: dragMoveListener
+  });
+
+  interact(".droppable").dropzone({
+    accept:".mode",
+    overlap: 0.5,
+
+    ondragenter: function (event) {
+      var draggableElement = event.relatedTarget;
+      var dropzoneElement = event.target;
+      console.log(dropzoneElement.id);
+
+      var dropRect  = interact.getElementRect(dropzoneElement);
+      var dropPoint = {
+        x: dropRect.left + dropRect.width / 2,
+        y: dropRect.top  + dropRect.height
+      };
+
+      event.draggable.draggable({
+        snap: {
+          targets: [dropPoint],
+        }
+      });
+    },
+
+    ondragleave: function(event) {
+      //Not needed yet.
+      //@@TODO state when dragged out of outer ring and not in any rings, should delete.  
+    },  
+    ondrop: function (event) {
+      //Get the dropped item and set a flag to what ring its in.
+      event.relatedTarget.setAttribute("parentLayer", event.target.id);
+      console.log(event.target.id);      
+
+      if (event.target.id === "main") {
+        mainIdeas.push(event.relatedTarget);
+
+        //change position of all so its nicely distributed
+        var angle = 2 * Math.PI / mainIdeas.length;
+        
+        var dropRect = interact.getElementRect(event.target);
+        var radius = dropRect.width / 2;
+
+        var center = {
+          x: parseFloat(event.relatedTarget.getAttribute('data-x')) || 0, 
+          y: parseFloat(event.relatedTarget.getAttribute('data-y')) - radius || 0
+        }
+
+        //Each node has a reference of its transformation to the centre
+        event.relatedTarget.setAttribute("centerX",center.x); 
+        event.relatedTarget.setAttribute("centerY",center.y);
+        
+        var ideaIndex = 0;
+
+        mainIdeas.forEach(element => {
+          var newX = radius * Math.sin (angle * ideaIndex) + parseFloat(element.getAttribute("centerX"));
+          var newY = radius * Math.cos (angle * ideaIndex) + parseFloat(element.getAttribute("centerY"));
+
+          console.log(newX);
+          ideaIndex++;
+          element.setAttribute('data-x', newX);
+          element.setAttribute('data-y', newY);        
+
+          element.style.webkitTransform =
+           element.style.transform =
+            'translate(' + newX + 'px, ' + newY + 'px)'
+        });
+      }
+
+      console.log(event.relatedTarget.id
+          + ' was dropped into '
+          + event.target.id)
+      }
+    })
+    .on('dropactivate', function (event) {
+      event.target.classList.add('drop-activated');
+  }.bind(this));
+
 
   const ProjectTile = ({ image }) => (
     <Col
@@ -359,6 +403,7 @@ const Home = ({ history }) => {
                 <circle cx="50%" cy="50%" r="125" fill="#FFFFFF" />
             </clipPath> */}
             {/* <image y="40%" x="40%" width="20%" xlinkHref={P1} clip-path="url(#myCircle)" /> */}
+            //@@TODO, might need to remap these to screen side 
             <circle className="mode" stroke="#000" r="2%" id="video" cy="90%" cx="3%" strokeWidth="1.5" fill="red" clonable = "true"/>
             <circle className="mode" stroke="#000" r="2%" id="sound" cy="90%" cx="8%" strokeWidth="1.5" fill="pink" clonable = "true"/>
             <circle className="mode" stroke="#000" r="2%" id="image" cy="90%" cx="13%" strokeWidth="1.5" fill="purple" clonable = "true"/>
