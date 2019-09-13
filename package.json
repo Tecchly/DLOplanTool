@@ -8,6 +8,7 @@
     "bootstrap": "^4.3.1",
     "firebase": "^6.4.0",
     "history": "^4.9.0",
+    "nlcst-to-string": "^2.0.3",
     "react": "^16.9.0",
     "react-bootstrap": "^1.0.0-beta.12",
     "react-content-loader": "^4.2.2",
@@ -15,7 +16,10 @@
     "react-firebaseui": "^4.0.0",
     "react-ionicons": "^2.1.6",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "0.9.x"
+    "react-scripts": "0.9.x",
+    "retext": "^7.0.0",
+    "retext-keywords": "^5.0.0",
+    "retext-pos": "^2.0.2"
   },
   "devDependencies": {},
   "scripts": {

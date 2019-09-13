@@ -1,0 +1,62 @@
+{
+  "Topic": {
+    "medium": "slide presentation",
+    "title": "The Water Cycle",
+    "subtitle": "Science",
+    "notes": [
+      "The water cycle, also known as the hydrologic cycle or the hydrological cycle",
+      "the continuous movement of water on, above and below the surface of the Earth",
+      "The mass of water on Earth remains fairly constant over time"
+    ]
+  },
+  "Ideas": [
+    {
+      "id": "YgTbfpFCdT",
+      "mode": "writing",
+      "icon": "ios-paper",
+      "title": "Precipitation",
+      "notes": [
+        "Condensed water vapor that falls to the Earth's surface.",
+        "Most precipitation occurs as rain, but also includes snow, hail, fog drip, graupel, and sleet.",
+        "precipitation is any product of the condensation of atmospheric water vapour that falls under gravity.",
+        "Moisture that is lifted or otherwise forced to rise over a layer of sub-freezing air at the surface may be condensed into clouds and rain."
+      ]
+    },
+    {
+      "id": "mqaqkldWDu",
+      "mode": "speech",
+      "title": "Evaporation",
+      "icon": "ios-microphone",
+      "notes": [
+        "The transformation of water from liquid to gas phases as it moves from the ground or bodies of water into the overlying atmosphere.",
+        "The source of energy for evaporation is primarily solar radiation",
+        "Evaporation often implicitly includes transpiration from plants, though together they are specifically referred to as evapotranspiration",
+        "Total annual evapotranspiration amounts to approximately 505,000 km3 of water, 434,000 km3 of which evaporates from the oceans."
+      ]
+    },
+    {
+      "id": "orfYTjJMCn",
+      "mode": "video",
+      "title": "Sublimation",
+      "icon": "ios-videocam",
+      "notes": [
+        "Sublimation is the transition of a substance directly from the solid to the gas phase, without passing through the intermediate liquid phase.",
+        "Sublimation is an endothermic process that occurs at temperatures and pressures below a substance's triple point in its phase diagram",
+        "known as phase transition",
+        "The state change directly from solid water (snow or ice) to water vapor by passing the liquid state."
+      ]
+    },
+    {
+      "id": "RSnjmeWyDC",
+      "mode": "writing",
+      "title": "Condensation",
+      "icon": "ios-paper",
+      "notes": [
+        "The transformation of water vapor to liquid water droplets in the air, creating clouds and fog.",
+        "Condensation is the change of the physical state of matter from the gas phase into the liquid phase",
+        "it is the reverse of vaporization",
+        "change in the state of water vapor to liquid water"
+      ]
+    }
+  ]
+}

@@ -310,3 +310,18 @@ margin-left: 30px;
   top: 30%;
   opacity: 0.5;
 }
+
+.chipClicked {
+  background-color: #FA8231 !important;
+  color: #fff !important;
+}
+.chipUnclicked {
+  background-color: #e0e0e0 !important;
+}
+.amplificationTileTitleRow{
+  margin: 39px 0px 0px 10px !important;
+}
+.amplificationTileTitleRow h2 {
+  font: 800 25px "Montserrat", sans-serif;
+  
+}

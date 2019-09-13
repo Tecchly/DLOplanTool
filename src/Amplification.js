@@ -12,6 +12,12 @@ import NewProjectPopup from "./NewProject";
 import { useState } from "react";
 import AmplificationTile from "./AmplificationTile";
 import Wave from "../assets/images/wave.png";
+import retext from "retext";
+import pos from "retext-pos";
+import keywords from "retext-keywords";
+import toString from "nlcst-to-string";
+import mappingData from "../assets/map_data.json";
+
 const useStyles = makeStyles(theme => ({
   button: {
     width: "100%",
@@ -66,6 +72,99 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Amplification = ({ history }) => {
+  const [ideaKeyWords, pushIdeaKeyWords] = useState([]);
+  const addIdea = ideas => {
+    pushIdeaKeyWords(oldArray => [...oldArray, ideas]);
+  };
+
+  const [topicNotes, pushTopicNotes] = useState([]);
+  const addTopicNotes = topic => {
+    pushTopicNotes(topic);
+  };
+
+  useEffect(() => {
+    let keyWordList = [];
+    let topicNotesList = [];
+    var allIdeas = words();
+    var mainTopic = topic();
+    console.log(mainTopic);
+    Object.values(allIdeas).forEach(info => {
+      console.log(info);
+      keyWordList = [];
+      retext()
+        .use(pos)
+        .use(keywords)
+        .process(info.notes, (err, file) => {
+          if (err) throw err;
+          //keywords
+          file.data.keywords.forEach(function(keyword) {
+            keyWordList.push(toString(keyword.matches[0].node));
+          });
+          //key phrases
+          file.data.keyphrases.forEach(phrase => {
+            keyWordList.push(phrase.matches[0].nodes.map(stringify).join(""));
+            function stringify(value) {
+              return toString(value);
+            }
+          });
+        });
+      info.keywords = keyWordList;
+      addIdea(info);
+    });
+    retext()
+      .use(pos)
+      .use(keywords)
+      .process(mainTopic.notes, (err, file) => {
+        if (err) throw err;
+        //keywords
+        file.data.keywords.forEach(function(keyword) {
+          topicNotesList.push(toString(keyword.matches[0].node));
+        });
+        //key phrases
+        file.data.keyphrases.forEach(phrase => {
+          topicNotesList.push(phrase.matches[0].nodes.map(stringify).join(""));
+          function stringify(value) {
+            return toString(value);
+          }
+        });
+      });
+
+    mainTopic["keywords"] = topicNotesList;
+    addTopicNotes(mainTopic);
+  }, []);
+
+  function words() {
+    var ideas = {};
+    let index = 0;
+    mappingData.Ideas.map(idea => {
+      ideas[idea.id] = {
+        id: index,
+        mode: idea.mode,
+        title: idea.title,
+        icon: idea.icon,
+        notes: idea.notes.join(" ")
+      };
+      index++;
+    });
+    return ideas;
+  }
+
+  function topic() {
+    var topicInfo = {
+      medium: mappingData.Topic.medium,
+      title: mappingData.Topic.title,
+      subtitle: mappingData.Topic.subtitle,
+      notes: mappingData.Topic.notes.join(" ")
+    };
+    return topicInfo;
+  }
+
+  // setTimeout(
+  //   function() {
+  //     console.log(topicNotes);
+  //   }.bind(this),
+  //   5000
+  // );
   const classes = useStyles();
 
   var storage = firebase.storage().ref();
@@ -149,10 +248,50 @@ const Amplification = ({ history }) => {
         </Container>
       </Navbar>
       <Container fluid={true}>
-        <AmplificationTile icon='ios-bulb' active={true} last={false}/>
-        <AmplificationTile icon='ios-videocam' active={false} last={false}/>
-        <AmplificationTile icon='ios-microphone' active={false} last={false}/>
-        <AmplificationTile icon='ios-image' active={false} last={true}/>
+        {topicNotes ? (
+          <AmplificationTile
+            icon="ios-bulb"
+            active={true}
+            last={false}
+            words={topicNotes}
+          />
+        ) : null}
+
+        {ideaKeyWords
+          ? ideaKeyWords.map((x, i) => (
+              <AmplificationTile
+                icon={x.icon}
+                key={i}
+                active={false}
+                last={ideaKeyWords.length-1 == i}
+                words={x}
+              />
+            ))
+          : null}
+        {/* <AmplificationTile
+          icon="ios-bulb"
+          active={true}
+          last={false}
+          words={ideaKeyWords[0]}
+        />
+        <AmplificationTile
+          icon="ios-videocam"
+          active={false}
+          last={false}
+          words={ideaKeyWords[1]}
+        />
+        <AmplificationTile
+          icon="ios-microphone"
+          active={false}
+          last={false}
+          words={ideaKeyWords[2]}
+        />
+        <AmplificationTile
+          icon="ios-image"
+          active={false}
+          last={true}
+          words={ideaKeyWords[3]}
+        /> */}
         {/* <Row style={{ marginLeft: "20%", marginRight: "20%" }}>
           <div className="ampTileChip">
             <Ionicon
