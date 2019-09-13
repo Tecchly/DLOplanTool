@@ -15,12 +15,12 @@ const App = () => {
     <AuthProvider>
       <Router>
 
-          <PrivateRoute exact path="/" component={Home} />
+          <PrivateRoute exact path="/" component={Project} />
           <PrivateRoute exact path="/projects" component={Projects} />
           <PrivateRoute exact path="/feedback" component={Feedback} />
           <Route exact path="/login" component={Login} id="login"/>
           <Route exact path="/signup" component={SignUp} />          
-          <PrivateRoute exact path="/project" component={Project}/>
+          //<PrivateRoute exact path="/project" component={Project}/>
           
       </Router>
     </AuthProvider>

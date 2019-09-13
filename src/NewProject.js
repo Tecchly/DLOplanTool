@@ -140,22 +140,25 @@ class NewProjectPopup extends React.Component {
       data.image = this.state.imageName;
     }
 
-    var uid = firebase.auth().currentUser.uid;
-    Firestore.saveNewProject(uid, data);
     if (this.state.file) {
       this.uploadImage(this.state.file);
     }
 
-    const { history } = this.props;
-    history.push({
-      pathname: "./project",
-      state: {
-        title: this.state.projectTitle,
-        topic: this.state.projectTopic,
-        image: this.state.image,
-        creationTime: +new Date()
-      }
-    });
+    var uid = firebase.auth().currentUser.uid;
+    Firestore.saveNewProject(uid, data).then(function(docRef){
+      const { history } = this.props;
+      history.push({
+        pathname: "./project",
+        state: {
+          title: this.state.projectTitle,
+          topic: this.state.projectTopic,
+          image: this.state.image,
+          docRef: docRef,
+          creationTime: +new Date()
+        }
+      })
+    }.bind(this));
+
   }
 
   //Generate a uuid

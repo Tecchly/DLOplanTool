@@ -18,7 +18,9 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "0.9.x"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
