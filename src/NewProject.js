@@ -71,6 +71,10 @@ class NewProjectPopup extends React.Component {
 
     var file = fileList[0];
     if (file) {
+      var size = file.size;
+      if (size > 5120000) {
+        alert('Image takes too much size! Images have to be 5MB or smaller');
+      }
       this.setState({file:file});
 
       var uniqueName = this.uuidv4();      
