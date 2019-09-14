@@ -79,7 +79,7 @@ const Home = ({ history }) => {
 
   useEffect(() => {
     var uid = firebase.auth().currentUser.uid;
-    var recents = Firestore.getRecentProjectsByUser(uid);
+    var recents = Firestore.getRecentProjectsByUser(uid, 4);
 
     recents
       .get()
