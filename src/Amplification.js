@@ -18,58 +18,6 @@ import keywords from "retext-keywords";
 import toString from "nlcst-to-string";
 import mappingData from "../assets/map_data.json";
 
-const useStyles = makeStyles(theme => ({
-  button: {
-    width: "100%",
-    boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
-
-    border: "none",
-    fontFamily: "Montserrat",
-    borderRadius: 17,
-    height: 50,
-    fontWeight: "400"
-  },
-  leftIcon: {
-    left: 0
-  },
-  recentProject: {
-    width: "100vh",
-    boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
-    backgroundColor: "#fff",
-    border: "none",
-    fontFamily: "Montserrat",
-    borderRadius: 17,
-    height: 400,
-    fontWeight: "400",
-    marginLeft: 10,
-    marginRight: 10
-  },
-  title: {
-    color: "#fff",
-    fontFamily: "Montserrat",
-    fontWeight: "700",
-    fontSize: 20
-  },
-  subtitle: {
-    color: "#fff",
-    fontFamily: "Montserrat",
-    fontWeight: "400",
-    fontSize: 17
-  },
-  rightIcon: {
-    marginLeft: theme.spacing(1)
-  },
-  iconSmall: {
-    fontSize: 20
-  },
-  projectOverlay: {
-    width: "100%",
-    height: "100%",
-    backgroundColor: "rgba(0,0,0,0.7)",
-    borderRadius: 17,
-    cursor: "pointer"
-  }
-}));
 
 const Amplification = ({ history }) => {
   const [ideaKeyWords, pushIdeaKeyWords] = useState([]);
@@ -80,6 +28,12 @@ const Amplification = ({ history }) => {
   const [topicNotes, pushTopicNotes] = useState([]);
   const addTopicNotes = topic => {
     pushTopicNotes(topic);
+  };
+
+  const [selectedTopic, setSelectedTopic] = useState(0);
+  const changeSelect = topic => {
+    setSelectedTopic(topic);
+    console.log(selectedTopic)
   };
 
   useEffect(() => {
@@ -159,13 +113,7 @@ const Amplification = ({ history }) => {
     return topicInfo;
   }
 
-  // setTimeout(
-  //   function() {
-  //     console.log(topicNotes);
-  //   }.bind(this),
-  //   5000
-  // );
-  const classes = useStyles();
+
 
   var storage = firebase.storage().ref();
 
@@ -251,9 +199,11 @@ const Amplification = ({ history }) => {
         {topicNotes ? (
           <AmplificationTile
             icon="ios-bulb"
-            active={true}
+            index={0}
+            active={selectedTopic==0}
             last={false}
             words={topicNotes}
+            parentCallback={changeSelect}
           />
         ) : null}
 
@@ -262,52 +212,14 @@ const Amplification = ({ history }) => {
               <AmplificationTile
                 icon={x.icon}
                 key={i}
-                active={false}
+                index={i+1}
+                active={selectedTopic == i+1}
                 last={ideaKeyWords.length-1 == i}
                 words={x}
+                parentCallback={changeSelect}
               />
             ))
           : null}
-        {/* <AmplificationTile
-          icon="ios-bulb"
-          active={true}
-          last={false}
-          words={ideaKeyWords[0]}
-        />
-        <AmplificationTile
-          icon="ios-videocam"
-          active={false}
-          last={false}
-          words={ideaKeyWords[1]}
-        />
-        <AmplificationTile
-          icon="ios-microphone"
-          active={false}
-          last={false}
-          words={ideaKeyWords[2]}
-        />
-        <AmplificationTile
-          icon="ios-image"
-          active={false}
-          last={true}
-          words={ideaKeyWords[3]}
-        /> */}
-        {/* <Row style={{ marginLeft: "20%", marginRight: "20%" }}>
-          <div className="ampTileChip">
-            <Ionicon
-              style={{
-                position: "absolute",
-                top: 9,
-                left: 10,
-              }}
-              fontSize="30"
-
-              color="#fff"
-              icon="ios-bulb"
-            />
-          </div>
-          <Col className="amplificationTile" fluid={false}></Col>
-        </Row> */}
       </Container>
     </React.Fragment>
   );
