@@ -13,7 +13,7 @@ import { maxWidth } from "@material-ui/system";
 class Project extends React.Component {
     
     constructor(props) {
-        super(props);       
+        super(props);  
 
         //@@TODO check if the props have been passed, if not then get them from DB
         
@@ -23,18 +23,15 @@ class Project extends React.Component {
         
     }
 
-    //Generate a uuid.
-    uuidv4() {
-        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-        )
-    }
+
 
     componentWillUnmount() {
         
     }
 
     state = {
+        //Will change based off the medium chosen
+        availableModes: ["video","sound","writing","image"]
 
     };
     render() {
@@ -42,7 +39,7 @@ class Project extends React.Component {
             <React.Fragment>
                 <HeaderBar/>
                     <div style={{marginLeft: "20%", marginRight: "20%", maxWidth: "60%"}}>
-                        <IdeaCard id ="rootNode" data = {this.props}/> 
+                        <IdeaCard id ="rootNode" data = {this.props} availableModes={this.state.availableModes}/> 
                     </div>                       
             </React.Fragment>          
         );

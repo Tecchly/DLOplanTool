@@ -7,6 +7,8 @@ import { withRouter, Redirect } from "react-router";
 import firebase from "firebase";
 import Firestore from "./Firestore.js";
 import Ionicon from "react-ionicons";
+import Utils from "./Utils.js";
+
 class NewProjectPopup extends React.Component {
   constructor(props) {
     super(props);
@@ -73,7 +75,7 @@ class NewProjectPopup extends React.Component {
     if (file) {
       this.setState({file:file});
 
-      var uniqueName = this.uuidv4();      
+      var uniqueName = Utils.uuid();      
       this.setState({imageName:uniqueName});
       this.localCache.setItem("imageName", uniqueName);
 
@@ -161,13 +163,6 @@ class NewProjectPopup extends React.Component {
 
   }
 
-  //Generate a uuid
-  uuidv4() {
-    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    )
-  }
-  
 
   render() {
     var togglePopup = this.props.togglePopup;
