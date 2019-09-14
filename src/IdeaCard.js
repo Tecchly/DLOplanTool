@@ -39,9 +39,10 @@ class IdeaCard extends React.Component {
     }
 
     //Called from popup
-    handleEdit = (title, notes) =>{
+    handleEdit = (title, notes, mode) =>{
         this.setState({title:title});
         this.setState({notes:notes});
+        this.setState({mode:mode});
     }
 
     closePopup = () =>{
@@ -62,7 +63,9 @@ class IdeaCard extends React.Component {
             this.setState({level: this.props.level});
         }           
 
-        //All others will be done with db calls.
+        if (this.props.level > 0) {
+            this.setState({editing:true});
+        }
 
         //Test,
         this.setState ({mode: "video"}); 
@@ -92,6 +95,7 @@ class IdeaCard extends React.Component {
                     mode={this.state.mode} 
                     notes ={this.state.notes} 
                     handleEdit = {this.handleEdit}
+                    availableModes= {this.props.availableModes}
                     closePopup = {this.closePopup}
                     />
                 ) : null}
@@ -165,8 +169,8 @@ class IdeaCard extends React.Component {
                         {this.state.childIdeas.map((uuid) =>
                              <IdeaCard  key={uuid} 
                                         uuid = {uuid}
-                                        parentID = {this.props.uuid}
-                                        parentArray = {this.state.childIdeas}
+                                        parentID = {this.props.uuid} //@@TODO Make this an array of all the parents
+                                        availableModes={this.props.availableModes}
                                         level={this.state.level+1}
                                         handleDelete = {this.handleDelete}></IdeaCard>)}
                     </div>

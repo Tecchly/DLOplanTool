@@ -5,6 +5,9 @@ import firebase from "firebase";
 import Firestore from "./Firestore.js";
 import Ionicon from "react-ionicons";
 import Utils from "./Utils.js";
+import { Select } from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
 import "./index.css";
 
 class IdeaEditPopup extends React.Component {
@@ -31,6 +34,7 @@ class IdeaEditPopup extends React.Component {
         if  (this.props.notes) {
             this.setState({"notes":this.props.notes});
         }
+        
     }
 
     handleTitleChange = (event)=> {
@@ -41,13 +45,36 @@ class IdeaEditPopup extends React.Component {
         this.setState({notes: event.target.value});
     }
 
+    handleModeChange = (event) => {
+        this.setState({mode:event.target.value});
+    }
+
     render(){
         return(
             <React.Fragment>
             <div className="popup">
                 <div className="inner">
                     <div className = {this.state.mode}>
-                        <h2>{this.state.mode}</h2>
+                        <h2>
+                        <FormControl className= "formControl">
+                            <Select
+                            native
+                            value={this.state.mode}
+                            onChange={this.handleModeChange}
+                            inputProps={{
+                                name: 'mode',
+                                id: 'age-native-simple',
+                            }}
+                            >
+                            {this.props.availableModes.map(mode=>
+                                <option 
+                                    key = {mode}
+                                    value = {mode}>
+                                        {mode}
+                                </option>)}
+                            </Select>
+                    </FormControl>
+                        </h2>
                     </div>
                     <input 
                         type="text"
@@ -61,11 +88,11 @@ class IdeaEditPopup extends React.Component {
                         onChange={this.handleNotesChange}
                         />
                     <div
-                    style={{marginLeft:"auto", marginRight:"auto",display:"flex", flexDirection:"column",width:"30%"}}>
+                    style={{marginLeft:"25%", marginRight:"25%",display:"flex", flexDirection:"column"}}>
                         <button
                             className= "selectButton"
                             onClick ={()=>{
-                                this.props.handleEdit(this.state.title,this.state.notes);
+                                this.props.handleEdit(this.state.title,this.state.notes, this.state.mode);
                                 this.props.closePopup();
                             }}>
                             Done
