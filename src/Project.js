@@ -8,13 +8,13 @@ import HeaderBar from "./HeaderBar.js"
 import "./index.css"
 import IdeaCard from "./IdeaCard.js"
 import { maxWidth } from "@material-ui/system";
+import Utils from "./Utils";
 
 
 class Project extends React.Component {
     
     constructor(props) {
         super(props);  
-
         //@@TODO check if the props have been passed, if not then get them from DB
         
     }
@@ -22,7 +22,6 @@ class Project extends React.Component {
     componentDidMount() {
         
     }
-
 
 
     componentWillUnmount() {
@@ -38,8 +37,8 @@ class Project extends React.Component {
         return(
             <React.Fragment>
                 <HeaderBar/>
-                    <div style={{marginLeft: "20%", marginRight: "20%", maxWidth: "60%"}}>
-                        <IdeaCard id ="rootNode" data = {this.props} availableModes={this.state.availableModes}/> 
+                    <div style={{marginLeft: "15%", marginRight: "15%", maxWidth: "70%"}}>
+                        <IdeaCard id ="rootNode" uuid = {Utils.uuid()} availableModes={this.state.availableModes}/> 
                     </div>                       
             </React.Fragment>          
         );

@@ -7,13 +7,16 @@ import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import "./index.css"
 import Ionicon from "react-ionicons";
 import Utils from "./Utils.js"
+import IdeaEditPopup from "./IdeaEditPopup.js"
+import { relative } from "path";
 
 
 class IdeaCard extends React.Component {
     constructor(props) {
         super(props)
-        //Props will have tile, mode and notes.
-        
+        //Props 
+        //uuid- the uuid of this tile
+        //parentID the uuid of this tiles parent   
     }
 
     state = {
@@ -21,7 +24,8 @@ class IdeaCard extends React.Component {
         mode: "",
         notes: "",
         level: 0,
-        childIdeas: []
+        childIdeas: [],
+        editing:false
     };
 
     //For removing a child
@@ -32,6 +36,16 @@ class IdeaCard extends React.Component {
             childIdeas: this.state.childIdeas.filter(idea => idea !== uuid)
           });        
           //Update the props on the children.
+    }
+
+    //Called from popup
+    handleEdit = (title, notes) =>{
+        this.setState({title:title});
+        this.setState({notes:notes});
+    }
+
+    closePopup = () =>{
+        this.setState({editing:false});
     }
 
     componentDidMount() {
@@ -51,8 +65,7 @@ class IdeaCard extends React.Component {
         //All others will be done with db calls.
 
         //Test,
-        this.setState ({mode: "video"});
-        this.setState({title: "Condensation"}); //@@TODO,need to fix text wrapping if text is too long here. 
+        this.setState ({mode: "video"}); 
         
     }
 
@@ -69,9 +82,19 @@ class IdeaCard extends React.Component {
     }
 
     render() {
-
+ 
         return(
             <React.Fragment>
+                {this.state.editing ? (
+                //Popup will live here.
+                <IdeaEditPopup 
+                    title ={this.state.title} 
+                    mode={this.state.mode} 
+                    notes ={this.state.notes} 
+                    handleEdit = {this.handleEdit}
+                    closePopup = {this.closePopup}
+                    />
+                ) : null}
                 <div>
                     <div style = {{
                         font:"Montserrat,sans-serif",
@@ -84,33 +107,35 @@ class IdeaCard extends React.Component {
                         marginRight: "auto",
                         marginLeft: "auto",
                         marginTop:"1rem",
-                        flexShrink:2
-                        }}
-
-                        onClick={()=> {
-                            //@@TODO edit component menu.
-                            
+                        flexShrink:2,
+                        position: "relative"
                         }}
                         >   
-                        <div>
-                            {this.state.mode}     
+                        <div
+                            className = {this.state.mode}
+                            style = {{
+                                cursor: 'pointer',
+                            }}
+                            onClick={()=> {
+                                //@@TODO edit component menu.
+                                this.setState({editing:"true"});
+                            }}>
+                            {this.state.mode}  
 
-                           {this.state.level !== 0 ? <Ionicon
+                            {this.state.level !== 0 ? <Ionicon
                             style={{
-                                position: "relative",
-                                height:"15%",
-                                width:"15%",
-                                left: "20%",
+                                float:"right",
+                                left: "15px",
                                 top: "0",
                                 cursor: 'pointer',
                             }}
                             icon="md-close"
-                            onClick={()=> {
-                                this.props.handleDelete(this.props.uuid);                                                          
+                            onClick={(event)=> {
+                                this.props.handleDelete(this.props.uuid);                                                        
                             }}
                             />: null}                
                         </div>
-                        
+
                         <div style = {{
                             fontSize:"20px"
                         }}>
@@ -120,9 +145,9 @@ class IdeaCard extends React.Component {
                         {this.state.level < 3 ? 
                            <Ionicon
                             style={{
-                                position: "relative",
-                                left: "40%", //@@TODO make this properly laid out.
-                                top: "100%",
+                                position: "absolute",
+                                right:0,
+                                bottom:0,
                                 cursor: 'pointer',
                             }}
                             icon="md-add"
@@ -140,6 +165,7 @@ class IdeaCard extends React.Component {
                         {this.state.childIdeas.map((uuid) =>
                              <IdeaCard  key={uuid} 
                                         uuid = {uuid}
+                                        parentID = {this.props.uuid}
                                         parentArray = {this.state.childIdeas}
                                         level={this.state.level+1}
                                         handleDelete = {this.handleDelete}></IdeaCard>)}

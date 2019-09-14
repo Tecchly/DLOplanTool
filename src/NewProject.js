@@ -15,6 +15,7 @@ class NewProjectPopup extends React.Component {
 
     this.localCache = window.localStorage;
 
+    //@@TODO make these arrow functions.
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleTopicChange = this.handleTopicChange.bind(this);
 
@@ -146,6 +147,7 @@ class NewProjectPopup extends React.Component {
       this.uploadImage(this.state.file);
     }
 
+    //take look here. 
     var uid = firebase.auth().currentUser.uid;
     Firestore.saveNewProject(uid, data).then(function(docRef){
       const { history } = this.props;
