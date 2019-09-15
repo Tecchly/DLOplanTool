@@ -7,6 +7,8 @@ import { withRouter, Redirect } from "react-router";
 import firebase from "firebase";
 import Firestore from "./Firestore.js";
 import Ionicon from "react-ionicons";
+import MessagePopup from "./MessagePopup.js";
+
 class NewProjectPopup extends React.Component {
   constructor(props) {
     super(props);
@@ -17,15 +19,21 @@ class NewProjectPopup extends React.Component {
     this.handleTopicChange = this.handleTopicChange.bind(this);
 
     this.isProjectCreated = false;
+
   }
 
   state = {
+    showMessagePopup : false,
     projectTitle: "",
     projectTopic: "",
     imageName: "", //The ID of the image, whether from DB or upload
     image: "", //represents the source information about the image.
     file: "" //the uploaded file for the image.
   };
+
+  toggleMessagePopup() {
+    this.setState({showMessagePopup: !this.state.showMessagePopup});
+  }
 
   componentDidMount() {
     //Local storage variant
@@ -73,7 +81,9 @@ class NewProjectPopup extends React.Component {
     if (file) {
       var size = file.size;
       if (size > 5120000) {
-        alert('Image takes too much size! Images have to be 5MB or smaller');
+        //alert('Image takes too much size! Images have to be 5MB or smaller');
+        this.toggleMessagePopup.bind(this);
+        return;
       }
       this.setState({file:file});
 
@@ -177,6 +187,11 @@ class NewProjectPopup extends React.Component {
       <React.Fragment>
         <div className="popup">
           <div className="inner">
+          {this.state.showMessagePopup ?
+          <MessagePopup 
+            text='Image takes too much size! Images have to be 5MB or smaller'
+            closeMessagePopup={this.toggleMessagePopup.bind(this)} />
+          : null}
             <Ionicon
               style={{
                 position: "absolute",
