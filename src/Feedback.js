@@ -44,7 +44,7 @@ const Feedback = ({ history }) => {
               href="#"
             >
               <Image
-                src={require("../assets/images/orange_logop.png")}
+                src={require("./images/orange_logop.png")}
                 style={{ height: 30, marginLeft: 5, marginBottom: 2 }}
               />
               Digital Learning
@@ -106,7 +106,7 @@ const Feedback = ({ history }) => {
           <Row></Row>
           <Row className="justify-content-md-center">
             <Image
-              src={require("../assets/images/feedback.svg")}
+              src={require("./images/feedback.svg")}
               style={{ height: 220 }}
             />
           </Row>

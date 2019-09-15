@@ -191,7 +191,7 @@ const Home = ({ history }) => {
               href="#"
             >
               <Image
-                src={require("../assets/images/orange_logop.png")}
+                src={require("./images/orange_logop.png")}
                 style={{ height: 30, marginLeft: 5, marginBottom: 2 }}
               />
               Digital Learning
@@ -240,7 +240,7 @@ const Home = ({ history }) => {
             <Row style={{ height: 200 }}>
               <Col sm={4}>
                 <Image
-                  src={require("../assets/images/book.svg")}
+                  src={require("./images/book.svg")}
                   style={{ height: 220 }}
                 />
               </Col>
@@ -336,7 +336,7 @@ const Home = ({ history }) => {
               <Container >
                 <Row className="justify-content-md-center">
                   <Image
-                    src={require("../assets/images/" + emptyImages[Math.floor(Math.random()*emptyImages.length)])}
+                    src={require("./images/" + emptyImages[Math.floor(Math.random()*emptyImages.length)])}
                     style={{ height: 180 }}
                   />
                 </Row>

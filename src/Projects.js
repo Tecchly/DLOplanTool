@@ -199,7 +199,7 @@ const Projects = props => {
               href="#"
             >
               <Image
-                src={require("../assets/images/orange_logop.png")}
+                src={require("./images/orange_logop.png")}
                 style={{ height: 30, marginLeft: 5, marginBottom: 2 }}
               />
               Digital Learning
@@ -263,7 +263,7 @@ const Projects = props => {
               <Container style={{ marginTop: "20vh" }}>
                 <Row className="justify-content-md-center">
                   <Image
-                    src={require("../assets/images/" + emptyImages[Math.floor(Math.random()*emptyImages.length)])}
+                    src={require("./images/" + emptyImages[Math.floor(Math.random()*emptyImages.length)])}
                     style={{ height: 180 }}
                   />
                 </Row>

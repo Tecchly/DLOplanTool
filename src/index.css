@@ -9,7 +9,7 @@ html, body, #app, #app>div, #root,#login {
 }
 
 #login {
-  background-image: url('../assets/images/background2.png');
+  background-image: url('./images/background2.png');
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;

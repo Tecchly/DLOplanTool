@@ -5,6 +5,10 @@ import { Button, Icon } from "antd";
 import { withRouter, Redirect } from "react-router";
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import HeaderBar from "./HeaderBar.js"
+import ReactDOM from 'react-dom'
+import Example from './example'
+import { DndProvider } from 'react-dnd'
+import HTML5Backend from 'react-dnd-html5-backend'
 
 class Project extends React.Component {
     constructor(props) {
@@ -22,6 +26,9 @@ class Project extends React.Component {
                 {this.props.location.state.topic}
                 <br/>
                 <img src={this.props.location.state.image}/>
+                <DndProvider backend={HTML5Backend}>
+					<Example />
+				</DndProvider>
             </React.Fragment>          
         );
     }
