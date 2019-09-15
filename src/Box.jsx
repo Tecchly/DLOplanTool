@@ -9,11 +9,11 @@ const style = {
   borderRadius: '50%',
   cursor: 'move',
 }
-const Box = () => {
-  const [, drag] = useDrag({ item: { type: ItemTypes.BOX } })
+const Box = ({ text }) => {
+  const [, drag] = useDrag({ item: { type: ItemTypes.BOX, text: text } })
   return (
     <div ref={drag} style={style}>
-      Drag me
+      {text}
     </div>
   )
 }

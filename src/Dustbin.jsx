@@ -27,7 +27,7 @@ const Dustbin = ({ greedy, children, text }) => {
       if (didDrop && !greedy) {
         return
       }
-      setHasDropped(true)
+      setHasDropped(item.text)
       setHasDroppedOnChild(didDrop)
     },
     collect: monitor => ({
@@ -41,9 +41,7 @@ const Dustbin = ({ greedy, children, text }) => {
   }
   return (
     <div ref={drop} style={getStyle(backgroundColor)}>
-      {text}
-      <br />
-      {hasDropped && <span>dropped {hasDroppedOnChild && ' on child'}</span>}
+      {hasDropped}
 
       <div>{children}</div>
     </div>
