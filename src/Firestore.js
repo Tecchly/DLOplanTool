@@ -70,7 +70,6 @@ class Firestore {
     };
 
     static saveNewProject(userID, projectData) {
-        this.updateUserDetails();
         return db.collection("users").doc(userID).collection("projects").add(projectData);
     }
 
