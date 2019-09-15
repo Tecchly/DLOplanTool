@@ -16,7 +16,8 @@ class IdeaCard extends React.Component {
         super(props)
         //Props 
         //uuid- the uuid of this tile
-        //parentID the uuid of this tiles parent   
+        //parentID the uuid of this tiles parent //@@TODO need to make this an array of parents to root for saving. 
+        //Maybe even keep route to root node as a state. 
     }
 
     state = {
@@ -30,7 +31,6 @@ class IdeaCard extends React.Component {
 
     //For removing a child
     handleDelete = (uuid) => {
-        //Seems to consistently delete from tail.
         console.log(this.state.childIdeas.filter(idea => idea !== uuid));
         this.setState({
             childIdeas: this.state.childIdeas.filter(idea => idea !== uuid)
@@ -64,15 +64,11 @@ class IdeaCard extends React.Component {
         }           
 
         if (this.props.level > 0) {
-            this.setState({editing:true});
+            this.setState({editing:true}); //Automatically open editing card if not root element. 
         }
 
         //Test,
         this.setState ({mode: "video"}); 
-        
-    }
-
-    componentWillReceiveProps(){
         
     }
 
@@ -156,8 +152,7 @@ class IdeaCard extends React.Component {
                             }}
                             icon="md-add"
                             onClick={() => {
-                                //should be mode
-                                //Generate UUID for the node here and also pass to child components
+                                //Generate UUID for the node here and also pass to child component
                                 var uuid = Utils.uuid();
                                 this.addChild(uuid);
                             }}

@@ -9,15 +9,12 @@ import Firestore from "./Firestore.js";
 import Ionicon from "react-ionicons";
 import Utils from "./Utils.js";
 
+//@@TODO, need to add a medium selector here.
 class NewProjectPopup extends React.Component {
   constructor(props) {
     super(props);
 
     this.localCache = window.localStorage;
-
-    //@@TODO make these arrow functions.
-    this.handleTitleChange = this.handleTitleChange.bind(this);
-    this.handleTopicChange = this.handleTopicChange.bind(this);
 
     this.isProjectCreated = false;
   }
@@ -115,14 +112,14 @@ class NewProjectPopup extends React.Component {
     );
   }
 
-  handleTitleChange(event) {
+  handleTitleChange =(event)=> {
     this.setState({ projectTitle: event.target.value }, function() {
       //Local cache variant
       this.localCache.setItem("title", this.state.projectTitle);
     });
   }
 
-  handleTopicChange(event) {
+  handleTopicChange = (event) => {
     this.setState({ projectTopic: event.target.value }, function() {
       this.localCache.setItem("topic", this.state.projectTopic);
     });
@@ -147,22 +144,21 @@ class NewProjectPopup extends React.Component {
       this.uploadImage(this.state.file);
     }
 
-    //take look here. 
+    const { history } = this.props;
     var uid = firebase.auth().currentUser.uid;
     Firestore.saveNewProject(uid, data).then(function(docRef){
-      const { history } = this.props;
+     
       history.push({
         pathname: "./project",
         state: {
+          projectId: docRef.id,
           title: this.state.projectTitle,
           topic: this.state.projectTopic,
           image: this.state.image,
-          docRef: docRef,
           creationTime: +new Date()
         }
       })
     }.bind(this));
-
   }
 
 

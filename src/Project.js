@@ -19,8 +19,28 @@ class Project extends React.Component {
         
     }
 
+    state= {
+        title:'',
+        topic: '', 
+        medium: '',
+        projectID: ''
+    }
+
     componentDidMount() {
+
+        if (this.props.location.state.projectID) {
+            this.setState({projectID: this.props.location.state.projectID}); //ID of the project for saving. 
+        }   
         
+        if (this.props.location.state.title) {
+        this.setState({title: this.props.location.state.title});
+        }
+
+        if (this.props.location.state.topic) {
+            this.setState({topic: this.props.location.state.topic});
+        }        
+
+        //@@TODO Medium to control the available modes. 
     }
 
 
