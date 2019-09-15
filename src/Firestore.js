@@ -87,6 +87,10 @@ class Firestore {
             uid:user.uid}, {merge: true});
     }
 
+    static queryUserByEmail(email) {
+        return db.collection("users").where("email","==",email);
+    }
+
 };
 
 export default Firestore;
