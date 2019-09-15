@@ -88,7 +88,16 @@ class Firestore {
     }
 
     static queryUserByEmail(email) {
-        return db.collection("users").where("email","==",email);
+        return db.collection("users").where("email","==",email).limit(1);
+    }
+
+    static saveSharedProject(email, sharedProjectData) {
+        return this.queryUserByEmail(email).get()
+            .then(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                    db.collection("users").doc(doc.id).collection("sharedProjects").doc(sharedProjectData.id).set(sharedProjectData, { merge: true });
+                });
+            });
     }
 
 };
