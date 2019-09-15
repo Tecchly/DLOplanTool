@@ -78,7 +78,10 @@ class Firestore {
         return db.collection('users').doc(user.uid).set({
             Name:user.displayName, 
             email:user.email, 
-            uid:user.uid}, {merge: true});
+            uid:user.uid
+        }, {
+            merge: true
+        });
     }
 };
 

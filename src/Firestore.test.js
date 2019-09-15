@@ -17,7 +17,7 @@ describe("saveWithDocID", () => {
     afterAll(() => {
         return Firestore.deleteDocument(collectionName, documentName).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete collection " + collectionName + ", error: " + error);
+            console.error("cleanup fail, please manually delete document " + documentName + " in collection " + collectionName + ", error: " + error);
         });
     });
 
@@ -68,7 +68,7 @@ describe("deleteDocument", () => {
         return Firestore.saveWithDocID(collectionName, documentName, {x: "x"}).then(() => {
             return Firestore.deleteDocument(collectionName, documentName).then(() => {
             }).catch(error => {
-                fail("delete fail, please manually delete " + collectionName + "." + documentName + ", error: " + error);
+                fail("delete fail, please manually delete document " + documentName + " in collection " + collectionName + ", error: " + error);
             });
         }).catch(error => {
             fail("error saving document: " + error);
@@ -88,7 +88,8 @@ describe("getCollection", () => {
     afterAll(() => {
         return Firestore.deleteDocument(collectionName, documentName).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete collection " + collectionName + ", error: " + error);
+            console.error("cleanup fail, please manually delete document " + documentName + " in collection " + collectionName + ", error: " + error);
+
         });
     });
 
@@ -125,7 +126,7 @@ describe("getDocument", () => {
     afterAll(() => {
         return Firestore.deleteDocument(collectionName, documentName).then(() => {
         }).catch(error => {
-            console.error("cleanup fail, please manually delete collection" + collectionName + ", error: " + error);
+            console.error("cleanup fail, please manually delete document " + documentName + " in collection " + collectionName + ", error: " + error);
         });
     });
 
@@ -228,8 +229,12 @@ describe("getAllProjectsByUser", () => {
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
+            return Firestore.getProjectById(userId, project.id).delete().then(() => {
+            }).catch(error => {
+                console.error("cleanup failed, please manually delete project " + project.id + " of user " + userId + ", error: " + error);
+            });
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + " and its project " + project.id + ", error: " + error);
         });
     });
 
@@ -280,8 +285,20 @@ describe("getRecentProjectsByUser", () => {
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
+            return Firestore.getProjectById(userId, project.id).delete().then(() => {
+                return Firestore.getProjectById(userId, project2.id).delete().then(() => {
+                    return Firestore.getProjectById(userId, project3.id).delete().then(() => {
+                    }).catch(error => {
+                        console.error("cleanup failed, please manually delete project " + project3.id + " of user " + userId + ", error: " + error);
+                    });
+                }).catch(error => {
+                    console.error("cleanup failed, please manually delete projects " + project2.id + ", " + project3.id + " of user " + userId + ", error: " + error);
+                });
+            }).catch(error => {
+                console.error("cleanup failed, please manually delete projects " + project.id + ", " + project2.id + ", " + project3.id + " of user " + userId + ", error: " + error);
+            });
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + " and its projects " + project1.id + ", " + project2.id + ", " + project3.id + ", error: " + error);
         });
     });
 
@@ -332,8 +349,12 @@ describe("getProjectById", () => {
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
+            return Firestore.getProjectById(userId, project.id).delete().then(() => {
+            }).catch(error => {
+                console.error("cleanup failed, please manually delete project " + project.id + " of user " + userId + ", error: " + error);
+            });
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + " and its project " + project.id + ", error: " + error);
         });
     });
 
@@ -375,8 +396,16 @@ describe("getAllIdeasByProject", () => {
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
+            return Firestore.getProjectById(userId, project.id).delete().then(() => {
+                return Firestore.getAllIdeasByProject(userId, project.id).doc(idea.id).delete().then(() => {
+                }).catch(error => {
+                    console.error("cleanup failed, please manually delete idea " + idea.id + " of project " + project.id + " of user " + userId + ", error: " + error);
+                });
+            }).catch(error => {
+                console.error("cleanup failed, please manually delete project " + project.id + " of user " + userId + " and idea " + idea.id + " of the project, error: " + error);
+            });
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + ", its project " + project.id + ", and the project's idea " + idea.id + ", error: " + error);
         });
     });
 
@@ -423,8 +452,12 @@ describe("saveToDBWithDocID", () => {
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
+            return Firestore.getProjectById(userId, project.id).delete().then(() => {
+            }).catch(error => {
+                console.error("cleanup fail, please manually delete project " + project.id + " of user " + userId + ", error: " + userId);
+            });
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + " and its project " + project.id + ", error: " + error);
         });
     });
 
@@ -493,8 +526,16 @@ describe("saveIdeaToProject", () => {
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
+            return Firestore.getProjectById(userId, project.id).delete().then(() => {
+                return Firestore.getAllIdeasByProject(userId, project.id).doc(idea.id).delete().then(() => {
+                }).catch(error => {
+                    console.error("cleanup failed, please manually delete idea " + idea.id + " of project " + project.id + " of user " + userId + ", error: " + error);
+                });
+            }).catch(error => {
+                console.error("cleanup failed, please manually delete project " + project.id + " of user " + userId + " and idea " + idea.id + " of the project, error: " + error);
+            });
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + ", its project " + project.id + ", and the project's idea " + idea.id + ", error: " + error);
         });
     });
 
@@ -537,8 +578,12 @@ describe("saveProjectToUser", () => {
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
+            return Firestore.getProjectById(userId, project.id).delete().then(() => {
+            }).catch(error => {
+                console.error("cleanup fail, please manually delete project " + project.id + " of user " + userId + ", error: " + error);
+            });
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + " and its project " + project.id + ", error: " + error);
         });
     });
 
@@ -573,11 +618,16 @@ describe("saveNewProject", () => {
         id: "1",
         val: "x"
     };
+    let projectId = "";
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
+            return Firestore.getProjectById(userId, projectId).delete().then(() => {
+            }).catch(error => {
+                console.error("cleanup fail, please manually delete project " + projectId + " of user " + userId + ", error: " + error);
+            });
         }).catch(error => {
-            console.error("cleanup fail, please manually delete user " + userId + ", error: " + error);
+            console.error("cleanup fail, please manually delete user " + userId + " and its project " + projectId + ", error: " + error);
         });
     });
 
@@ -586,6 +636,7 @@ describe("saveNewProject", () => {
             userId = doc.id;
             return Firestore.saveNewProject(userId, project).then(projectRef => {
                 return projectRef.get().then(retrieved => {
+                    projectId = retrieved.id;
                     if (retrieved.exists) {
                         let data = retrieved.data();
                         expect(data.id).toEqual(project.id);
