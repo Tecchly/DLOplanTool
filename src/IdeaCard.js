@@ -17,7 +17,6 @@ class IdeaCard extends React.Component {
         //Props 
         //uuid- the uuid of this tile
         //parentID the uuid of this tiles parent //@@TODO need to make this an array of parents to root for saving. 
-        //Maybe even keep route to root node as a state. 
     }
 
     state = {
@@ -50,7 +49,7 @@ class IdeaCard extends React.Component {
     }
 
     componentDidMount() {
-        
+        console.log(this.props);
         if (this.props.title){
             this.setState ({title: this.props.title});
         }

@@ -50,6 +50,7 @@ class IdeaEditPopup extends React.Component {
     }
 
     render(){
+        //@@TODO Layout the dropdown to look nicer. 
         return(
             <React.Fragment>
             <div className="popup">

@@ -23,7 +23,8 @@ class Project extends React.Component {
         title:'',
         topic: '', 
         medium: '',
-        projectID: ''
+        projectID: '',
+        availableModes: ["video","sound","writing","image"]
     }
 
     componentDidMount() {
@@ -40,7 +41,7 @@ class Project extends React.Component {
             this.setState({topic: this.props.location.state.topic});
         }        
 
-        //@@TODO Medium to control the available modes. 
+        //@@TODO Medium select to control the available modes. 
     }
 
 
@@ -48,17 +49,18 @@ class Project extends React.Component {
         
     }
 
-    state = {
-        //Will change based off the medium chosen
-        availableModes: ["video","sound","writing","image"]
-
-    };
     render() {
         return(
             <React.Fragment>
                 <HeaderBar/>
+                    <h1 style ={{
+                        textAlign: "center"
+                    }}
+                    >
+                        {this.state.title}
+                    </h1>
                     <div style={{marginLeft: "15%", marginRight: "15%", maxWidth: "70%"}}>
-                        <IdeaCard id ="rootNode" uuid = {Utils.uuid()} availableModes={this.state.availableModes}/> 
+                        <IdeaCard id ="rootNode" uuid = {Utils.uuid()} title={this.props.location.state.topic} availableModes={this.state.availableModes}/> 
                     </div>                       
             </React.Fragment>          
         );
