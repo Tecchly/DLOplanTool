@@ -18,17 +18,7 @@ class MessagePopup extends React.Component {
                 icon="md-close"
                 onClick={this.props.closeMessagePopup}
                 />
-            
-
-                <div
-                style={{
-                    marginTop: "25%",
-                    marginBottom: "25%",
-                    marginLeft: "25%",
-                    marginRight: "25%"
-                }}>
-                    <h1 className="popupMessage">{this.props.text}</h1>
-                </div>
+                {this.props.text}
             </div>
             </div>
         );

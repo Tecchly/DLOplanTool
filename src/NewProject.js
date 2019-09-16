@@ -81,8 +81,7 @@ class NewProjectPopup extends React.Component {
     if (file) {
       var size = file.size;
       if (size > 5120000) {
-        //alert('Image takes too much size! Images have to be 5MB or smaller');
-        this.toggleMessagePopup.bind(this);
+        this.toggleMessagePopup();
         return;
       }
       this.setState({file:file});
@@ -189,7 +188,7 @@ class NewProjectPopup extends React.Component {
           <div className="inner">
           {this.state.showMessagePopup ?
           <MessagePopup 
-            text='Image takes too much size! Images have to be 5MB or smaller'
+            text='Images have to be 5MB or smaller. Please upload an image with a smaller file size.'
             closeMessagePopup={this.toggleMessagePopup.bind(this)} />
           : null}
             <Ionicon
