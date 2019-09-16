@@ -7,11 +7,11 @@ class Firestore {
 
     static saveWithDocID(collection, docID, data) {
         return db.collection(collection).doc(docID).set(data, { merge: true })
-            // .then(function() {
-            //     // console.log("written doc " + docID + " successfully to collection " + collection);
-            // }).catch(function (error) {
-            //     console.error("Error writing document: ", error);
-            // })
+        // .then(function() {
+        //     // console.log("written doc " + docID + " successfully to collection " + collection);
+        // }).catch(function (error) {
+        //     console.error("Error writing document: ", error);
+        // })
     };
 
     static getCollection(collection) {
@@ -36,11 +36,11 @@ class Firestore {
     };
 
     static getAllProjectsByUser(userID) {
-        return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'asc'); 
+        return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'asc');
     };
 
     static getRecentProjectsByUser(userID) {
-        return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'desc').limit(4); 
+        return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'desc').limit(4);
     };
 
     static getProjectById(userID, projectID) {
@@ -52,7 +52,7 @@ class Firestore {
     };
 
     static saveToDBWithDocID(collection, docID, data) {
-        return collection.doc(docID).set(data, {merge : true})
+        return collection.doc(docID).set(data, { merge: true })
         // .then(function () {
         //     console.log("written doc " + docID + " successfully");
         // }).catch(function (error) {
@@ -62,7 +62,7 @@ class Firestore {
 
     static saveIdeasToProject(userID, projectID, ideas) {
         var ideaCollection = this.getAllIdeasByProject(userID, projectID);
-        ideas.forEach(function(idea) {
+        ideas.forEach(function (idea) {
             this.saveToDBWithDocID(ideaCollection, idea.id, idea);
         });
     };
@@ -79,25 +79,23 @@ class Firestore {
         return db.collection("users").doc(userID).collection("projects").add(projectData);
     }
 
-    static updateUserDetails(){
+    static updateUserDetails() {
         var user = firebase.auth().currentUser;
         return db.collection('users').doc(user.uid).set({
-            Name:user.displayName, 
-            email:user.email, 
-            uid:user.uid}, {merge: true});
+            Name: user.displayName,
+            email: user.email,
+            uid: user.uid
+        }, { merge: true });
     }
 
     static queryUserByEmail(email) {
-        return db.collection("users").where("email","==",email).limit(1);
+        return db.collection("users").where("email", "==", email);
     }
 
-    static saveSharedProject(email, sharedProjectData) {
-        return this.queryUserByEmail(email).get()
-            .then(function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                    db.collection("users").doc(doc.id).collection("sharedProjects").doc(sharedProjectData.id).set(sharedProjectData, { merge: true });
-                });
-            });
+    static saveSharedProject(uid, sharedProjectData) {
+        return db.collection("users").doc(uid)
+            .collection("sharedProjects").doc(sharedProjectData.id)
+            .set(sharedProjectData, { merge: true });
     }
 
 };
