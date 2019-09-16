@@ -126,7 +126,7 @@ class ShareProjectPopup extends React.Component {
                                 cursor: 'pointer',
                             }}
                             icon="md-close"
-                            onClick={() => togglePopup()}
+                            onClick={this.props.closePopup}
                         />
 
                         <h1 className="shareProjectTitle">Share Project</h1>
@@ -178,7 +178,9 @@ class ShareProjectPopup extends React.Component {
                                         height: 45,
                                         fontWeight: "600"
                                     }}
-                                    onClick={() => this.shareProject()}
+                                    onClick={() =>
+                                        this.shareProject()
+                                    }
                                     disabled={
                                         this.state.shareEmails.length == 0
                                     }
