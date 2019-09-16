@@ -15,7 +15,8 @@
     "react-firebaseui": "^4.0.0",
     "react-ionicons": "^2.1.6",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "0.9.x"
+    "react-scripts": "0.9.x",
+    "reactjs-popup": "1.5.0"
   },
   "devDependencies": {},
   "scripts": {
