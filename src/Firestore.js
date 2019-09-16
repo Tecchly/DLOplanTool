@@ -98,6 +98,10 @@ class Firestore {
             .set(sharedProjectData, { merge: true });
     }
 
+    static getAllSharedProjectsByUser(userID) {
+        return db.collection("users").doc(userID).collection("sharedProjects").orderBy('shareTime', 'desc');
+    };
+
 };
 
 export default Firestore;
