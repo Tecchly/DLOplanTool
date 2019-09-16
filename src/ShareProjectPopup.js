@@ -21,7 +21,7 @@ class ShareProjectPopup extends React.Component {
         projectTitle: "",
         projectTopic: "",
         shareEmails: "",
-        image: "", //represents the source information about the image.
+        image: "" //represents the source information about the image.
     };
 
     componentDidMount() {
@@ -116,7 +116,7 @@ class ShareProjectPopup extends React.Component {
         const { history } = this.props;
         return (
             <React.Fragment>
-                <div className="popup">
+                <div className="sharepopup">
                     <div className="inner">
                         <Ionicon
                             style={{
@@ -138,9 +138,9 @@ class ShareProjectPopup extends React.Component {
                         >
                             <form>
                                 <div className="inputTitle">Who do you want to share this project with?</div>
-                                <textarea rows="5" cols="100"
+                                <textarea rows="8" cols="100"
                                     type="text"
-                                    className="textInput"
+                                    className="emailInput"
                                     placeholder="please specify the user emails here, one email one line."
                                     value={this.state.shareEmails}
                                     onChange={this.handleEmailChange}
@@ -148,7 +148,7 @@ class ShareProjectPopup extends React.Component {
                             </form>
                         </div>
                         <div
-                            className='dropDiv'
+                            className='sharedropDiv'
                             style={{
                                 marginTop: "10%",
                                 marginLeft: "25%",
