@@ -65,22 +65,35 @@ const StyledMenuItem = withStyles(theme => ({
 }))(MenuItem);
 const AplificationTile = props => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selected, pushSelected] = useState([]);
+  const [currentSelection, setCurrentSelection] = useState(null);
+  const [selected, pushSelected] = useState({});
   const addSelect = idea => {
-    pushSelected(oldArray => [...oldArray, idea]);
+    selected[idea] = {
+      type: "basic amplification",
+      keyword: props.words.keywords[idea]
+    };
+    pushSelected(selected);
+    console.log(selected);
   };
   const deleteSelect = idea => {
-    selected.splice(idea, 1);
-    pushSelected([...selected]);
+    delete selected[idea];
+    pushSelected({ ...selected });
+    console.log(selected);
   };
-
+  const setAmplificationType = (index, type) => {
+    selected[index].type = type;
+    console.log(selected);
+    handleClose();
+  };
   function handleClick(event, index) {
-    console.log(index)
+    console.log(index);
     setAnchorEl(event.target);
+    setCurrentSelection(index);
   }
 
-  function handleClose() {
+  function handleClose(event) {
     setAnchorEl(null);
+    setCurrentSelection(null);
   }
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
@@ -122,7 +135,7 @@ const AplificationTile = props => {
                   aria-label="add"
                   className={classes.chip2}
                   classes={
-                    selected.length == 3
+                    selected && Object.keys(selected).length == 3
                       ? { root: "amplificationDone", sizeSmall: "smallFab" }
                       : {
                           root: "amplificationDoneDisabled",
@@ -130,13 +143,16 @@ const AplificationTile = props => {
                         }
                   }
                   onClick={() => {
-                    !props.last ? props.parentCallback(props.index + 1) : null;
+                    props.setAmplificationOptions(
+                      props.words.title,
+                      selected,
+                      !props.last ? props.index + 1 : null
+                    );
                   }}
                 >
                   <DoneIcon fontSize={"small"} />
                 </Fab>
-              ) :
-              null}
+              ) : null}
             </Col>
           </Row>
         ) : null}
@@ -147,7 +163,7 @@ const AplificationTile = props => {
                 key={i}
                 label={x}
                 avatar={
-                  selected.indexOf(i) >= 0 ? (
+                  selected && selected[i] ? (
                     <Avatar
                       style={{ backgroundColor: "#FA8231", color: "#ffffff67" }}
                     >
@@ -157,17 +173,17 @@ const AplificationTile = props => {
                 }
                 className={classes.chip}
                 classes={
-                  selected.indexOf(i) >= 0
+                  selected && selected[i]
                     ? { root: "chipClicked" }
-                    : selected.indexOf(i) == -1 && selected.length == 3
+                    : selected && Object.keys(selected).length == 3
                     ? { root: "chipDisabled" }
                     : { root: "chipUnclicked" }
                 }
                 clickable
                 onClick={() => {
-                  selected.indexOf(i) >= 0
-                    ? deleteSelect(selected.indexOf(i))
-                    : selected.length < 3
+                  selected && selected[i]
+                    ? deleteSelect(i)
+                    : selected && Object.keys(selected).length < 3
                     ? (addSelect(i), handleClick(event, i))
                     : null;
                 }}
@@ -182,25 +198,33 @@ const AplificationTile = props => {
           onClose={handleClose}
           classes={{ paper: "popMenu" }}
         >
-          <StyledMenuItem onClick={handleClose}>
+          <StyledMenuItem
+            onClick={() => setAmplificationType(currentSelection, "colour")}
+          >
             <ListItemIcon>
               <ColorLensIcon />
             </ListItemIcon>
-            <ListItemText primary="Color" />
+            <ListItemText primary="Colour" />
           </StyledMenuItem>
-          <StyledMenuItem onClick={handleClose}>
+          <StyledMenuItem
+            onClick={() => setAmplificationType(currentSelection, "highlight")}
+          >
             <ListItemIcon>
               <FormatPaintIcon />
             </ListItemIcon>
             <ListItemText primary="Highlight" />
           </StyledMenuItem>
-          <StyledMenuItem onClick={handleClose}>
+          <StyledMenuItem
+            onClick={() => setAmplificationType(currentSelection, "move")}
+          >
             <ListItemIcon>
               <ControlCameraIcon />
             </ListItemIcon>
             <ListItemText primary="Move" />
           </StyledMenuItem>
-          <StyledMenuItem onClick={handleClose}>
+          <StyledMenuItem
+            onClick={() => setAmplificationType(currentSelection, "enlarge")}
+          >
             <ListItemIcon>
               <ZoomIcon />
             </ListItemIcon>

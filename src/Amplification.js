@@ -18,7 +18,6 @@ import keywords from "retext-keywords";
 import toString from "nlcst-to-string";
 import mappingData from "../assets/map_data.json";
 
-
 const Amplification = ({ history }) => {
   const [ideaKeyWords, pushIdeaKeyWords] = useState([]);
   const addIdea = ideas => {
@@ -33,7 +32,19 @@ const Amplification = ({ history }) => {
   const [selectedTopic, setSelectedTopic] = useState(0);
   const changeSelect = topic => {
     setSelectedTopic(topic);
-    console.log(selectedTopic)
+    console.log(selectedTopic);
+  };
+
+  const [amplificationOptions, addAmplificationOptions] = useState({});
+
+  const saveTopicAmplifications = (topic, options, next) => {
+    amplificationOptions[topic] = options;
+    addAmplificationOptions(amplificationOptions);
+    console.log(amplificationOptions);
+    if (next) changeSelect(next)
+    //if next is null then it is the last section so all sections
+    //are complete so save to firestore here
+    else console.log('this is where it should be saved to firestore')
   };
 
   useEffect(() => {
@@ -112,8 +123,6 @@ const Amplification = ({ history }) => {
     };
     return topicInfo;
   }
-
-
 
   var storage = firebase.storage().ref();
 
@@ -200,10 +209,11 @@ const Amplification = ({ history }) => {
           <AmplificationTile
             icon="ios-bulb"
             index={0}
-            active={selectedTopic==0}
+            active={selectedTopic == 0}
             last={false}
             words={topicNotes}
             parentCallback={changeSelect}
+            setAmplificationOptions={saveTopicAmplifications}
           />
         ) : null}
 
@@ -212,11 +222,12 @@ const Amplification = ({ history }) => {
               <AmplificationTile
                 icon={x.icon}
                 key={i}
-                index={i+1}
-                active={selectedTopic == i+1}
-                last={ideaKeyWords.length-1 == i}
+                index={i + 1}
+                active={selectedTopic == i + 1}
+                last={ideaKeyWords.length - 1 == i}
                 words={x}
                 parentCallback={changeSelect}
+                setAmplificationOptions={saveTopicAmplifications}
               />
             ))
           : null}
