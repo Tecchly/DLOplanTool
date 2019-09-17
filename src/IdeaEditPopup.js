@@ -93,8 +93,7 @@ class IdeaEditPopup extends React.Component {
                         <button
                             className= "selectButton"
                             onClick ={()=>{
-                                this.props.handleEdit(this.state.title,this.state.notes, this.state.mode);
-                                this.props.closePopup();
+                               this.props.handleEdit(this.state.title,this.state.notes, this.state.mode);                                
                             }}>
                             Done
                         </button>

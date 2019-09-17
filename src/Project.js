@@ -24,7 +24,14 @@ class Project extends React.Component {
         topic: '', 
         medium: '',
         projectID: '',
-        availableModes: ["video","sound","writing","image"]
+        availableModes: ["video","sound","writing","image"],
+        ideas :{
+
+        }
+    }
+
+    handleIdeaUpdate = (uuid,data) =>{
+        //Update ideas object
     }
 
     componentDidMount() {
@@ -60,7 +67,7 @@ class Project extends React.Component {
                         {this.state.title}
                     </h1>
                     <div style={{marginLeft: "15%", marginRight: "15%", maxWidth: "70%"}}>
-                        <IdeaCard id ="rootNode" uuid = {Utils.uuid()} title={this.props.location.state.topic} availableModes={this.state.availableModes}/> 
+                        <IdeaCard id ="rootNode" handleIdeaUpdate = {this.handleIdeaUpdate} uuid = {Utils.uuid()} title={this.props.location.state.topic} availableModes={this.state.availableModes}/> 
                     </div>                       
             </React.Fragment>          
         );

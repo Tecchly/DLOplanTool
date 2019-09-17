@@ -22,6 +22,7 @@ class IdeaCard extends React.Component {
     state = {
         title: "",
         mode: "",
+        created: false,
         notes: "",
         level: 0,
         childIdeas: [],
@@ -37,15 +38,31 @@ class IdeaCard extends React.Component {
           //Update the props on the children.
     }
 
-    //Called from popup
+    //Handle the edit, then close the popup.
     handleEdit = (title, notes, mode) =>{
+        //Set as created.
+
         this.setState({title:title});
         this.setState({notes:notes});
         this.setState({mode:mode});
+        
+        this.props.handleIdeaUpdate(this.props.uuid,{
+            title: title,
+            notes: notes,
+            mode : mode
+        });
+
+        this.setState({created: true}, () => {
+            this.closePopup()
+        });
     }
 
     closePopup = () =>{
         this.setState({editing:false});
+
+        if (!this.state.created) {
+            this.props.handleDelete(this.props.uuid); 
+        }       
     }
 
     componentDidMount() {
@@ -90,6 +107,8 @@ class IdeaCard extends React.Component {
                     mode={this.state.mode} 
                     notes ={this.state.notes} 
                     handleEdit = {this.handleEdit}
+                    uuid = {this.props.uuid}
+                    handleDelete = {this.handleDelete}
                     availableModes= {this.props.availableModes}
                     closePopup = {this.closePopup}
                     />
@@ -163,6 +182,7 @@ class IdeaCard extends React.Component {
                         {this.state.childIdeas.map((uuid) =>
                              <IdeaCard  key={uuid} 
                                         uuid = {uuid}
+                                        handleIdeaUpdate = {this.props.handleIdeaUpdate}
                                         parentID = {this.props.uuid} //@@TODO Make this an array of all the parents
                                         availableModes={this.props.availableModes}
                                         level={this.state.level+1}
