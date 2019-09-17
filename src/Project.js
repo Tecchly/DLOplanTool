@@ -40,8 +40,7 @@ class Project extends React.Component {
                   ...this.state.ideas,
                   [`${uuid}`]: data
             }
-        }, ()=> {
-                        
+        }, ()=> {                        
             var uid = firebase.auth().currentUser.uid;
             for (let idea in this.state.ideas) {
                 //Saving of all ideas. 
@@ -63,6 +62,8 @@ class Project extends React.Component {
         }        
 
         //@@TODO Medium select to control the available modes. 
+        
+        //get all ideas from DB if opening a previously saved project. 
     }
 
 
@@ -81,7 +82,12 @@ class Project extends React.Component {
                         {this.state.title}
                     </h1>
                     <div style={{marginLeft: "15%", marginRight: "15%", maxWidth: "70%"}}>
-                        <IdeaCard id ="rootNode" handleIdeaUpdate = {this.handleIdeaUpdate} uuid = {Utils.uuid()} title={this.props.location.state.topic} availableModes={this.state.availableModes}/> 
+                        <IdeaCard 
+                            handleIdeaUpdate = {this.handleIdeaUpdate}
+                            uuid = "root"
+                            parentID = "none"
+                            title={this.props.location.state.topic}
+                            availableModes={this.state.availableModes}/> 
                     </div>                       
             </React.Fragment>          
         );

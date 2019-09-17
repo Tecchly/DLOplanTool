@@ -38,7 +38,9 @@ class IdeaEditPopup extends React.Component {
     }
 
     handleTitleChange = (event)=> {
-        this.setState({title: event.target.value});
+        if (event.target.value.length < 25){
+            this.setState({title: event.target.value});
+        }       
     }
 
     handleNotesChange = (event)=> {

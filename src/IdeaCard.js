@@ -45,6 +45,7 @@ class IdeaCard extends React.Component {
         this.setState({notes:notes});
         this.setState({mode:mode});
         
+        //@@TODO need to save root node as well. 
         this.props.handleIdeaUpdate(this.props.uuid,{
             title: title,
             uuid: this.props.uuid,
