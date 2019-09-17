@@ -25,7 +25,7 @@ class IdeaCard extends React.Component {
         created: false,
         notes: "",
         level: 0,
-        childIdeas: [],
+        childIdeas: [], //Maybe store as an associative array.
         editing:false
     };
 
@@ -41,13 +41,14 @@ class IdeaCard extends React.Component {
     //Handle the edit, then close the popup.
     handleEdit = (title, notes, mode) =>{
         //Set as created.
-
         this.setState({title:title});
         this.setState({notes:notes});
         this.setState({mode:mode});
         
         this.props.handleIdeaUpdate(this.props.uuid,{
             title: title,
+            uuid: this.props.uuid,
+            parentID: this.props.parentID,
             notes: notes,
             mode : mode
         });
@@ -66,7 +67,7 @@ class IdeaCard extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
+        //console.log(this.props);
         if (this.props.title){
             this.setState ({title: this.props.title});
         }
@@ -85,11 +86,11 @@ class IdeaCard extends React.Component {
 
         //Test,
         this.setState ({mode: "video"}); 
-        
     }
 
     addChild(title) {
         if (this.state.childIdeas.length < 4){
+            //Possibly also update project
             this.setState({
                 childIdeas:[...this.state.childIdeas, title]
               });
@@ -97,8 +98,7 @@ class IdeaCard extends React.Component {
     }
 
     render() {
- 
-        return(
+         return(
             <React.Fragment>
                 {this.state.editing ? (
                 //Popup will live here.
@@ -135,9 +135,20 @@ class IdeaCard extends React.Component {
                                 cursor: 'pointer',
                             }}
                             onClick={()=> {
-                                //@@TODO edit component menu.
                                 this.setState({editing:"true"});
                             }}>
+                            
+                            <Ionicon
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 10
+                            }}
+                            fontSize="30"
+                            color="#fff"
+                            icon="ios-bulb"
+                            />
+
                             {this.state.mode}  
 
                             {this.state.level !== 0 ? <Ionicon

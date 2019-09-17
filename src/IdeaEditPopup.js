@@ -57,6 +57,16 @@ class IdeaEditPopup extends React.Component {
                 <div className="inner">
                     <div className = {this.state.mode}>
                         <h2>
+                        <Ionicon
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 10
+                            }}
+                            fontSize="30"
+                            color="#fff"
+                            icon="ios-bulb"
+                            />
                         <FormControl className= "formControl">
                             <Select
                             native

@@ -9,6 +9,8 @@ import "./index.css"
 import IdeaCard from "./IdeaCard.js"
 import { maxWidth } from "@material-ui/system";
 import Utils from "./Utils";
+import firebase from "firebase";
+import Firestore from "./Firestore.js";
 
 
 class Project extends React.Component {
@@ -19,6 +21,7 @@ class Project extends React.Component {
         
     }
 
+    //Onload, load the idea object as a prop to all children. 
     state= {
         title:'',
         topic: '', 
@@ -30,16 +33,27 @@ class Project extends React.Component {
         }
     }
 
+    //Get changes from components.
     handleIdeaUpdate = (uuid,data) =>{
-        //Update ideas object
+        this.setState({
+            ideas: {
+                  ...this.state.ideas,
+                  [`${uuid}`]: data
+            }
+        }, ()=> {
+                        
+            var uid = firebase.auth().currentUser.uid;
+            for (let idea in this.state.ideas) {
+                //Saving of all ideas. 
+                Firestore.saveIdeaToProject(uid,this.props.location.state.projectID,this.state.ideas[idea]);
+            }
+        })
     }
 
     componentDidMount() {
 
-        if (this.props.location.state.projectID) {
-            this.setState({projectID: this.props.location.state.projectID}); //ID of the project for saving. 
-        }   
-        
+        //this.props.location.state.projectID; Get project id.
+
         if (this.props.location.state.title) {
         this.setState({title: this.props.location.state.title});
         }

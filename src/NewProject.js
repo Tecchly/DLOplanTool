@@ -151,7 +151,7 @@ class NewProjectPopup extends React.Component {
       history.push({
         pathname: "./project",
         state: {
-          projectId: docRef.id,
+          projectID: docRef.id,
           title: this.state.projectTitle,
           topic: this.state.projectTopic,
           image: this.state.image,

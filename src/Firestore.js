@@ -43,6 +43,7 @@ class Firestore {
     };
 
     static getProjectById(userID, projectID) {
+        //Can't seem to do doc on the returned promise
         return this.getAllProjectsByUser(userID).doc(projectID);
     };
 
@@ -59,12 +60,26 @@ class Firestore {
         // })
     };
 
-    static saveIdeasToProject(userID, projectID, ideas) {
+    static saveIdeaToProject(userID, projectID, ideas) {
+        
         var ideaCollection = this.getAllIdeasByProject(userID, projectID);
+
         ideas.forEach(function(idea) {
             this.saveToDBWithDocID(ideaCollection, idea.id, idea);
         });
+        
     };
+
+    static saveIdeaToProject(userID, projectID, idea) {
+        console.log(idea.uuid);
+        var ideaRef = db.collection("users").doc(userID).collection("projects").doc(projectID).collection("ideas").doc(idea.uuid);
+        ideaRef.set({
+            title: idea.title,
+            mode: idea.mode,
+            notes: idea.notes,
+            parentID: idea.parentID
+        })
+    }
 
     static saveProjectsToUser(userID, projects) {
         var projectCollection = this.getAllProjectsByUser(userID);
