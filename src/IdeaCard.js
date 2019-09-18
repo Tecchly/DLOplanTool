@@ -14,16 +14,11 @@ import { relative } from "path";
 class IdeaCard extends React.Component {
     constructor(props) {
         super(props)
-        //Props 
-        //uuid- the uuid of this tile
-        //parentID the uuid of this tiles parent //@@TODO need to make this an array of parents to root for saving. 
+        //@@TODO make all the states take from project. 
     }
 
     state = {
-        title: "",
-        mode: "",
         created: false,
-        notes: "",
         level: 0,
         childIdeas: [], //Maybe store as an associative array.
         editing:false
@@ -31,24 +26,32 @@ class IdeaCard extends React.Component {
 
     //For removing a child
     handleDelete = (uuid) => {
-        console.log(this.state.childIdeas.filter(idea => idea !== uuid));
+        //console.log(this.state.childIdeas.filter(idea => idea !== uuid));
         this.setState({
             childIdeas: this.state.childIdeas.filter(idea => idea !== uuid)
           });        
           //Update the props on the children.
     }
 
+    addChild(title) {
+        if (this.state.childIdeas.length < 4){
+            //Need to update project
+            this.props.handleIdeaUpdate(title, {
+                title: "",
+                parentID: this.props.uuid,
+                notes: "",
+                mode: "video"
+            })
+            this.setState({
+                childIdeas:[...this.state.childIdeas, title]
+              });
+        }
+    }
+
     //Handle the edit, then close the popup.
-    handleEdit = (title, notes, mode) =>{
-        //Set as created.
-        this.setState({title:title});
-        this.setState({notes:notes});
-        this.setState({mode:mode});
-        
-        //@@TODO need to save root node as well. 
+    handleEdit = (title, notes, mode) =>{       
         this.props.handleIdeaUpdate(this.props.uuid,{
             title: title,
-            uuid: this.props.uuid,
             parentID: this.props.parentID,
             notes: notes,
             mode : mode
@@ -68,15 +71,8 @@ class IdeaCard extends React.Component {
     }
 
     componentDidMount() {
-        //console.log(this.props);
-        if (this.props.title){
-            this.setState ({title: this.props.title});
-        }
-
-        if (this.props.mode) {
-            this.setState({mode: this.props.mode});
-        }
-
+        console.log(this.props.ideas);
+        
         if (this.props.level) {
             this.setState({level: this.props.level});
         }           
@@ -89,24 +85,15 @@ class IdeaCard extends React.Component {
         this.setState ({mode: "video"}); 
     }
 
-    addChild(title) {
-        if (this.state.childIdeas.length < 4){
-            //Possibly also update project
-            this.setState({
-                childIdeas:[...this.state.childIdeas, title]
-              });
-        }
-    }
-
     render() {
          return(
             <React.Fragment>
                 {this.state.editing ? (
                 //Popup will live here.
                 <IdeaEditPopup 
-                    title ={this.state.title} 
-                    mode={this.state.mode} 
-                    notes ={this.state.notes} 
+                    title ={this.props.ideas[this.props.uuid].title} 
+                    mode={this.props.ideas[this.props.uuid].mode} 
+                    notes ={this.props.ideas[this.props.uuid].notes} 
                     handleEdit = {this.handleEdit}
                     uuid = {this.props.uuid}
                     handleDelete = {this.handleDelete}
@@ -131,7 +118,7 @@ class IdeaCard extends React.Component {
                         }}
                         >   
                         <div
-                            className = {this.state.mode}
+                            className = {this.props.ideas[this.props.uuid] ? this.props.ideas[this.props.uuid].mode : null }
                             style = {{
                                 cursor: 'pointer',
                             }}
@@ -149,8 +136,8 @@ class IdeaCard extends React.Component {
                             color="#fff"
                             icon="ios-bulb"
                             />
-
-                            {this.state.mode}  
+                            
+                            {this.props.ideas[this.props.uuid] ? this.props.ideas[this.props.uuid].mode : null }
 
                             {this.state.level !== 0 ? <Ionicon
                             style={{
@@ -169,7 +156,7 @@ class IdeaCard extends React.Component {
                         <div style = {{
                             fontSize:"20px"
                         }}>
-                            {this.state.title}    
+                            {this.props.ideas[this.props.uuid] ? this.props.ideas[this.props.uuid].title : null }
                         </div>     
       
                         {this.state.level < 3 ? 
@@ -195,7 +182,9 @@ class IdeaCard extends React.Component {
                              <IdeaCard  key={uuid} 
                                         uuid = {uuid}
                                         handleIdeaUpdate = {this.props.handleIdeaUpdate}
-                                        parentID = {this.props.uuid} //@@TODO Make this an array of all the parents
+                                        handleIdeaDeletion = {this.props.handleIdeaDeletion}
+                                        ideas = {this.props.ideas}
+                                        parentID = {this.props.uuid} 
                                         availableModes={this.props.availableModes}
                                         level={this.state.level+1}
                                         handleDelete = {this.handleDelete}></IdeaCard>)}

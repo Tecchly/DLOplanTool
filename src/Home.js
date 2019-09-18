@@ -143,7 +143,7 @@ const Home = ({ history }) => {
         padding: 0
       }}
       onClick = {()=>{
-        console.log(x.id); //push this project id and title/subtitle to project page. 
+        console.log(x.projectID); //push this project id and title/subtitle to project page. 
       }}
     >
       <Container fluid className={classes.projectOverlay}>

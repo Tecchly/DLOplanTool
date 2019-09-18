@@ -144,7 +144,7 @@ const Projects = props => {
         props.history.push({
           pathname: "./project",
           state: {
-            projectID: x.id,
+            projectID: x.projectID,
             title: x.title,
             topic: x.subtitle
           }

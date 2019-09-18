@@ -17,8 +17,7 @@ class Project extends React.Component {
     
     constructor(props) {
         super(props);  
-        //@@TODO check if the props have been passed, if not then get them from DB
-        
+        //@@TODO find a good point to put saving.        
     }
 
     //Onload, load the idea object as a prop to all children. 
@@ -26,32 +25,81 @@ class Project extends React.Component {
         title:'',
         topic: '', 
         medium: '',
-        projectID: '',
         availableModes: ["video","sound","writing","image"],
+        loaded: false,
         ideas :{
-
+            
         }
     }
 
-    //Get changes from components.
+    //Get changes from components,
+    //@@TODO make slighltly different arrangements for root. Root change changes topic.
     handleIdeaUpdate = (uuid,data) =>{
+        if (uuid==="root") {
+            this.setState({topic: data.title});
+            //Change field in DB too.
+        }
         this.setState({
             ideas: {
                   ...this.state.ideas,
                   [`${uuid}`]: data
             }
-        }, ()=> {                        
+        }, ()=> { 
+
+            //@@Test for saving point. 
             var uid = firebase.auth().currentUser.uid;
             for (let idea in this.state.ideas) {
                 //Saving of all ideas. 
-                Firestore.saveIdeaToProject(uid,this.props.location.state.projectID,this.state.ideas[idea]);
+                Firestore.saveIdeaToProject(uid,this.props.location.state.projectID,idea,this.state.ideas[idea]);
             }
         })
     }
 
+    handleIdeaDeletion = (uuid) =>{
+        this.setState({
+            ideas: {
+                //@@TODO Need to recursively delete node and all children 
+            }
+        })
+    }
+
+    addIdea =(x)=>{
+        var data= x.data();
+        this.setState({
+            ideas: {
+                  ...this.state.ideas,
+                  [`${x.id}`]: x.data()
+            }
+        }, () => {
+            console.log(this.state.ideas);
+        })
+    }
+
+
+
     componentDidMount() {
+        this.setState({
+            ideas: {
+                  ...this.state.ideas,
+                  root: {
+                      title: this.props.location.state.topic,
+                      parentID: "none",
+                      mode : "video",
+                      notes: ""
+                  }
+            }
+        });
 
         //this.props.location.state.projectID; Get project id.
+        var ideas = Firestore.getAllIdeasByProject(firebase.auth().currentUser.uid,this.props.location.state.projectID); 
+        ideas
+        .get()
+        .then(function(idea) {
+             idea.forEach(x=>{
+                 this.addIdea(x); 
+            })
+        }.bind(this));
+
 
         if (this.props.location.state.title) {
         this.setState({title: this.props.location.state.title});
@@ -84,9 +132,11 @@ class Project extends React.Component {
                     <div style={{marginLeft: "15%", marginRight: "15%", maxWidth: "70%"}}>
                         <IdeaCard 
                             handleIdeaUpdate = {this.handleIdeaUpdate}
+                            handleIdeaDeletion = {this.handleIdeaDeletion}
                             uuid = "root"
                             parentID = "none"
-                            title={this.props.location.state.topic}
+                            topic = {this.state.topic}
+                            ideas = {this.state.ideas}
                             availableModes={this.state.availableModes}/> 
                     </div>                       
             </React.Fragment>          
