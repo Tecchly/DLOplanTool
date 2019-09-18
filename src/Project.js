@@ -97,6 +97,8 @@ class Project extends React.Component {
              idea.forEach(x=>{
                  this.addIdea(x); 
             })
+        }.bind(this)).then(function(){
+            this.setState({loaded:true});
         }.bind(this));
 
 
@@ -129,7 +131,7 @@ class Project extends React.Component {
                         {this.state.title}
                     </h1>
                     <div style={{marginLeft: "15%", marginRight: "15%", maxWidth: "70%"}}>
-                        <IdeaCard 
+                        {this.state.loaded ? <IdeaCard 
                             handleIdeaUpdate = {this.handleIdeaUpdate}
                             handleIdeaDeletion = {this.handleIdeaDeletion}
                             uuid = "root"
@@ -137,6 +139,7 @@ class Project extends React.Component {
                             topic = {this.state.topic}
                             ideas = {this.state.ideas}
                             availableModes={this.state.availableModes}/> 
+                            :null }
                     </div>                       
             </React.Fragment>          
         );

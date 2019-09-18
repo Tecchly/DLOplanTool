@@ -33,20 +33,29 @@ class IdeaCard extends React.Component {
           //Update the props on the children.
     }
 
-    addChild(title) {
+    //Add empty child
+    addChild(uuid) {
         if (this.state.childIdeas.length < 4){
             //Need to update project
-            this.props.handleIdeaUpdate(title, {
+            this.props.handleIdeaUpdate(uuid, {
                 title: "",
                 parentID: this.props.uuid,
                 notes: "",
                 mode: "video"
             })
-
             this.setState({
-                childIdeas:[...this.state.childIdeas, title]
+                childIdeas:[...this.state.childIdeas, uuid]
               });
         }
+    }
+
+
+    loadChildren(uuidArray) {
+        //@@TODO Make so children load as created.
+                
+        this.setState({
+            childIdeas:this.state.childIdeas.concat(uuidArray)
+        })
     }
 
     //Handle the edit, then close the popup.
@@ -81,7 +90,15 @@ class IdeaCard extends React.Component {
             this.setState({editing:true}); //Automatically open editing card if not root element. 
         }
 
-        //when props finish loading, append all child nodes to childideas array.
+        var ideaArray = [];
+
+        for (let idea in this.props.ideas) {
+
+            if (this.props.ideas[idea].parentID === this.props.uuid) {
+                ideaArray.push(idea);
+            }
+        }
+        this.loadChildren(ideaArray);
 
         //Test,
         this.setState ({mode: "video"}); 
