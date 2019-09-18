@@ -49,10 +49,8 @@ class IdeaCard extends React.Component {
         }
     }
 
-
-    loadChildren(uuidArray) {
-        //@@TODO Make so children load as created.
-                
+    //Loading multiple children 
+    loadChildren(uuidArray) {                
         this.setState({
             childIdeas:this.state.childIdeas.concat(uuidArray)
         })
@@ -93,12 +91,18 @@ class IdeaCard extends React.Component {
         var ideaArray = [];
 
         for (let idea in this.props.ideas) {
-
             if (this.props.ideas[idea].parentID === this.props.uuid) {
                 ideaArray.push(idea);
             }
         }
         this.loadChildren(ideaArray);
+
+        //If the data was from the load, close the popup onload. 
+        if(this.props.ideas[this.props.uuid].fromLoad) {
+            this.setState({created: true}, () => {
+                this.closePopup()
+            });
+        }
 
         //Test,
         this.setState ({mode: "video"}); 
@@ -206,7 +210,8 @@ class IdeaCard extends React.Component {
                                         parentID = {this.props.uuid} 
                                         availableModes={this.props.availableModes}
                                         level={this.state.level+1}
-                                        handleDelete = {this.handleDelete}></IdeaCard>)}
+                                        handleDelete = {this.handleDelete}>
+                                    </IdeaCard>)}
                     </div>
                 </div>
             </React.Fragment>

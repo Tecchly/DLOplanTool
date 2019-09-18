@@ -66,10 +66,11 @@ class Project extends React.Component {
     //When loading.
     addIdea =(x)=>{
         var data= x.data();
+        data.fromLoad = true; 
         this.setState({
             ideas: {
                   ...this.state.ideas,
-                  [`${x.id}`]: x.data()
+                  [`${x.id}`]: data
             }
         })
     }
@@ -82,9 +83,8 @@ class Project extends React.Component {
                   root: {
                       title: this.props.location.state.topic,
                       parentID: "none",
-                      mode : "video",
-                      notes: "",
-                      childIdeas: []
+                      mode : "video", //Get from a prop
+                      notes: ""
                   }
             }
         });
@@ -101,9 +101,8 @@ class Project extends React.Component {
             this.setState({loaded:true});
         }.bind(this));
 
-
         if (this.props.location.state.title) {
-        this.setState({title: this.props.location.state.title});
+            this.setState({title: this.props.location.state.title});
         }
 
         if (this.props.location.state.topic) {
