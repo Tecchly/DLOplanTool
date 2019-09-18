@@ -4,11 +4,9 @@ import ContentLoader from "react-content-loader"
 const ProjectLoader = () => {
     const MyLoader = () => (
         <Col style={{width: "25vh",
-    
         height: 400,
-    
-        marginLeft: 10,
-        marginRight: 10}}>
+        paddingRight: 200
+        }}>
         
         <ContentLoader 
           height={10}
