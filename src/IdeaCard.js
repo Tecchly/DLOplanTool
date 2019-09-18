@@ -20,7 +20,7 @@ class IdeaCard extends React.Component {
     state = {
         created: false,
         level: 0,
-        childIdeas: [], //Maybe store as an associative array.
+        childIdeas: [], //@@TODO move this into state.
         editing:false
     };
 
@@ -42,6 +42,7 @@ class IdeaCard extends React.Component {
                 notes: "",
                 mode: "video"
             })
+
             this.setState({
                 childIdeas:[...this.state.childIdeas, title]
               });
@@ -70,8 +71,7 @@ class IdeaCard extends React.Component {
         }       
     }
 
-    componentDidMount() {
-        console.log(this.props.ideas);
+    componentDidMount() {       
         
         if (this.props.level) {
             this.setState({level: this.props.level});
@@ -80,6 +80,8 @@ class IdeaCard extends React.Component {
         if (this.props.level > 0) {
             this.setState({editing:true}); //Automatically open editing card if not root element. 
         }
+
+        //when props finish loading, append all child nodes to childideas array.
 
         //Test,
         this.setState ({mode: "video"}); 

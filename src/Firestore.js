@@ -78,7 +78,7 @@ class Firestore {
             title: idea.title,
             mode: idea.mode,
             notes: idea.notes,
-            parentID: idea.parentID
+            parentID: idea.parentID,
         })
     }
 
@@ -98,7 +98,7 @@ class Firestore {
         ideaRef.set({
             title: data.title,
             subtitle: data.subtitle,
-            image: data.image
+            image: data.image,
         })
     }
 

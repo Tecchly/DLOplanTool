@@ -46,7 +46,7 @@ class Project extends React.Component {
             }
         }, ()=> { 
 
-            //@@Test for saving point. 
+            //@@Test for saving point. Make cleaner later
             var uid = firebase.auth().currentUser.uid;
             for (let idea in this.state.ideas) {
                 //Saving of all ideas. 
@@ -62,7 +62,8 @@ class Project extends React.Component {
             }
         })
     }
-
+    
+    //When loading.
     addIdea =(x)=>{
         var data= x.data();
         this.setState({
@@ -70,11 +71,8 @@ class Project extends React.Component {
                   ...this.state.ideas,
                   [`${x.id}`]: x.data()
             }
-        }, () => {
-            console.log(this.state.ideas);
         })
     }
-
 
 
     componentDidMount() {
@@ -85,7 +83,8 @@ class Project extends React.Component {
                       title: this.props.location.state.topic,
                       parentID: "none",
                       mode : "video",
-                      notes: ""
+                      notes: "",
+                      childIdeas: []
                   }
             }
         });
