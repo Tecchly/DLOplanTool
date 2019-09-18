@@ -82,6 +82,10 @@ class Firestore {
         })
     }
 
+    static deleteIdeafromProject(userID, projectID, ideaID){
+        var ideaRef = db.collection("users").doc(userID).collection("projects").doc(projectID).collection("ideas").doc(ideaID).delete();
+    }
+
     static saveProjectsToUser(userID, projects) {
         var projectCollection = this.getAllProjectsByUser(userID);
         projects.forEach(function (project) {

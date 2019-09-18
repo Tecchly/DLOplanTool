@@ -56,11 +56,25 @@ class Project extends React.Component {
     }
 
     handleIdeaDeletion = (uuid) =>{
-        this.setState({
-            ideas: {
-                //@@TODO Need to recursively delete node and all children 
+        const recursiveDelete = (uuid) => {
+            for(let idea in this.state.ideas){
+                if (this.state.ideas[idea].parentID == uuid){
+                    recursiveDelete(idea);
+                }
             }
-        })
+            console.log("Deleted: " + uuid);
+            var replacement = this.state.ideas;
+            delete replacement[uuid];
+            this.setState({
+                ideas: replacement
+            });
+            var uid = firebase.auth().currentUser.uid;
+            Firestore.deleteIdeafromProject(uid, this.props.location.state.projectID,uuid);
+
+        }
+        recursiveDelete(uuid);
+        console.log(this.state.ideas);
+
     }
     
     //When loading.
