@@ -18,22 +18,19 @@ class ShareProjectPopup extends React.Component {
     }
 
     state = {
-        projectTitle: "",
-        projectTopic: "",
-        shareEmails: "",
-        image: "" //represents the source information about the image.
+        shareEmails: ""
     };
 
     componentDidMount() {
         //Local storage variant
         var title = this.localCache.getItem("title");
         if (title) {
-            this.setState({ projectTitle: title });
+            this.setState({ title: title });
         }
 
         var topic = this.localCache.getItem("topic");
         if (topic) {
-            this.setState({ projectTopic: topic });
+            this.setState({ subtitle: topic });
         }
 
         var image = this.localCache.getItem("image");
@@ -65,13 +62,19 @@ class ShareProjectPopup extends React.Component {
         });
     }
 
+    uuidv4() {
+        return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+        )
+    }
+
     shareProject() {
         this.isProjectShared = true;
         var data = {
-            id: "abcdefghijklmnopqrst",
-            title: "test", //this.state.projectTitle,
-            subtitle: "test", //this.state.projectTopic,
-            image: "marae.jpg", //Default image.
+            id: this.uuidv4(),
+            title: this.props.location.state.title,
+            subtitle: this.props.location.state.topic,
+            image: this.props.location.state.image,
             shareTime: + new Date(),
             createUser: "",
             path: ""
@@ -83,7 +86,7 @@ class ShareProjectPopup extends React.Component {
 
         var user = firebase.auth().currentUser;
         data.createUser = user.displayName;
-        data.path = "users/" + user.uid + "/projects/abcdefghijklmnopqrst"; //+ this.projectId
+        data.path = "users/" + user.uid + "/projects/" + data.id; //+ this.projectId
 
         var shareEmails = this.state.shareEmails;
         shareEmails.split(/[,|\n]/).forEach(function (email) {
@@ -101,12 +104,12 @@ class ShareProjectPopup extends React.Component {
         const { history } = this.props;
         history.push({
             pathname: "./",
-            state: {
-                title: this.state.projectTitle,
-                topic: this.state.projectTopic,
-                image: this.state.image,
-                creationTime: +new Date()
-            }
+            // state: {
+            //     title: this.state.projectTitle,
+            //     topic: this.state.projectTopic,
+            //     image: this.state.image,
+            //     creationTime: +new Date()
+            // }
         });
     }
 

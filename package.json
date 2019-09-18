@@ -16,7 +16,7 @@
     "react-ionicons": "^2.1.6",
     "react-router-dom": "^5.0.1",
     "react-scripts": "0.9.x",
-    "reactjs-popup": "1.5.0"
+    "react-js-pagination": "3.0.2"
   },
   "devDependencies": {},
   "scripts": {
