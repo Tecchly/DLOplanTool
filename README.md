@@ -9,8 +9,9 @@ Naomi has worked extensively  with 1:1 initiatives (1 device per student) in sch
 
 1. Ensure npm is installed on your machine, you can get it from here https://www.npmjs.com/get-npm
 2. Download/clone this repository
-3. In the root folder (i.e. DLOplanTool) open terminal and run  ```npm install```
-4. Then run ```npm start```
+3. Please email any member of the team of the .env file to include in the root folder. It has not been included in the repository as a security consideration.  
+4. In the root folder (i.e. DLOplanTool) open terminal and run  ```npm install```
+5. Then run ```npm start```
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
