@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useState } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -13,7 +14,8 @@ import Backg from "../assets/images/poster2.jpg";
 import { Image } from "react-bootstrap";
 import firebase from "firebase";
 import Firestore from "./Firestore.js";
-
+import ShareProjectPopup from "./ShareProjectPopup";
+import Chips, { Chip } from "react-chips";
 import "./index.css";
 const styles = theme => ({
   root: {
@@ -29,11 +31,13 @@ const styles = theme => ({
   }
 });
 
+
+
 const DialogTitle = withStyles(styles)(props => {
   const { children, classes, onClose } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root}>
-      <Typography className='projectDialogTitle' >{children}</Typography>
+      <Typography className="projectDialogTitle">{children}</Typography>
       {onClose ? (
         <IconButton
           aria-label="close"
@@ -47,10 +51,10 @@ const DialogTitle = withStyles(styles)(props => {
   );
 });
 
-const archive = (projectID) => {
-    var uid = firebase.auth().currentUser.uid;
-    Firestore.archiveProject(uid, projectID);
-}
+const archive = projectID => {
+  var uid = firebase.auth().currentUser.uid;
+  Firestore.archiveProject(uid, projectID);
+};
 
 const DialogContent = withStyles(theme => ({
   root: {
@@ -65,7 +69,38 @@ const DialogActions = withStyles(theme => ({
   }
 }))(MuiDialogActions);
 
-const ProjectView = ({ open, hide, projectInfo, edit }) =>
+const ProjectView = ({ open, hide, projectInfo, edit }) => {
+  const [suggestions, setSuggestions] = useState([]);
+  const [share, setShare] = useState(false); 
+  const [tags, addTags] = useState([]);
+
+  const addTag = t => {
+    addTags(t);
+  };
+  const shareP = () => {
+    setShare(!share)
+  };
+  const onChange = tags => {
+    addTag(tags)
+  };
+  const addSuggestion = s => {
+    setSuggestions(oldArray => [...oldArray, s]);
+  };
+  useEffect(() => {
+    Firestore.getUserEmails().then(querySnapshot => {
+      console.log(querySnapshot);
+      // this.setState({suggestions: [...suggestions, ...qu]})
+      querySnapshot.forEach(doc => {
+        // this.setState(previousState => ({suggestions: [...previousState.suggestions, {name: doc.data().email}]}))
+        addSuggestion(doc.data().email);
+        // this.setState(previousState => ({
+        //   suggestions: [...previousState.suggestions, doc.data().email]
+        // }));
+        console.log(suggestions);
+      });
+    });
+  },[]);
+  return (
   open
     ? ReactDOM.createPortal(
         <React.Fragment>
@@ -77,29 +112,62 @@ const ProjectView = ({ open, hide, projectInfo, edit }) =>
           >
             <div>
               <Image fluid src={projectInfo.image} />
-              <h3 className='projectDialogTitle'>{projectInfo.title}</h3>
-            <br/>
-            <h3 className='projectDialogSubtitle'>{projectInfo.subtitle}</h3>
-            <h3 className='projectDialogMedium'>{projectInfo.medium} Project</h3>
+              <h3 className="projectDialogTitle">{projectInfo.title}</h3>
+              <br />
+              <h3 className="projectDialogSubtitle">{projectInfo.subtitle}</h3>
+              <h3 className="projectDialogMedium">
+                {projectInfo.medium} Project
+              </h3>
             </div>
-            <DialogTitle id="customized-dialog-title" onClose={hide}>
-            </DialogTitle>
-            {/* <DialogContent dividers>
-              <Typography gutterBottom>
-              </Typography>
-            </DialogContent> */}
+            <DialogTitle
+              id="customized-dialog-title"
+              onClose={hide}
+            ></DialogTitle>
+            {/* <DialogContent dividers style={{display: share? 'block':'none'}}> */}
+            <Chips
+            style={{display: share? 'block':'none'}}
+                  value={tags}
+                  onChange={onChange}
+                  suggestions={suggestions}
+                />
+            {/* </DialogContent> */}
             <DialogActions>
-            <Button onClick={() => {archive(projectInfo.projectID); hide()}} color="secondary">
+              <Button
+                onClick={() => {
+                  archive(projectInfo.projectID);
+                  hide();
+                }}
+                color="secondary"
+              >
                 Archive
               </Button>
-              <Button onClick={() => {hide(); edit(projectInfo)}} color="primary">
+              <Button
+                onClick={() => {
+                  hide();
+                  edit(projectInfo);
+                }}
+                color="primary"
+              >
                 Edit
               </Button>
+              <Button
+                onClick={shareP}
+                color="primary"
+              >
+                Share
+              </Button>
+              <ShareProjectPopup
+                title={projectInfo.title}
+                subtitle={projectInfo.subtitle}
+                image={projectInfo.image}
+                projectId={projectInfo.projectID}
+              />
             </DialogActions>
           </Dialog>
         </React.Fragment>,
         document.body
       )
-    : null;
+    : null);
+};
 
 export default ProjectView;

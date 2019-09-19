@@ -522,4 +522,10 @@ margin-left: 30px;
 
 }
 
+.buttonToolbar {
+  top: 0;
+    position: absolute;
+    left: 0;
+}
+
 
