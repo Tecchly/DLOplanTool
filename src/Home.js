@@ -143,9 +143,16 @@ const Home = ({ history }) => {
         backgroundSize: "cover",
         padding: 0
       }}
-      onClick = {()=>{
-        console.log(x.projectID); //push this project id and title/subtitle to project page. 
-      }}
+      onClick = {()=>
+        history.push({
+          pathname: "./project",
+          state: {
+            projectID: x.projectID,
+            title: x.title,
+            topic: x.subtitle
+            }
+          }
+        )}
     >
       <Container fluid className={classes.projectOverlay}>
         <Container style={{ position: "absolute", bottom: 5 }}>
