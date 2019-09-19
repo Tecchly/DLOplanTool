@@ -7,11 +7,11 @@ class Firestore {
 
     static saveWithDocID(collection, docID, data) {
         return db.collection(collection).doc(docID).set(data, { merge: true })
-            // .then(function() {
-            //     // console.log("written doc " + docID + " successfully to collection " + collection);
-            // }).catch(function (error) {
-            //     console.error("Error writing document: ", error);
-            // })
+        // .then(function() {
+        //     // console.log("written doc " + docID + " successfully to collection " + collection);
+        // }).catch(function (error) {
+        //     console.error("Error writing document: ", error);
+        // })
     };
 
     static getCollection(collection) {
@@ -35,22 +35,22 @@ class Firestore {
         });
     };
 
-   
+
     /**
      *  Gets the collection for all users
      *  @param orderd: if the output should be ordered by creation time 
      */
     static getAllProjectsByUser(userID, ordered = false) {
         if (ordered) {
-            return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'asc'); 
-        }else {
+            return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'asc');
+        } else {
             return db.collection("users").doc(userID).collection("projects");
         }
-        
+
     };
 
     static getRecentProjectsByUser(userID) {
-        return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'desc').limit(4); 
+        return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'desc').limit(4);
     };
 
     static getProjectById(userID, projectID) {
@@ -62,7 +62,7 @@ class Firestore {
     };
 
     static saveToDBWithDocID(collection, docID, data) {
-        return collection.doc(docID).set(data, {merge : true})
+        return collection.doc(docID).set(data, { merge: true })
         // .then(function () {
         //     console.log("written doc " + docID + " successfully");
         // }).catch(function (error) {
@@ -71,26 +71,26 @@ class Firestore {
     };
 
     //@@TODO maybe deprecated due to storing ideas as an object and not an list 
-    static saveIdeaToProject(userID, projectID, ideas) {        
+    static saveIdeaToProject(userID, projectID, ideas) {
         var ideaCollection = this.getAllIdeasByProject(userID, projectID);
-        ideas.forEach(function(idea) {
+        ideas.forEach(function (idea) {
             this.saveToDBWithDocID(ideaCollection, idea.id, idea);
         });
-        
+
     };
 
     //save a singular idea to the project.
     static saveSingleIdeaToProject(userID, projectID, ideaID, idea) {
         var ideaRef = db.collection("users").doc(userID).collection("projects").doc(projectID).collection("ideas").doc(ideaID);
         return ideaRef.set({
-                title: idea.title,
-                mode: idea.mode,
-                notes: idea.notes,
-                parentID: idea.parentID,
-            })
+            title: idea.title,
+            mode: idea.mode,
+            notes: idea.notes,
+            parentID: idea.parentID,
+        })
     }
 
-    static deleteIdeafromProject(userID, projectID, ideaID){
+    static deleteIdeafromProject(userID, projectID, ideaID) {
         var ideaRef = db.collection("users").doc(userID).collection("projects").doc(projectID).collection("ideas").doc(ideaID).delete();
     }
 
@@ -116,18 +116,33 @@ class Firestore {
 
 
     static editProjectFields(userID, projectID, data) {
-        var ideaRef = this.getProjectById(userID,projectID);
+        var ideaRef = this.getProjectById(userID, projectID);
         return ideaRef.update(data);
     }
-    
 
-    static updateUserDetails(){
+
+    static updateUserDetails() {
         var user = firebase.auth().currentUser;
         return db.collection('users').doc(user.uid).set({
-            Name:user.displayName, 
-            email:user.email, 
-            uid:user.uid}, {merge: true});
+            Name: user.displayName,
+            email: user.email,
+            uid: user.uid
+        }, { merge: true });
     }
+
+    static queryUserByEmail(email) {
+        return db.collection("users").where("email", "==", email);
+    }
+
+    static saveSharedProject(uid, sharedProjectData) {
+        return db.collection("users").doc(uid)
+            .collection("sharedProjects").doc(sharedProjectData.id)
+            .set(sharedProjectData, { merge: true });
+    }
+
+    static getAllSharedProjectsByUser(userID) {
+        return db.collection("users").doc(userID).collection("sharedProjects").orderBy('shareTime', 'desc');
+    };
 
 };
 
