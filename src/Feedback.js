@@ -11,71 +11,7 @@ import "./index.css";
 const Feedback = ({ history }) => {
   return (
     <React.Fragment>
-      <Navbar
-        collapseOnSelect
-        expand="lg"
-        bg="light"
-        variant="light"
-        style={{
-          boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.2)"
-        }}
-      >
-        <Container
-          fluid
-          style={{
-            alignSelf: "center",
-            alignContent: "center",
-            justifyContent: "center"
-          }}
-        >
-          <Col />
-          <Col
-            className="justify-content-md-center"
-            xs={11}
-            style={{ textAlign: "center" }}
-          >
-            <Navbar.Brand
-              style={{
-                textAlign: "center",
-                color: "#FFF",
-                fontFamily: "Montserrat",
-                fontWeight: "600",
-                fontSize: 22,
-                cursor: 'pointer'
-              }}
-              onClick={() => {
-                history.push("/");
-              }}
-            >
-              <Image
-                src={require("../assets/images/orange_logop.png")}
-                style={{ height: 30, marginLeft: 5, marginBottom: 2 }}
-              />
-              Digital Learning
-            </Navbar.Brand>
-          </Col>
-          <Col style={{}}>
-            <Nav className="mr-auto"></Nav>
-            <Nav>
-              <img
-                alt="profile"
-                src={app.auth().currentUser.photoURL}
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 20,
-                  cursor: "pointer"
-                }}
-                onClick={() => {
-                  localStorage.setItem("user", null);
-                  app.auth().signOut();
-                  history.push("/login");
-                }}
-              />
-            </Nav>
-          </Col>
-        </Container>
-      </Navbar>
+      <HeaderBar />
       <Container fluid={true}>
         <Container
           style={{ marginTop: 40, marginLeft: 100, marginRight: 100 }}
@@ -139,6 +75,8 @@ const Feedback = ({ history }) => {
                 fontSize: 15
               }}
             >
+              <br />
+              <br />
               When feedback is given, you will see it here!
             </h2>
           </Row>

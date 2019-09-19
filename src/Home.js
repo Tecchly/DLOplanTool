@@ -280,7 +280,7 @@ const Home = ({ history }) => {
                 bcolor="#FFF"
                 tcolor="#FA8231"
                 icon="question-circle"
-                nav="/"
+                nav="#"
                 text="Help"
               />
             </Row>
