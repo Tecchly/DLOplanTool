@@ -23,7 +23,7 @@ const Login = ({ history }) => {
   const { currentUser } = useContext(AuthContext);
 
   if (currentUser) {
-    return <Redirect to="/amplification" />;
+    return <Redirect to="/" />;
   }
   return (
     <div id="login"

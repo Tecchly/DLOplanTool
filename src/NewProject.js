@@ -7,25 +7,33 @@ import { withRouter, Redirect } from "react-router";
 import firebase from "firebase";
 import Firestore from "./Firestore.js";
 import Ionicon from "react-ionicons";
+import Utils from "./Utils.js";
+
+//@@TODO, need to add a medium selector here.
+import MessagePopup from "./MessagePopup.js";
+
 class NewProjectPopup extends React.Component {
   constructor(props) {
     super(props);
 
     this.localCache = window.localStorage;
 
-    this.handleTitleChange = this.handleTitleChange.bind(this);
-    this.handleTopicChange = this.handleTopicChange.bind(this);
-
     this.isProjectCreated = false;
+
   }
 
   state = {
+    showMessagePopup : false,
     projectTitle: "",
     projectTopic: "",
-    imageName: "", //The name of the image, whether from DB or upload
+    imageName: "", //The ID of the image, whether from DB or upload
     image: "", //represents the source information about the image.
     file: "" //the uploaded file for the image.
   };
+
+  toggleMessagePopup() {
+    this.setState({showMessagePopup: !this.state.showMessagePopup});
+  }
 
   componentDidMount() {
     //Local storage variant
@@ -71,10 +79,16 @@ class NewProjectPopup extends React.Component {
 
     var file = fileList[0];
     if (file) {
-      this.setState({ file: file });
-      this.setState({ imageName: file.name });
+      var size = file.size;
+      if (size > 5120000) {
+        this.toggleMessagePopup();
+        return;
+      }
+      this.setState({file:file});
 
-      this.localCache.setItem("imageName", file.name);
+      var uniqueName = Utils.uuid();      
+      this.setState({imageName:uniqueName});
+      this.localCache.setItem("imageName", uniqueName);
 
       var reader = new FileReader();
       reader.onload = function(e) {
@@ -98,8 +112,8 @@ class NewProjectPopup extends React.Component {
       return;
     }
 
-    //Uploading image
-    var storageRef = firebase.storage().ref("projectImage/" + file.name);
+    //Uploading image    
+    var storageRef = firebase.storage().ref("projectImage/" + this.state.imageName);          
     var uploadTask = storageRef.put(file);
 
     uploadTask.on(
@@ -111,14 +125,14 @@ class NewProjectPopup extends React.Component {
     );
   }
 
-  handleTitleChange(event) {
+  handleTitleChange =(event)=> {
     this.setState({ projectTitle: event.target.value }, function() {
       //Local cache variant
       this.localCache.setItem("title", this.state.projectTitle);
     });
   }
 
-  handleTopicChange(event) {
+  handleTopicChange = (event) => {
     this.setState({ projectTopic: event.target.value }, function() {
       this.localCache.setItem("topic", this.state.projectTopic);
     });
@@ -131,39 +145,47 @@ class NewProjectPopup extends React.Component {
     var data = {
       title: this.state.projectTitle,
       subtitle: this.state.projectTopic,
-      image: "",
-      creationTime: +new Date()
+      image: "marae.jpg", //Default image.
+      creationTime: + new Date()
     };
 
     if (this.state.imageName) {
       data.image = this.state.imageName;
     }
 
-    var uid = firebase.auth().currentUser.uid;
-    Firestore.saveNewProject(uid, data);
     if (this.state.file) {
       this.uploadImage(this.state.file);
     }
 
     const { history } = this.props;
-    history.push({
-      pathname: "./project",
-      state: {
-        title: this.state.projectTitle,
-        topic: this.state.projectTopic,
-        image: this.state.image,
-        creationTime: +new Date()
-      }
-    });
+    var uid = firebase.auth().currentUser.uid;
+    Firestore.saveNewProject(uid, data).then(function(docRef){
+     
+      history.push({
+        pathname: "./project",
+        state: {
+          projectID: docRef.id,
+          title: this.state.projectTitle,
+          topic: this.state.projectTopic,
+          image: this.state.image,
+          creationTime: +new Date()
+        }
+      })
+    }.bind(this));
   }
+
 
   render() {
     var togglePopup = this.props.togglePopup;
-    const { history } = this.props;
     return (
       <React.Fragment>
         <div className="popup">
           <div className="inner">
+          {this.state.showMessagePopup ?
+          <MessagePopup 
+            text='Images have to be 5MB or smaller. Please upload an image with a smaller file size.'
+            closeMessagePopup={this.toggleMessagePopup.bind(this)} />
+          : null}
             <Ionicon
               style={{
                 position: "absolute",
@@ -225,7 +247,7 @@ class NewProjectPopup extends React.Component {
                     }}
                     icon="md-close"
                     onClick={() => {
-                      //Could remove image from db too?
+                      //Remove image from dropdown
                       this.localCache.removeItem("image");
                       this.localCache.removeItem("imageName");
                       this.setState({ image: "" });

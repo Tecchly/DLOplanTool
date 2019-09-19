@@ -5,6 +5,7 @@ import Firestore from "./Firestore.js";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Icon } from "antd";
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
+import HeaderBar from "./HeaderBar.js"
 import history from "./history";
 import Ionicon from "react-ionicons";
 import "./index.css";
@@ -87,6 +88,7 @@ const Home = ({ history }) => {
         if (doc.empty) toggleNoProjects()
         doc.forEach(x => {
           var proj = x.data();
+          proj.projectID = x.id;
           storage
             .child("projectImage/" + x.data().image)
             .getDownloadURL()
@@ -141,6 +143,16 @@ const Home = ({ history }) => {
         backgroundSize: "cover",
         padding: 0
       }}
+      onClick = {()=>
+        history.push({
+          pathname: "./project",
+          state: {
+            projectID: x.projectID,
+            title: x.title,
+            topic: x.subtitle
+            }
+          }
+        )}
     >
       <Container fluid className={classes.projectOverlay}>
         <Container style={{ position: "absolute", bottom: 5 }}>

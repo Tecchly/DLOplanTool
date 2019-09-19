@@ -8,6 +8,7 @@ import GridListTile from "@material-ui/core/GridListTile";
 import withWidth, { isWidthUp } from "@material-ui/core/withWidth";
 import { Button, Icon } from "antd";
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
+import HeaderBar from "./HeaderBar.js"
 import history from "./history";
 import Ionicon from "react-ionicons";
 import ProjectLoader from "./ProjectLoader";
@@ -108,12 +109,12 @@ const Projects = props => {
         if (doc.empty) toggleNoProjects()
         doc.forEach(x => {
           var proj = x.data();
+          proj.projectID = x.id;
           storage
             .child("projectImage/" + x.data().image)
             .getDownloadURL()
             .then(function(url) {
               proj.image = url;
-
               addProject(proj);
               console.log(proj);
             });
@@ -127,6 +128,7 @@ const Projects = props => {
     setNoProjects(!noProjects);
 
   }
+  
   const ProjectTile = ({ x, size }) => (
     <div
       key={x.creationTime}
@@ -139,6 +141,16 @@ const Projects = props => {
         padding: 0,
         marginBottom: 10
       }}
+      onClick = {()=>
+        props.history.push({
+          pathname: "./project",
+          state: {
+            projectID: x.projectID,
+            title: x.title,
+            topic: x.subtitle
+          }
+        })
+      }
     >
       <Container fluid className={classes.projectOverlay}>
         <Container style={{ position: "absolute", bottom: 5 }}>

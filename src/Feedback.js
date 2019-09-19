@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button, Icon } from "antd";
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import history from "./history";
+import HeaderBar from "./HeaderBar.js"
 import Ionicon from "react-ionicons";
 import "./index.css";
 
@@ -103,7 +104,7 @@ const Feedback = ({ history }) => {
           </Row>
         </Container>
         <Container
-          class="d-flex align-items-center"
+          className="d-flex align-items-center"
           style={{ marginTop: "20vh" }}
         >
           <Row></Row>
