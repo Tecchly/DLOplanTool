@@ -144,6 +144,10 @@ class Firestore {
         return db.collection("users").doc(userID).collection("sharedProjects").orderBy('shareTime', 'desc');
     };
 
+    static getUserEmails() {
+        return db.collection("users").get();
+    };
+
 };
 
 export default Firestore;

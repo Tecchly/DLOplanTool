@@ -266,7 +266,7 @@ class Project extends React.Component {
             ) : null}
           </div>
         </Container>
-        <ShareProjectPopup style={{
+        {/* <ShareProjectPopup style={{
                         backgroundColor: "#FA8231",
                         color: "#fff",
                         marginTop: "30%",
@@ -281,7 +281,7 @@ class Project extends React.Component {
                         minHeight: 45,
                         fontWeight: "600"
                 }}
-                    title={this.state.title} subtitle={this.state.topic} image={this.props.location.state.image} projectId={this.props.location.state.projectID} />
+                    title={this.state.title} subtitle={this.state.topic} image={this.props.location.state.image} projectId={this.props.location.state.projectID} /> */}
       </React.Fragment>
     );
   }

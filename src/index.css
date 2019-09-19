@@ -422,7 +422,7 @@ margin-left: 30px;
 .outer {
   z-index: 1;
   width: 4px;
-  height: 433px;
+  height: 400px;
   position: absolute;
   overflow: hidden;
   margin-left: 52px;
@@ -520,6 +520,12 @@ margin-left: 30px;
   font: 700 20px "Montserrat", sans-serif !important;
   color: white;
 
+}
+
+.buttonToolbar {
+  top: 0;
+    position: absolute;
+    left: 0;
 }
 
 

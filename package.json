@@ -9,10 +9,13 @@
     "bootstrap": "^4.3.1",
     "firebase": "^6.4.0",
     "history": "^4.9.0",
+    "material-ui-chip-input": "^2.0.0-beta.1",
     "nlcst-to-string": "^2.0.3",
     "react": "^16.9.0",
     "react-bootstrap": "^1.0.0-beta.12",
+    "react-chips": "^0.8.0",
     "react-content-loader": "^4.2.2",
+    "react-dnd-cjs": "^9.3.9",
     "react-dom": "^16.9.0",
     "react-firebaseui": "^4.0.0",
     "react-ionicons": "^2.1.6",
@@ -21,9 +24,6 @@
     "retext": "^7.0.0",
     "retext-keywords": "^5.0.0",
     "retext-pos": "^2.0.2"
-  },
-  "devDependencies": {
-    "gulp": "^4.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
