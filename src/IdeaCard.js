@@ -21,7 +21,7 @@ class IdeaCard extends React.Component {
         created: false,
         level: 0,
         childIdeas: [], 
-        icon: "ios-bulb",
+        icon: "",
         editing:false
     };
 
@@ -51,7 +51,7 @@ class IdeaCard extends React.Component {
                 title: "",
                 parentID: this.props.uuid,
                 notes: "",
-                mode: "video"
+                mode: this.props.availableModes[0]
             })
             this.setState({
                 childIdeas:[...this.state.childIdeas, uuid]
@@ -111,7 +111,7 @@ class IdeaCard extends React.Component {
                     this.setState({icon:"ios-image"})
                 break;
             default:
-                this.setState({icon:"ios-bulb"})                
+                this.setState({icon:""})                
         }
     }
 
@@ -142,6 +142,8 @@ class IdeaCard extends React.Component {
         }
 
         this.setIcon(this.props.ideas[this.props.uuid].mode);
+
+        
     }
 
     render() {
@@ -182,7 +184,9 @@ class IdeaCard extends React.Component {
                                 cursor: 'pointer',
                             }}
                             onClick={()=> {
-                                this.setState({editing:"true"});
+                                if (this.state.icon != ""){
+                                    this.setState({editing:"true"});
+                                }
                             }}>
                             
                             <Ionicon

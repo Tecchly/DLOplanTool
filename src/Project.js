@@ -108,11 +108,25 @@ class Project extends React.Component {
                   root: {
                       title: this.props.location.state.topic,
                       parentID: "none",
-                      mode : "video", //Get from a prop
+                      mode : this.props.location.state.medium, //Get from a prop
                       notes: ""
                   }
             }
         });
+
+        if (this.props.location.state.medium == "Presentation"){
+            this.state.availableModes = ["video","sound","writing","image"]
+        }else if (this.props.location.state.medium == "Screencast"){
+            this.state.availableModes = ["video","sound","writing","image"]
+        }else if (this.props.location.state.medium == "Animation"){
+            this.state.availableModes = ["video","sound","writing","image"]
+        }else if (this.props.location.state.medium == "Video"){
+            this.state.availableModes = ["sound","writing","image"]
+        }else if (this.props.location.state.medium == "Podcast"){
+            this.state.availableModes = ["sound"]
+        }else if (this.props.location.state.medium == "Film"){
+            this.state.availableModes = ["video","sound"]
+        }
 
         //this.props.location.state.projectID; Get project id.
         var ideas = Firestore.getAllIdeasByProject(firebase.auth().currentUser.uid,this.props.location.state.projectID); 
@@ -135,7 +149,9 @@ class Project extends React.Component {
         }        
 
         //@@TODO Medium select to control the available modes. 
-        
+        if (this.props.location.state.medium) {
+            this.setState({medium: this.props.location.state.medium});
+        }  
     }
 
 
@@ -147,14 +163,43 @@ class Project extends React.Component {
         return(
             <React.Fragment>
                 <HeaderBar/>
+                <Container
+                style={{ marginTop: 40, paddingLeft: 100, marginRight: 100 }}
+                fluid
+                >
+                <Row>
+                    <Icon
+                    type="arrow-left"
+                    onClick={() => this.props.history.push("/")}
+                    style={{
+                        fontSize: 30,
+                        marginRight: 10,
+                        color: "#2F4858",
+                        cursor: "pointer"
+                    }}
+                    />
+                    <h3
+                    style={{
+                        color: "#2F4858",
+                        fontFamily: "Montserrat",
+                        fontWeight: "700"
+                    }}
+                    >
+                    Back
+                    
+                    </h3>
+                </Row>
+                </Container>
                     <h1 style ={{
                         textAlign: "center"
                     }}
                     >
                         {this.state.title}
+                        
                     </h1>
                     <div style={{marginLeft: "15%", marginRight: "15%", maxWidth: "70%"}}>
-                        {this.state.loaded ? <IdeaCard 
+                        {this.state.loaded ? 
+                        <IdeaCard 
                             handleIdeaUpdate = {this.handleIdeaUpdate}
                             handleIdeaDeletion = {this.handleIdeaDeletion}
                             handleMainTopicChange = {this.handleMainTopicChange}
