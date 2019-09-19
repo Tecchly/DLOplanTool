@@ -138,7 +138,6 @@ class Project extends React.Component {
         
     }
 
-
     componentWillUnmount() {
         
     }
@@ -147,12 +146,64 @@ class Project extends React.Component {
         return(
             <React.Fragment>
                 <HeaderBar/>
+                <Container fluid = {true}>
+                    <Row style ={{textAlign: "center",  marginTop: 40}}>                    
+                        <div style ={{ display: "flex", float:"left" , marginLeft: 100}}>
+                            <Icon
+                            type="arrow-left"
+                            onClick={() => {
+                                const { history } = this.props;
+                                history.goBack();
+                                }
+                            }
+                            style={{
+                                fontSize: 30,
+                                color: "#2F4858",
+                                cursor: "pointer"
+                            }}
+                            />
+                            <h3
+                            style={{
+                                color: "#2F4858",
+                                fontFamily: "Montserrat",
+                                fontWeight: "700"
+                            }}
+                            >
+                                Back
+                            </h3>
+                        </div>              
+                        
+                        <div style ={{ display: "flex", float:"right"}}>
+                        <h3
+                        style={{
+                            color: "#2F4858",
+                            fontFamily: "Montserrat",
+                            fontWeight: "700"
+                        }}
+                        >
+                            Amplify
+                        </h3>
+                            <Icon
+                            type="arrow-right"
+                            onClick={() => {
+                                alert("I do nothing lol");
+                                }
+                            }
+                            style={{
+                                fontSize: 30,
+                                color: "#2F4858",
+                                cursor: "pointer"
+                            }}
+                         />    
+                        </div>              
+                    </Row> 
                     <h1 style ={{
-                        textAlign: "center"
-                    }}
+                           textAlign: "center"
+                        }}
                     >
                         {this.state.title}
-                    </h1>                   
+                    </h1> 
+
                     <div style={{marginLeft: "15%", marginRight: "15%", maxWidth: "70%"}}>
                         {this.state.loaded ? <IdeaCard 
                             handleIdeaUpdate = {this.handleIdeaUpdate}
@@ -164,7 +215,8 @@ class Project extends React.Component {
                             ideas = {this.state.ideas}
                             availableModes={this.state.availableModes}/> 
                             :null }
-                    </div>                       
+                    </div>
+                </Container>                       
             </React.Fragment>          
         );
     }
