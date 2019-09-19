@@ -12,6 +12,10 @@ import HeaderBar from "./HeaderBar.js"
 import history from "./history";
 import Ionicon from "react-ionicons";
 import ProjectLoader from "./ProjectLoader";
+import ProjectView from "./ProjectView";
+import useProjectDialog from './useProjectDialog';
+
+
 import "./index.css";
 import { useState } from "react";
 const emptyImages = ["void.svg","empty.svg","empty_1.svg","empty_2.svg","empty_3.svg"]
@@ -71,6 +75,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 const Projects = props => {
+  const {open, toggle} = useProjectDialog();
   const getGridListCols = () => {
     if (isWidthUp("xl", props.width)) {
       return 4;
@@ -89,11 +94,19 @@ const Projects = props => {
   const classes = useStyles();
   const [allProjects, pushProjects] = useState([]);
   const [noProjects, setNoProjects] = useState(false);
+  const [currentProject, setCurrentProject] = useState(null);
 
   const AllProjects = ({ project, size }) => (
     <ProjectTile x={project} size={size} />
   );
   var storage = firebase.storage().ref();
+
+  const clickedProject = project => {
+    setCurrentProject(project);
+  }
+  const closeProject = () => {
+    setCurrentProject(null);
+  }
 
   const addProject = project => {
     pushProjects(oldArray => [...oldArray, project]);
@@ -109,14 +122,15 @@ const Projects = props => {
         if (doc.empty) toggleNoProjects()
         doc.forEach(x => {
           var proj = x.data();
+
           storage
             .child("projectImage/" + x.data().image)
             .getDownloadURL()
             .then(function(url) {
               proj.image = url;
-
+              proj.id = x.id
               addProject(proj);
-              console.log(proj);
+              // console.log(proj);
             });
         });
       })
@@ -140,6 +154,7 @@ const Projects = props => {
         padding: 0,
         marginBottom: 10
       }}
+      onClick={() => {toggle(); clickedProject(x)}}
     >
       <Container fluid className={classes.projectOverlay}>
         <Container style={{ position: "absolute", bottom: 5 }}>
@@ -168,6 +183,11 @@ const Projects = props => {
     <React.Fragment>
       <HeaderBar/>
       <Container fluid={true}>
+      <ProjectView
+        open={open}
+        hide={toggle}
+        projectInfo={currentProject}
+      />
         <Container
           style={{ marginTop: 40, paddingLeft: 100, marginRight: 100 }}
           fluid

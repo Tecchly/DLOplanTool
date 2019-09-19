@@ -12,6 +12,10 @@ import "./index.css";
 import NewProjectPopup from "./NewProject";
 import { useState } from "react";
 import ProjectLoader from "./ProjectLoader";
+import ProjectView from "./ProjectView";
+import useProjectDialog from './useProjectDialog';
+
+
 const useStyles = makeStyles(theme => ({
   button: {
     width: "100%",
@@ -67,16 +71,21 @@ const useStyles = makeStyles(theme => ({
 const emptyImages = ["void.svg","empty.svg","empty_1.svg","empty_2.svg","empty_3.svg"]
 
 const Home = ({ history }) => {
+  const {open, toggle} = useProjectDialog();
   const classes = useStyles();
   const [showNewProject, setShowNewProject] = useState(false);
   const [noProjects, setNoProjects] = useState(false);
   const [recentProjects, pushRecentProjects] = useState([]);
+  const [currentProject, setCurrentProject] = useState(null);
   const RecentProject = ({ project }) => <ProjectTile x={project} />;
   var storage = firebase.storage().ref();
 
   const addRecentProject = project => {
     pushRecentProjects(oldArray => [...oldArray, project]);
   };
+  const clickedProject = project => {
+    setCurrentProject(project);
+  }
 
   useEffect(() => {
     var uid = firebase.auth().currentUser.uid;
@@ -93,6 +102,7 @@ const Home = ({ history }) => {
             .getDownloadURL()
             .then(function(url) {
               proj.image = url;
+              proj.id = x.id
               addRecentProject(proj);
               console.log(proj);
 
@@ -142,6 +152,7 @@ const Home = ({ history }) => {
         backgroundSize: "cover",
         padding: 0
       }}
+      onClick={() => {toggle(); clickedProject(x)}}
     >
       <Container fluid className={classes.projectOverlay}>
         <Container style={{ position: "absolute", bottom: 5 }}>
@@ -160,6 +171,11 @@ const Home = ({ history }) => {
     <React.Fragment>
       <HeaderBar/>
       <Container fluid={true}>
+      <ProjectView
+        open={open}
+        hide={toggle}
+        projectInfo={currentProject}
+      />
         {showNewProject ? (
           //Popup will live here.
           <NewProjectPopup togglePopup={togglePopup} />
@@ -180,8 +196,8 @@ const Home = ({ history }) => {
             <Row style={{ height: 200 }}>
               <Col sm={4}>
                 <Image
-                  src={require("../assets/images/book.svg")}
-                  style={{ height: 220 }}
+                  src={require("../assets/images/project.svg")}
+                  style={{ height: 220, width: '83%' }}
                 />
               </Col>
               <Col

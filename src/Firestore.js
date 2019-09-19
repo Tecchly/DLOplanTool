@@ -79,6 +79,13 @@ class Firestore {
         return db.collection("users").doc(userID).collection("projects").add(projectData);
     }
 
+    static archiveProject(userID, projectID) {
+        this.updateUserDetails();
+        return db.collection("users").doc(userID).collection("projects").doc(projectID).update({
+            archived: true
+        });
+    }
+
     static updateUserDetails(){
         var user = firebase.auth().currentUser;
         return db.collection('users').doc(user.uid).set({
