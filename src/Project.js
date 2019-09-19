@@ -12,7 +12,7 @@ import Utils from "./Utils";
 import firebase from "firebase";
 import Firestore from "./Firestore.js";
 
-
+//@@Need a loader image before ideas are loaded.
 class Project extends React.Component {
     
     constructor(props) {
@@ -152,7 +152,7 @@ class Project extends React.Component {
                     }}
                     >
                         {this.state.title}
-                    </h1>
+                    </h1>                   
                     <div style={{marginLeft: "15%", marginRight: "15%", maxWidth: "70%"}}>
                         {this.state.loaded ? <IdeaCard 
                             handleIdeaUpdate = {this.handleIdeaUpdate}

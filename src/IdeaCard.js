@@ -38,11 +38,18 @@ class IdeaCard extends React.Component {
     //Add empty child
     addChild(uuid) {
         //Limit the number of child ideas.
-        var max = 4; 
-        if (this.state.level = 1) {
-            max = 2
-        } else if (this.state.level >= 2 ){
-            max = 1
+        var max; 
+        //level of the node to add children to 
+        switch (this.state.level) {
+            case 0:
+                max = 4;
+                break;
+            case 1: 
+                max = 2;
+                break;
+            case 2: 
+                max = 1;
+                break;
         }
 
         if (this.state.childIdeas.length < max){
