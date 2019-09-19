@@ -25,9 +25,6 @@
     "retext-keywords": "^5.0.0",
     "retext-pos": "^2.0.2"
   },
-  "devDependencies": {
-    "gulp": "^4.0.2"
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
