@@ -104,22 +104,9 @@ class IdeaCard extends React.Component {
 
     //Called to change the icon
     setIcon(mode) {
-        switch (mode){
-            case "video":
-                this.setState({icon:"md-videocam"})
-                break;
-            case "sound":
-                this.setState({icon:"ios-microphone"})
-                break;
-            case "writing":
-                this.setState({icon:"ios-paper"})
-                break;
-            case "image":
-                    this.setState({icon:"ios-image"})
-                break;
-            default:
-                this.setState({icon:""})                
-        }
+        var icon = Utils.modeToIcon(mode);
+
+        this.setState({icon: icon});
     }
 
     componentDidMount() {       
@@ -197,7 +184,7 @@ class IdeaCard extends React.Component {
                                 height: '40px'
                             }}
                             onClick={()=> {
-                                if (this.state.icon != ""){
+                                if (this.props.uuid !== "root"){
                                     this.setState({editing:"true"});
                                 }
                             }}>
