@@ -140,14 +140,20 @@ class NewProjectPopup extends React.Component {
     });
   }
 
+  medChange = (event) =>{
+    this.setState({medium: event.target.value});
+  }
+
   makeProject() {
     //Make upload image here too.
     this.isProjectCreated = true;
+    /*
     var e = document.getElementById("dropdown");
     var ddval = e.options[e.selectedIndex].text;
-    
-
+  
     this.state.medium = ddval;
+    */
+
     var data = {
       medium: this.state.medium,
       title: this.state.projectTitle,
@@ -176,7 +182,7 @@ class NewProjectPopup extends React.Component {
           title: this.state.projectTitle,
           topic: this.state.projectTopic,
           image: this.state.image,
-          creationTime: +new Date()
+          creationTime: + new Date()
         }
       })
     }.bind(this));
@@ -238,14 +244,14 @@ class NewProjectPopup extends React.Component {
                 >
                 </ListItem> */}
                 <div > 
-                  <select id="dropdown" class="custom-select">
+                  <select id="dropdown" class="custom-select" onChange={this.medChange}>
                     <option value="0" disabled selected>Select your medium</option>
-                    <option value="presentation" onChange={this.medChange} >Presentation</option>
-                    <option value="screencast" onChange={this.medChange}>Screencast</option>
-                    <option value="animation" onChange={this.medChange}>Animation</option>
-                    <option value="video" onChange={this.medChange}>Video</option>
-                    <option value="podcast" onChange={this.medChange}>Podcast</option>
-                    <option value="film" onChange={this.medChange}>Film</option>
+                    <option value="Presentation">Presentation</option>
+                    <option value="Screencast">Screencast</option>
+                    <option value="Animation">Animation</option>
+                    <option value="Video">Video</option>
+                    <option value="Podcast">Podcast</option>
+                    <option value="Film">Film</option>
                   </select>
                 </div>
               </form>
@@ -330,7 +336,8 @@ class NewProjectPopup extends React.Component {
                   onClick={() => this.makeProject()}
                   disabled={
                     this.state.projectTitle.length == 0 ||
-                    this.state.projectTopic.length == 0
+                    this.state.projectTopic.length == 0 ||
+                    this.state.medium == 0
                   }
                 >
                   Create

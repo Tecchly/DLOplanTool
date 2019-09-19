@@ -147,7 +147,8 @@ const Projects = props => {
           state: {
             projectID: x.projectID,
             title: x.title,
-            topic: x.subtitle
+            topic: x.subtitle,
+            medium: x.medium
           }
         })
       }

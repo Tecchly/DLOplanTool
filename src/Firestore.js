@@ -44,7 +44,7 @@ class Firestore {
     };
 
     static getProjectById(userID, projectID) {
-        //Can't seem to do doc on the returned promise
+        //Can't seem to do doc on the returned query
         return this.getAllProjectsByUser(userID).doc(projectID);
     };
 

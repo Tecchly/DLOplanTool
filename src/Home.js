@@ -149,7 +149,8 @@ const Home = ({ history }) => {
           state: {
             projectID: x.projectID,
             title: x.title,
-            topic: x.subtitle
+            topic: x.subtitle,
+            medium: x.medium
             }
           }
         )}
