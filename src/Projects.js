@@ -101,7 +101,7 @@ const Projects = props => {
 
   useEffect(() => {
     var uid = firebase.auth().currentUser.uid;
-    var recents = Firestore.getAllProjectsByUser(uid);
+    var recents = Firestore.getAllProjectsByUser(uid,true);
 
     recents
       .get()
@@ -109,12 +109,12 @@ const Projects = props => {
         if (doc.empty) toggleNoProjects()
         doc.forEach(x => {
           var proj = x.data();
+          proj.projectID = x.id;
           storage
             .child("projectImage/" + x.data().image)
             .getDownloadURL()
             .then(function(url) {
               proj.image = url;
-
               addProject(proj);
               console.log(proj);
             });
@@ -128,6 +128,7 @@ const Projects = props => {
     setNoProjects(!noProjects);
 
   }
+  
   const ProjectTile = ({ x, size }) => (
     <div
       key={x.creationTime}
@@ -140,6 +141,17 @@ const Projects = props => {
         padding: 0,
         marginBottom: 10
       }}
+      onClick = {()=>
+        props.history.push({
+          pathname: "./project",
+          state: {
+            projectID: x.projectID,
+            title: x.title,
+            topic: x.subtitle,
+            medium: x.medium
+          }
+        })
+      }
     >
       <Container fluid className={classes.projectOverlay}>
         <Container style={{ position: "absolute", bottom: 5 }}>

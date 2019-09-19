@@ -7,6 +7,10 @@ import { withRouter, Redirect } from "react-router";
 import firebase from "firebase";
 import Firestore from "./Firestore.js";
 import Ionicon from "react-ionicons";
+import Utils from "./Utils.js";
+import ListItem from '@material-ui/core/ListItem';
+
+//@@TODO, need to add a medium selector here.
 import MessagePopup from "./MessagePopup.js";
 
 class NewProjectPopup extends React.Component {
@@ -14,9 +18,6 @@ class NewProjectPopup extends React.Component {
     super(props);
 
     this.localCache = window.localStorage;
-
-    this.handleTitleChange = this.handleTitleChange.bind(this);
-    this.handleTopicChange = this.handleTopicChange.bind(this);
 
     this.isProjectCreated = false;
 
@@ -26,6 +27,7 @@ class NewProjectPopup extends React.Component {
     showMessagePopup : false,
     projectTitle: "",
     projectTopic: "",
+    medium: "",
     imageName: "", //The ID of the image, whether from DB or upload
     image: "", //represents the source information about the image.
     file: "" //the uploaded file for the image.
@@ -86,7 +88,7 @@ class NewProjectPopup extends React.Component {
       }
       this.setState({file:file});
 
-      var uniqueName = this.uuidv4();      
+      var uniqueName = Utils.uuid();      
       this.setState({imageName:uniqueName});
       this.localCache.setItem("imageName", uniqueName);
 
@@ -125,24 +127,36 @@ class NewProjectPopup extends React.Component {
     );
   }
 
-  handleTitleChange(event) {
+  handleTitleChange =(event)=> {
     this.setState({ projectTitle: event.target.value }, function() {
       //Local cache variant
       this.localCache.setItem("title", this.state.projectTitle);
     });
   }
 
-  handleTopicChange(event) {
+  handleTopicChange = (event) => {
     this.setState({ projectTopic: event.target.value }, function() {
       this.localCache.setItem("topic", this.state.projectTopic);
     });
   }
 
+  medChange = (event) =>{
+    //@@TODO maybe local cache this too.
+    this.setState({medium: event.target.value});
+  }
+
   makeProject() {
     //Make upload image here too.
     this.isProjectCreated = true;
+    /*
+    var e = document.getElementById("dropdown");
+    var ddval = e.options[e.selectedIndex].text;
+  
+    this.state.medium = ddval;
+    */
 
     var data = {
+      medium: this.state.medium,
       title: this.state.projectTitle,
       subtitle: this.state.projectTopic,
       image: "marae.jpg", //Default image.
@@ -153,35 +167,31 @@ class NewProjectPopup extends React.Component {
       data.image = this.state.imageName;
     }
 
-    var uid = firebase.auth().currentUser.uid;
-    Firestore.saveNewProject(uid, data);
     if (this.state.file) {
       this.uploadImage(this.state.file);
     }
 
     const { history } = this.props;
-    history.push({
-      pathname: "./project",
-      state: {
-        title: this.state.projectTitle,
-        topic: this.state.projectTopic,
-        image: this.state.image,
-        creationTime: +new Date()
-      }
-    });
+    var uid = firebase.auth().currentUser.uid;
+    Firestore.saveNewProject(uid, data).then(function(docRef){
+     
+      history.push({
+        pathname: "./project",
+        state: {
+          projectID: docRef.id,
+          medium: this.state.medium,
+          title: this.state.projectTitle,
+          topic: this.state.projectTopic,
+          image: this.state.image,
+          creationTime: + new Date()
+        }
+      })
+    }.bind(this));
   }
 
-  //Generate a uuid
-  uuidv4() {
-    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    )
-  }
-  
 
   render() {
     var togglePopup = this.props.togglePopup;
-    const { history } = this.props;
     return (
       <React.Fragment>
         <div className="popup">
@@ -224,6 +234,27 @@ class NewProjectPopup extends React.Component {
                   value={this.state.projectTopic}
                   onChange={this.handleTopicChange}
                 />
+                {/* <ListItem
+                  button
+                  aria-haspopup="true"
+                  stye = {{
+                      width:"100%",
+                      backgroundColor: "#fd00ff"
+                  }}
+                  // onClick={handleClickListItem}
+                >
+                </ListItem> */}
+                <div > 
+                  <select id="dropdown" class="custom-select" onChange={this.medChange}>
+                    <option value="0" disabled selected>Select your medium</option>
+                    <option value="Presentation">Presentation</option>
+                    <option value="Screencast">Screencast</option>
+                    <option value="Animation">Animation</option>
+                    <option value="Video">Video</option>
+                    <option value="Podcast">Podcast</option>
+                    <option value="Film">Film</option>
+                  </select>
+                </div>
               </form>
             </div>
             <div
@@ -306,7 +337,8 @@ class NewProjectPopup extends React.Component {
                   onClick={() => this.makeProject()}
                   disabled={
                     this.state.projectTitle.length == 0 ||
-                    this.state.projectTopic.length == 0
+                    this.state.projectTopic.length == 0 ||
+                    this.state.medium == 0
                   }
                 >
                   Create

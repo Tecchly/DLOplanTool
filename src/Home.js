@@ -88,6 +88,7 @@ const Home = ({ history }) => {
         if (doc.empty) toggleNoProjects()
         doc.forEach(x => {
           var proj = x.data();
+          proj.projectID = x.id;
           storage
             .child("projectImage/" + x.data().image)
             .getDownloadURL()
@@ -142,6 +143,17 @@ const Home = ({ history }) => {
         backgroundSize: "cover",
         padding: 0
       }}
+      onClick = {()=>
+        history.push({
+          pathname: "./project",
+          state: {
+            projectID: x.projectID,
+            title: x.title,
+            topic: x.subtitle,
+            medium: x.medium
+            }
+          }
+        )}
     >
       <Container fluid className={classes.projectOverlay}>
         <Container style={{ position: "absolute", bottom: 5 }}>
