@@ -51,10 +51,10 @@ const Amplification = ( props ) => {
     var ideas = Firestore.getAllIdeasByProject(firebase.auth().currentUser.uid,props.location.state.projectID);
     let keyWordList = [];
     let topicNotesList = [];
-    words(ideas).then(function (allIdeas){
-      var mainTopic = topic(allIdeas);
+    words(ideas).then(function (result){
+      var mainTopic = topic(result["topic"]);
       console.log(mainTopic);
-      Object.values(allIdeas).forEach(info => {
+      Object.values(result["ideas"]).forEach(info => {
         console.log(info);
         keyWordList = [];
         retext()
@@ -104,9 +104,17 @@ const Amplification = ( props ) => {
     var promise1 = new Promise(function(resolve, reject) {
       var index = 0;
       var ideas = {};
+      var topic = {}
       loadIdeas.get().then(function(idea) {
         idea.forEach(x=>{
           var data = x.data();
+          if (x.id == "root"){
+            topic = {
+              medium: data.mode,
+              topic: data.title
+            };
+          }
+          else{
             let index = 0;
               ideas[x.id] = {
                 id: index,
@@ -116,20 +124,23 @@ const Amplification = ( props ) => {
                 notes: data.notes
               };
               index++;
+            }
        });
        console.log(ideas);
-       resolve(ideas);
+       var result = {ideas, topic};
+       console.log(result);
+       resolve(result);
     });
   });
   return promise1;
   }
 
-  function topic(allideas) {
-    console.log(allideas);
+  function topic(topic) {
+    console.log(topic);
     var topicInfo = {
-      medium: "Medium",
-      title: "Title",
-      subtitle: "Subtitle",
+      medium: topic.medium,
+      title: props.location.state.title,
+      subtitle: topic.subtitle,
       notes: ""
     };
     return topicInfo;
