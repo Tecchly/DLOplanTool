@@ -57,7 +57,7 @@ export default function ModeSelectionMenu(props) {
                 icon = "md-videocam";
                 break;
             case "sound":
-                icon = "ios-microphone-outline";
+                icon = "ios-microphone";
                 break;
             case "writing":
                 icon = "ios-paper";
@@ -93,7 +93,7 @@ export default function ModeSelectionMenu(props) {
         </ListItemIcon>
           <ListItemText 
                 disableTypography
-                primary={<Typography type="body2" style={{ font:"Montserrat", fontSize: '24px' }}>{options[selectedIndex]}</Typography>}
+                primary={<Typography type="body2" className='modeSelectionTitle' style={{ font:"Montserrat", fontSize: '24px' }}>{options[selectedIndex]}</Typography>}
              />
         </ListItem>
       </List>
@@ -109,6 +109,7 @@ export default function ModeSelectionMenu(props) {
             key={option}
             selected={index === selectedIndex}
             onClick={event => handleMenuItemClick(event, index)}
+
           > 
             <ListItemIcon>
                 <Ionicon
