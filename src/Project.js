@@ -147,8 +147,8 @@ class Project extends React.Component {
             <React.Fragment>
                 <HeaderBar/>
                 <Container fluid = {true}>
-                    <Row style ={{textAlign: "center",  marginTop: 40}}>                    
-                        <div style ={{ display: "flex", float:"left" , marginLeft: 100}}>
+                    <Row style ={{textAlign: "center",  marginTop: 40, position: "relative"}}>                    
+                        <div style ={{ display: "flex", position:"absolute", left:100}}>
                             <Icon
                             type="arrow-left"
                             onClick={() => {
@@ -173,7 +173,7 @@ class Project extends React.Component {
                             </h3>
                         </div>              
                         
-                        <div style ={{ display: "flex", float:"right"}}>
+                        <div style ={{ display:"flex", position:"absolute", right:100}}>
                         <h3
                         style={{
                             color: "#2F4858",
