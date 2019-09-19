@@ -16,6 +16,7 @@ import retext from "retext";
 import pos from "retext-pos";
 import keywords from "retext-keywords";
 import toString from "nlcst-to-string";
+import Utils from "./Utils";
 
 const Amplification = ( props ) => {
   const [ideaKeyWords, pushIdeaKeyWords] = useState([]);
@@ -120,7 +121,7 @@ const Amplification = ( props ) => {
                 id: index,
                 mode: data.mode,
                 title: data.title,
-                icon: "",
+                icon: Utils.modeToIcon(data.mode),
                 notes: data.notes
               };
               index++;

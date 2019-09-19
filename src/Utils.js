@@ -6,6 +6,28 @@ class Utils {
         (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
         )
     };
+
+    static modeToIcon(mode) {
+        
+        var icon = "";
+        switch (mode){
+            case "video":
+                icon = "md-videocam";
+                break;
+            case "sound":
+                icon = "ios-microphone-outline";
+                break;
+            case "writing":
+                icon = "ios-paper";
+                break;
+            case "image":
+                    icon = "ios-image";
+                break;
+            default:
+                    icon = "ios-bulb";   
+        }
+            return icon;            
+    }
 }
 
 export default Utils;

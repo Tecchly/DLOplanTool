@@ -10,6 +10,7 @@ import Menu from '@material-ui/core/Menu';
 import Ionicon from "react-ionicons";
 import Typography from '@material-ui/core/Typography';
 import "./index.css";
+import Utils from "./Utils";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,27 +50,6 @@ export default function ModeSelectionMenu(props) {
     setAnchorEl(null);
   }
 
-  function modeToIcon(mode) {
-        
-        var icon = "";
-        switch (mode){
-            case "video":
-                icon = "md-videocam";
-                break;
-            case "sound":
-                icon = "ios-microphone-outline";
-                break;
-            case "writing":
-                icon = "ios-paper";
-                break;
-            case "image":
-                    icon = "ios-image";
-                break;
-            default:
-                    icon = "ios-bulb";   
-        }
-            return icon;            
-    }
 
    return (
     <div className={classes.root}>
@@ -87,7 +67,7 @@ export default function ModeSelectionMenu(props) {
             <Ionicon
             fontSize="30"
             color="#fff"
-            icon= {modeToIcon(options[selectedIndex])}
+            icon= {Utils.modeToIcon(options[selectedIndex])}
             />   
         </ListItemIcon>
           <ListItemText 
@@ -113,7 +93,7 @@ export default function ModeSelectionMenu(props) {
                 <Ionicon
                 fontSize="30"
                 color="#666"
-                icon= {modeToIcon(option)}
+                icon= {Utils.modeToIcon(option)}
                 />
             </ListItemIcon>                      
             {option}
