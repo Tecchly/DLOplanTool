@@ -10,6 +10,8 @@ import Ionicon from "react-ionicons";
 import Utils from "./Utils.js";
 
 //@@TODO, need to add a medium selector here.
+import MessagePopup from "./MessagePopup.js";
+
 class NewProjectPopup extends React.Component {
   constructor(props) {
     super(props);
@@ -17,15 +19,21 @@ class NewProjectPopup extends React.Component {
     this.localCache = window.localStorage;
 
     this.isProjectCreated = false;
+
   }
 
   state = {
+    showMessagePopup : false,
     projectTitle: "",
     projectTopic: "",
     imageName: "", //The ID of the image, whether from DB or upload
     image: "", //represents the source information about the image.
     file: "" //the uploaded file for the image.
   };
+
+  toggleMessagePopup() {
+    this.setState({showMessagePopup: !this.state.showMessagePopup});
+  }
 
   componentDidMount() {
     //Local storage variant
@@ -71,6 +79,11 @@ class NewProjectPopup extends React.Component {
 
     var file = fileList[0];
     if (file) {
+      var size = file.size;
+      if (size > 5120000) {
+        this.toggleMessagePopup();
+        return;
+      }
       this.setState({file:file});
 
       var uniqueName = Utils.uuid();      
@@ -169,6 +182,11 @@ class NewProjectPopup extends React.Component {
       <React.Fragment>
         <div className="popup">
           <div className="inner">
+          {this.state.showMessagePopup ?
+          <MessagePopup 
+            text='Images have to be 5MB or smaller. Please upload an image with a smaller file size.'
+            closeMessagePopup={this.toggleMessagePopup.bind(this)} />
+          : null}
             <Ionicon
               style={{
                 position: "absolute",

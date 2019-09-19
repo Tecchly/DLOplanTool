@@ -92,7 +92,7 @@ export default function ModeSelectionMenu(props) {
         </ListItemIcon>
           <ListItemText 
                 disableTypography
-                primary={<Typography type="body2" style={{ fontSize: '24px' }}>{options[selectedIndex]}</Typography>}
+                primary={<Typography type="body2" style={{ font:"Montserrat", fontSize: '24px' }}>{options[selectedIndex]}</Typography>}
              />
         </ListItem>
       </List>

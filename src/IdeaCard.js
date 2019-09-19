@@ -27,6 +27,7 @@ class IdeaCard extends React.Component {
 
     //For removing a child
     handleDelete = (uuid) => {
+        this.props.handleIdeaDeletion(uuid);
         //console.log(this.state.childIdeas.filter(idea => idea !== uuid));
         this.setState({
             childIdeas: this.state.childIdeas.filter(idea => idea !== uuid)
