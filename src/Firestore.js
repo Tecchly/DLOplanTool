@@ -7,11 +7,6 @@ class Firestore {
 
     static saveWithDocID(collection, docID, data) {
         return db.collection(collection).doc(docID).set(data, { merge: true })
-            // .then(function() {
-            //     // console.log("written doc " + docID + " successfully to collection " + collection);
-            // }).catch(function (error) {
-            //     console.error("Error writing document: ", error);
-            // })
     };
 
     static getCollection(collection) {
@@ -63,11 +58,6 @@ class Firestore {
 
     static saveToDBWithDocID(collection, docID, data) {
         return collection.doc(docID).set(data, {merge : true})
-        // .then(function () {
-        //     console.log("written doc " + docID + " successfully");
-        // }).catch(function (error) {
-        //     console.error("Error writing document: ", error);
-        // })
     };
 
     //@@TODO maybe deprecated due to storing ideas as an object and not an list 
