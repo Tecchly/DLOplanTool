@@ -120,20 +120,17 @@ const ProjectView = ({ open, hide, projectInfo, edit }) => {
         });
     });
 
-    // this.toggleSharePopup();
+
     clearSuggestions;
-    // this.localCache.removeItem("shareEmails");
+
   };
   useEffect(() => {
     Firestore.getUserEmails().then(querySnapshot => {
       console.log(querySnapshot);
-      // this.setState({suggestions: [...suggestions, ...qu]})
+
       querySnapshot.forEach(doc => {
-        // this.setState(previousState => ({suggestions: [...previousState.suggestions, {name: doc.data().email}]}))
         addSuggestion(doc.data().email);
-        // this.setState(previousState => ({
-        //   suggestions: [...previousState.suggestions, doc.data().email]
-        // }));
+
         console.log(suggestions);
       });
     });
@@ -165,8 +162,7 @@ const ProjectView = ({ open, hide, projectInfo, edit }) => {
               style={{ display: share ? "block" : "none" }}
             >
               <Chips
-                style={{ display: share ? "block" : "none", float: 'left',
-                width:' 87%'}}
+                style={{ display: share ? "block" : "none"}}
                 value={tags}
                 onChange={onChange}
                 suggestions={suggestions}

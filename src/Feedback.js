@@ -41,7 +41,7 @@ const Feedback = ({ history }) => {
         </Container>
         <Container
           className="d-flex align-items-center"
-          style={{ marginTop: "20vh" }}
+          style={{ marginTop: "20vh", flexDirection: 'column' }}
         >
           <Row></Row>
           <Row className="justify-content-md-center">
