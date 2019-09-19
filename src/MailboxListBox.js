@@ -3,6 +3,7 @@ import Pagination from 'react-js-pagination';
 import MailboxList from "./MailboxList";
 import Firestore from "./Firestore";
 import firebase from "firebase";
+// import Pagination from 'react-bootstrap/Pagination';
 
 class MailboxListBox extends React.Component {
 

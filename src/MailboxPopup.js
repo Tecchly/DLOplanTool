@@ -1,66 +1,70 @@
 import React from "react";
-import { app } from "./Firebase";
-import "./MailboxPopup.css";
-import { Button, Icon } from "antd";
-import { withRouter, Redirect } from "react-router";
-import firebase from "firebase";
-import Firestore from "./Firestore.js";
-import Ionicon from "react-ionicons";
 import MailboxListBox from "./MailboxListBox";
+import { Modal, Button, ButtonToolbar } from "react-bootstrap";
 
 class MailboxPopup extends React.Component {
     constructor(props) {
         super(props);
-        // this.state = { totalData: this.Mailbox() };
+        this.state = { mailModalShow: false };
     }
 
-    // Mailbox() {
-    //     var user = firebase.auth().currentUser;
-    //     var sharedProjects = Firestore.getAllSharedProjectsByUser(user.uid);
-    //     var listMessages = [];
-    //     var promises = [sharedProjects.get()];
-    //     Promise.all(promises).then(docs => {
-    //         docs.forEach(doc => {
-    //             var proj = doc.data();
-    //             listMessages.push(proj);
-    //         })
-    //     });
-    //     // }
-    //     // });
-    //     console.log(listMessages);
-    //     return listMessages;
-    // }
+    toggleMailPopup() {
+        this.setState({ mailModalShow: !this.state.mailModalShow });
+    }
 
     render() {
-        var togglePopup = this.props.togglePopup;
-        const { history } = this.props;
         return (
-            <React.Fragment>
-                <div className="mailboxpopup">
-                    <div className="inner">
-                        <Ionicon
-                            style={{
-                                position: "absolute",
-                                right: "15px",
-                                top: "15px",
-                                cursor: 'pointer',
-                            }}
-                            icon="md-close"
-                            onClick={this.props.closePopup}
-                        />
+            <ButtonToolbar>
+                <Button style={{
+                    backgroundColor: "#FA8231",
+                    color: "#fff",
+                    marginTop: "1%",
+                    borderRadius: 11,
+                    marginLeft: "90%",
+                    width: "6%",
+                    boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
+                    border: "none",
+                    fontFamily: "Montserrat",
+                    height: 45,
+                    fontWeight: "600"
+                }}
+                    variant="primary" onClick={() => this.toggleMailPopup()}>
+                    Messages
+                    </Button>
 
-                        <div className="Mailbox"
-                            style={{
-                                marginLeft: "1%",
-                                marginRight: "5%",
-                                marginTop: "10%"
-                            }}
-                        >
-                            <MailboxListBox pageSize={4} />
-                        </div>
-                    </div>
-                </div>
-            </React.Fragment>
+
+                <Modal
+                    show={this.state.mailModalShow}
+                    onHide={() => this.toggleMailPopup()}
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="sharing-messages">
+                            Sharing notices
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <MailboxListBox pageSize={8} />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button style={{
+                            backgroundColor: "#FA8231",
+                            color: "#fff",
+                            borderRadius: 11,
+                            marginRight: "5%",
+                            width: "10%",
+                            boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
+                            border: "none",
+                            fontFamily: "Montserrat",
+                            height: 35,
+                            fontWeight: "600"
+                        }}
+                            onClick={() => this.toggleMailPopup()}>Close</Button>
+                    </Modal.Footer>
+                </Modal>
+            </ButtonToolbar>
         );
     }
 }
