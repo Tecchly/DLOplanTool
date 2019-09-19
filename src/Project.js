@@ -11,6 +11,7 @@ import { maxWidth } from "@material-ui/system";
 import Utils from "./Utils";
 import firebase from "firebase";
 import Firestore from "./Firestore.js";
+import ShareProjectPopup from "./ShareProjectPopup";
 
 /** Note When pushing props to enter this component, need to push 
 * projectID 
@@ -168,6 +169,7 @@ class Project extends React.Component {
         return (
             <React.Fragment>
                 <HeaderBar />
+                
                 <Container fluid={true}>
                     <Row style={{ textAlign: "center", marginTop: 40, position: "relative" }}>
                         <div style={{ display: "flex", position: "absolute", left: 100 }}>
@@ -239,7 +241,22 @@ class Project extends React.Component {
                                 availableModes={this.state.availableModes} />
                             : null}
                     </div>
+                    
                 </Container>
+                <ShareProjectPopup style={{
+                        backgroundColor: "#FA8231",
+                        color: "#fff",
+                        marginTop: "30%",
+                        borderRadius: 11,
+                        marginLeft: "90%",
+                        width: "5%",
+                        boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
+                        border: "none",
+                        fontFamily: "Montserrat",
+                        height: 45,
+                        fontWeight: "600"
+                }}
+                    title={this.state.title} subtitle={this.state.topic} image={this.props.location.state.image} projectId={this.props.location.state.projectID} />
             </React.Fragment>
         );
     }

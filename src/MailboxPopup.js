@@ -18,18 +18,18 @@ class MailboxPopup extends React.Component {
                 <Button style={{
                     backgroundColor: "#FA8231",
                     color: "#fff",
-                    marginTop: "1%",
                     borderRadius: 11,
                     marginLeft: "90%",
-                    width: "6%",
+                    width: "10%",
+                    marginTop: "-2.5%",
+                    height: 35,
                     boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
                     border: "none",
                     fontFamily: "Montserrat",
-                    height: 45,
                     fontWeight: "600"
                 }}
                     variant="primary" onClick={() => this.toggleMailPopup()}>
-                    Messages
+                    Notifications
                     </Button>
 
 
