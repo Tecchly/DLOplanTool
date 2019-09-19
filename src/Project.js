@@ -208,9 +208,14 @@ class Project extends React.Component {
                                 Amplify
                         </h3>
                             <Icon
-                                type="arrow-right"
+                            type="arrow-right"
                                 onClick={() => {
-                                    alert("I do nothing lol");
+                                    const { history } = this.props;
+                                    history.push({
+                                        pathname: "./Amplification",
+                                        state: this.props.location.state
+                                    }
+                                    )
                                 }
                                 }
                                 style={{
