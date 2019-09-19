@@ -12,7 +12,7 @@ class IdeaEditPopup extends React.Component {
         title:'',
         mode:'',
         notes:'',
-        icon:'ios-bulb'
+        icon:'ios-bulb',
     }
 
     componentDidMount(){
@@ -26,6 +26,11 @@ class IdeaEditPopup extends React.Component {
 
         if  (this.props.notes) {
             this.setState({notes:this.props.notes});
+        }
+        console.log(this.props.mode)
+
+        if  (this.props.mode == "Podcast") {
+            this.setState({availMode:["Audio"]});
         }
         
     }
@@ -45,12 +50,11 @@ class IdeaEditPopup extends React.Component {
     }
 
     render(){
-        //@@TODO Layout the dropdown to look nicer. 
         return(
             <React.Fragment>
             <div className="popup">
                 <div className="inner">
-                    <div className = {this.state.mode}>
+                    <div className = {this.state.availMode}>
                         <ModeSelectionMenu 
                             availableModes = {this.props.availableModes}
                             handleModeChange = {this.handleModeChange} 

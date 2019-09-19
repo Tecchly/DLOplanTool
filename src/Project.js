@@ -12,7 +12,12 @@ import Utils from "./Utils";
 import firebase from "firebase";
 import Firestore from "./Firestore.js";
 
-//@@Need a loader image before ideas are loaded.
+/** Note When pushing props to enter this component, need to push 
+* projectID 
+* title 
+* subtitle
+* medium
+*/
 class Project extends React.Component {
     
     constructor(props) {
@@ -33,7 +38,6 @@ class Project extends React.Component {
     }
 
     //Get changes from components,
-    //@@TODO make slighltly different arrangements for root. Root change changes topic.
     handleIdeaUpdate = (uuid,data) =>{
         if (uuid==="root") {
             this.setState({topic: data.title});
@@ -48,9 +52,10 @@ class Project extends React.Component {
 
             //@@Test for saving point. Make cleaner later
             var uid = firebase.auth().currentUser.uid;
+            
             for (let idea in this.state.ideas) {
                 //Saving of all ideas. 
-                Firestore.saveIdeaToProject(uid,this.props.location.state.projectID,idea,this.state.ideas[idea]);
+                Firestore.saveSingleIdeaToProject(uid,this.props.location.state.projectID,idea,this.state.ideas[idea]);
             }
         })
     }
@@ -108,11 +113,25 @@ class Project extends React.Component {
                   root: {
                       title: this.props.location.state.topic,
                       parentID: "none",
-                      mode : "video", //Get from a prop
+                      mode : this.props.location.state.medium, //Get from a prop
                       notes: ""
                   }
             }
         });
+
+        if (this.props.location.state.medium == "Presentation"){
+            this.state.availableModes = ["video","sound","writing","image"]
+        }else if (this.props.location.state.medium == "Screencast"){
+            this.state.availableModes = ["video","sound","writing","image"]
+        }else if (this.props.location.state.medium == "Animation"){
+            this.state.availableModes = ["video","sound","writing","image"]
+        }else if (this.props.location.state.medium == "Video"){
+            this.state.availableModes = ["sound","writing","image"]
+        }else if (this.props.location.state.medium == "Podcast"){
+            this.state.availableModes = ["sound"]
+        }else if (this.props.location.state.medium == "Film"){
+            this.state.availableModes = ["video","sound"]
+        }
 
         //this.props.location.state.projectID; Get project id.
         var ideas = Firestore.getAllIdeasByProject(firebase.auth().currentUser.uid,this.props.location.state.projectID); 
@@ -135,8 +154,11 @@ class Project extends React.Component {
         }        
 
         //@@TODO Medium select to control the available modes. 
-        
+        if (this.props.location.state.medium) {
+            this.setState({medium: this.props.location.state.medium});
+        }  
     }
+
 
     componentWillUnmount() {
         
@@ -147,8 +169,8 @@ class Project extends React.Component {
             <React.Fragment>
                 <HeaderBar/>
                 <Container fluid = {true}>
-                    <Row style ={{textAlign: "center",  marginTop: 40}}>                    
-                        <div style ={{ display: "flex", float:"left" , marginLeft: 100}}>
+                    <Row style ={{textAlign: "center",  marginTop: 40, position: "relative"}}>                    
+                        <div style ={{ display: "flex", position:"absolute", left:100}}>
                             <Icon
                             type="arrow-left"
                             onClick={() => {
@@ -173,7 +195,7 @@ class Project extends React.Component {
                             </h3>
                         </div>              
                         
-                        <div style ={{ display: "flex", float:"right"}}>
+                        <div style ={{ display:"flex", position:"absolute", right:150}}>
                         <h3
                         style={{
                             color: "#2F4858",
@@ -203,14 +225,15 @@ class Project extends React.Component {
                         </div>              
                     </Row> 
                     <h1 style ={{
-                           textAlign: "center"
-                        }}
+                        textAlign: "center"
+                    }}
                     >
                         {this.state.title}
-                    </h1> 
-
+                        
+                    </h1>
                     <div style={{marginLeft: "15%", marginRight: "15%", maxWidth: "70%"}}>
-                        {this.state.loaded ? <IdeaCard 
+                        {this.state.loaded ? 
+                        <IdeaCard 
                             handleIdeaUpdate = {this.handleIdeaUpdate}
                             handleIdeaDeletion = {this.handleIdeaDeletion}
                             handleMainTopicChange = {this.handleMainTopicChange}
@@ -220,8 +243,8 @@ class Project extends React.Component {
                             ideas = {this.state.ideas}
                             availableModes={this.state.availableModes}/> 
                             :null }
-                    </div>
-                </Container>                       
+                    </div> 
+                </Container>                      
             </React.Fragment>          
         );
     }

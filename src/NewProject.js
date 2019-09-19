@@ -8,6 +8,7 @@ import firebase from "firebase";
 import Firestore from "./Firestore.js";
 import Ionicon from "react-ionicons";
 import Utils from "./Utils.js";
+import ListItem from '@material-ui/core/ListItem';
 
 //@@TODO, need to add a medium selector here.
 import MessagePopup from "./MessagePopup.js";
@@ -26,6 +27,7 @@ class NewProjectPopup extends React.Component {
     showMessagePopup : false,
     projectTitle: "",
     projectTopic: "",
+    medium: "",
     imageName: "", //The ID of the image, whether from DB or upload
     image: "", //represents the source information about the image.
     file: "" //the uploaded file for the image.
@@ -138,11 +140,23 @@ class NewProjectPopup extends React.Component {
     });
   }
 
+  medChange = (event) =>{
+    //@@TODO maybe local cache this too.
+    this.setState({medium: event.target.value});
+  }
+
   makeProject() {
     //Make upload image here too.
     this.isProjectCreated = true;
+    /*
+    var e = document.getElementById("dropdown");
+    var ddval = e.options[e.selectedIndex].text;
+  
+    this.state.medium = ddval;
+    */
 
     var data = {
+      medium: this.state.medium,
       title: this.state.projectTitle,
       subtitle: this.state.projectTopic,
       image: "marae.jpg", //Default image.
@@ -165,10 +179,11 @@ class NewProjectPopup extends React.Component {
         pathname: "./project",
         state: {
           projectID: docRef.id,
+          medium: this.state.medium,
           title: this.state.projectTitle,
           topic: this.state.projectTopic,
           image: this.state.image,
-          creationTime: +new Date()
+          creationTime: + new Date()
         }
       })
     }.bind(this));
@@ -219,6 +234,27 @@ class NewProjectPopup extends React.Component {
                   value={this.state.projectTopic}
                   onChange={this.handleTopicChange}
                 />
+                {/* <ListItem
+                  button
+                  aria-haspopup="true"
+                  stye = {{
+                      width:"100%",
+                      backgroundColor: "#fd00ff"
+                  }}
+                  // onClick={handleClickListItem}
+                >
+                </ListItem> */}
+                <div > 
+                  <select id="dropdown" class="custom-select" onChange={this.medChange}>
+                    <option value="0" disabled selected>Select your medium</option>
+                    <option value="Presentation">Presentation</option>
+                    <option value="Screencast">Screencast</option>
+                    <option value="Animation">Animation</option>
+                    <option value="Video">Video</option>
+                    <option value="Podcast">Podcast</option>
+                    <option value="Film">Film</option>
+                  </select>
+                </div>
               </form>
             </div>
             <div
@@ -301,7 +337,8 @@ class NewProjectPopup extends React.Component {
                   onClick={() => this.makeProject()}
                   disabled={
                     this.state.projectTitle.length == 0 ||
-                    this.state.projectTopic.length == 0
+                    this.state.projectTopic.length == 0 ||
+                    this.state.medium == 0
                   }
                 >
                   Create

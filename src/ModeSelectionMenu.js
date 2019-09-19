@@ -59,7 +59,8 @@ export default function ModeSelectionMenu(props) {
           button
           aria-haspopup="true"
           stye = {{
-              width:"100%"
+              width:"100%",
+              backgroundColor: "#fd00ff"
           }}
           onClick={handleClickListItem}
         >
