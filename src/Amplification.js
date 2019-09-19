@@ -18,7 +18,7 @@ import keywords from "retext-keywords";
 import toString from "nlcst-to-string";
 import mappingData from "../assets/map_data.json";
 
-const Amplification = ({ history }) => {
+const Amplification = ({ history }, { props }) => {
   const [ideaKeyWords, pushIdeaKeyWords] = useState([]);
   const addIdea = ideas => {
     pushIdeaKeyWords(oldArray => [...oldArray, ideas]);
@@ -50,7 +50,7 @@ const Amplification = ({ history }) => {
   useEffect(() => {
     let keyWordList = [];
     let topicNotesList = [];
-    var allIdeas = words();
+    var allIdeas = words(props);
     var mainTopic = topic();
     console.log(mainTopic);
     Object.values(allIdeas).forEach(info => {
@@ -98,9 +98,14 @@ const Amplification = ({ history }) => {
     addTopicNotes(mainTopic);
   }, []);
 
-  function words() {
+  function words(props) {
     var ideas = {};
     let index = 0;
+    console.log(props);
+    // var ideas = Firestore.getAllIdeasByProject(firebase.auth().currentUser.uid,props.location.state.projectID); 
+    // ideas
+    // .get();
+    console.log(ideas);
     mappingData.Ideas.map(idea => {
       ideas[idea.id] = {
         id: index,

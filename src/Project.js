@@ -186,7 +186,12 @@ class Project extends React.Component {
                             <Icon
                             type="arrow-right"
                             onClick={() => {
-                                alert("I do nothing lol");
+                                const { history } = this.props;
+                                history.push({
+                                    pathname: "./Amplification",
+                                    state: this.props.location.state
+                                    }
+                                  )
                                 }
                             }
                             style={{
