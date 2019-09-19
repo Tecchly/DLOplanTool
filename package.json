@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.3.3",
+    "@material-ui/icons": "^4.4.1",
     "antd": "^3.22.2",
     "bootstrap": "^4.3.1",
     "firebase": "^6.4.0",
