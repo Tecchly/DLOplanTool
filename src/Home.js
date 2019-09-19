@@ -5,7 +5,7 @@ import Firestore from "./Firestore.js";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Icon } from "antd";
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
-import HeaderBar from "./HeaderBar.js"
+import HeaderBar from "./HeaderBar.js";
 import history from "./history";
 import Ionicon from "react-ionicons";
 import "./index.css";
@@ -13,8 +13,7 @@ import NewProjectPopup from "./NewProject";
 import { useState } from "react";
 import ProjectLoader from "./ProjectLoader";
 import ProjectView from "./ProjectView";
-import useProjectDialog from './useProjectDialog';
-
+import useProjectDialog from "./useProjectDialog";
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -68,10 +67,16 @@ const useStyles = makeStyles(theme => ({
     cursor: "pointer"
   }
 }));
-const emptyImages = ["void.svg","empty.svg","empty_1.svg","empty_2.svg","empty_3.svg"]
+const emptyImages = [
+  "void.svg",
+  "empty.svg",
+  "empty_1.svg",
+  "empty_2.svg",
+  "empty_3.svg"
+];
 
 const Home = ({ history }) => {
-  const {open, toggle} = useProjectDialog();
+  const { open, toggle } = useProjectDialog();
   const classes = useStyles();
   const [showNewProject, setShowNewProject] = useState(false);
   const [noProjects, setNoProjects] = useState(false);
@@ -85,7 +90,7 @@ const Home = ({ history }) => {
   };
   const clickedProject = project => {
     setCurrentProject(project);
-  }
+  };
 
   useEffect(() => {
     var uid = firebase.auth().currentUser.uid;
@@ -94,26 +99,25 @@ const Home = ({ history }) => {
     recents
       .get()
       .then(function(doc) {
-        if (doc.empty) toggleNoProjects()
+        if (doc.empty) toggleNoProjects();
         doc.forEach(x => {
           var proj = x.data();
+          proj.projectID = x.id;
           storage
             .child("projectImage/" + x.data().image)
             .getDownloadURL()
             .then(function(url) {
               proj.image = url;
-              proj.id = x.id
+              proj.id = x.id;
               addRecentProject(proj);
               console.log(proj);
-
             });
         });
       })
       .catch(function(error) {
         console.log("Error getting document:", error);
-        toggleNoProjects()
+        toggleNoProjects();
       });
-
   }, []);
 
   function togglePopup() {
@@ -122,7 +126,6 @@ const Home = ({ history }) => {
 
   function toggleNoProjects() {
     setNoProjects(!noProjects);
-
   }
   const IconButton = ({ bcolor, icon, text, nav, tcolor }) => (
     <Col>
@@ -141,6 +144,18 @@ const Home = ({ history }) => {
     </Col>
   );
 
+  const editProject = x => {
+    history.push({
+      pathname: "./project",
+      state: {
+        projectID: x.projectID,
+        title: x.title,
+        topic: x.subtitle,
+        medium: x.medium
+      }
+    });
+  };
+
   const ProjectTile = ({ x }) => (
     <Col
       key={x.creationTime}
@@ -152,7 +167,10 @@ const Home = ({ history }) => {
         backgroundSize: "cover",
         padding: 0
       }}
-      onClick={() => {toggle(); clickedProject(x)}}
+      onClick={() => {
+        toggle();
+        clickedProject(x);
+      }}
     >
       <Container fluid className={classes.projectOverlay}>
         <Container style={{ position: "absolute", bottom: 5 }}>
@@ -169,13 +187,14 @@ const Home = ({ history }) => {
 
   return (
     <React.Fragment>
-      <HeaderBar/>
+      <HeaderBar />
       <Container fluid={true}>
-      <ProjectView
-        open={open}
-        hide={toggle}
-        projectInfo={currentProject}
-      />
+        <ProjectView
+          open={open}
+          hide={toggle}
+          projectInfo={currentProject}
+          edit={editProject}
+        />
         {showNewProject ? (
           //Popup will live here.
           <NewProjectPopup togglePopup={togglePopup} />
@@ -197,7 +216,7 @@ const Home = ({ history }) => {
               <Col sm={4}>
                 <Image
                   src={require("../assets/images/project.svg")}
-                  style={{ height: 220, width: '83%' }}
+                  style={{ height: 220, width: "83%" }}
                 />
               </Col>
               <Col
@@ -285,30 +304,27 @@ const Home = ({ history }) => {
 
         <Container style={{ marginTop: 40 }} fluid>
           <Row style={{ marginLeft: 80, marginRight: 80 }}>
-            {recentProjects.length == 0 &&  !noProjects? 
-              <ProjectLoader />: null}
-              {
-              noProjects ? (
-              <Container >
+            {recentProjects.length == 0 && !noProjects ? (
+              <ProjectLoader />
+            ) : null}
+            {noProjects ? (
+              <Container>
                 <Row className="justify-content-md-center">
                   <Image
-                    src={require("../assets/images/" + emptyImages[Math.floor(Math.random()*emptyImages.length)])}
+                    src={require("../assets/images/" +
+                      emptyImages[
+                        Math.floor(Math.random() * emptyImages.length)
+                      ])}
                     style={{ height: 180 }}
                   />
                 </Row>
                 <Row className="justify-content-md-center">
-                  <h1
-                    className="imageTitle"
-                    style={{color: "#3A4A56"}}
-                  >
+                  <h1 className="imageTitle" style={{ color: "#3A4A56" }}>
                     No Recent Projects!
                   </h1>
                 </Row>
                 <Row className="justify-content-md-center">
-                  <h2
-                  className="imageSubtitle"
-                    style={{color: "#8fa5b5"}}
-                  >
+                  <h2 className="imageSubtitle" style={{ color: "#8fa5b5" }}>
                     Click the 'New Project' button to create your first project!
                   </h2>
                 </Row>

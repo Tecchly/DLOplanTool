@@ -65,7 +65,7 @@ const DialogActions = withStyles(theme => ({
   }
 }))(MuiDialogActions);
 
-const ProjectView = ({ open, hide, projectInfo }) =>
+const ProjectView = ({ open, hide, projectInfo, edit }) =>
   open
     ? ReactDOM.createPortal(
         <React.Fragment>
@@ -80,19 +80,19 @@ const ProjectView = ({ open, hide, projectInfo }) =>
               <h3 className='projectDialogTitle'>{projectInfo.title}</h3>
             <br/>
             <h3 className='projectDialogSubtitle'>{projectInfo.subtitle}</h3>
+            <h3 className='projectDialogMedium'>{projectInfo.medium} Project</h3>
             </div>
             <DialogTitle id="customized-dialog-title" onClose={hide}>
             </DialogTitle>
-            <DialogContent dividers>
+            {/* <DialogContent dividers>
               <Typography gutterBottom>
-                Here we will add some project info
               </Typography>
-            </DialogContent>
+            </DialogContent> */}
             <DialogActions>
-            <Button onClick={() => {archive(projectInfo.id); hide()}} color="secondary">
+            <Button onClick={() => {archive(projectInfo.projectID); hide()}} color="secondary">
                 Archive
               </Button>
-              <Button onClick={hide} color="primary">
+              <Button onClick={() => {hide(); edit(projectInfo)}} color="primary">
                 Edit
               </Button>
             </DialogActions>

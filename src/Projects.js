@@ -8,17 +8,22 @@ import GridListTile from "@material-ui/core/GridListTile";
 import withWidth, { isWidthUp } from "@material-ui/core/withWidth";
 import { Button, Icon } from "antd";
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
-import HeaderBar from "./HeaderBar.js"
+import HeaderBar from "./HeaderBar.js";
 import history from "./history";
 import Ionicon from "react-ionicons";
 import ProjectLoader from "./ProjectLoader";
 import ProjectView from "./ProjectView";
-import useProjectDialog from './useProjectDialog';
-
+import useProjectDialog from "./useProjectDialog";
 
 import "./index.css";
 import { useState } from "react";
-const emptyImages = ["void.svg","empty.svg","empty_1.svg","empty_2.svg","empty_3.svg"]
+const emptyImages = [
+  "void.svg",
+  "empty.svg",
+  "empty_1.svg",
+  "empty_2.svg",
+  "empty_3.svg"
+];
 const useStyles = makeStyles(theme => ({
   button: {
     width: "100%",
@@ -75,7 +80,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 const Projects = props => {
-  const {open, toggle} = useProjectDialog();
+  const { open, toggle } = useProjectDialog();
   const getGridListCols = () => {
     if (isWidthUp("xl", props.width)) {
       return 4;
@@ -103,10 +108,10 @@ const Projects = props => {
 
   const clickedProject = project => {
     setCurrentProject(project);
-  }
+  };
   const closeProject = () => {
     setCurrentProject(null);
-  }
+  };
 
   const addProject = project => {
     pushProjects(oldArray => [...oldArray, project]);
@@ -114,21 +119,21 @@ const Projects = props => {
 
   useEffect(() => {
     var uid = firebase.auth().currentUser.uid;
-    var recents = Firestore.getAllProjectsByUser(uid);
+    var recents = Firestore.getAllProjectsByUser(uid, true);
 
     recents
       .get()
       .then(function(doc) {
-        if (doc.empty) toggleNoProjects()
+        if (doc.empty) toggleNoProjects();
         doc.forEach(x => {
           var proj = x.data();
+          proj.projectID = x.id;
 
           storage
             .child("projectImage/" + x.data().image)
             .getDownloadURL()
             .then(function(url) {
               proj.image = url;
-              proj.id = x.id
               addProject(proj);
               // console.log(proj);
             });
@@ -140,8 +145,18 @@ const Projects = props => {
   }, []);
   function toggleNoProjects() {
     setNoProjects(!noProjects);
-
   }
+  const editProject = x => {
+    props.history.push({
+      pathname: "./project",
+      state: {
+        projectID: x.projectID,
+        title: x.title,
+        topic: x.subtitle,
+        medium: x.medium
+      }
+    });
+  };
   const ProjectTile = ({ x, size }) => (
     <div
       key={x.creationTime}
@@ -154,7 +169,10 @@ const Projects = props => {
         padding: 0,
         marginBottom: 10
       }}
-      onClick={() => {toggle(); clickedProject(x)}}
+      onClick={() => {
+        toggle();
+        clickedProject(x);
+      }}
     >
       <Container fluid className={classes.projectOverlay}>
         <Container style={{ position: "absolute", bottom: 5 }}>
@@ -181,13 +199,14 @@ const Projects = props => {
   );
   return (
     <React.Fragment>
-      <HeaderBar/>
+      <HeaderBar />
       <Container fluid={true}>
-      <ProjectView
-        open={open}
-        hide={toggle}
-        projectInfo={currentProject}
-      />
+        <ProjectView
+          open={open}
+          hide={toggle}
+          projectInfo={currentProject}
+          edit={editProject}
+        />
         <Container
           style={{ marginTop: 40, paddingLeft: 100, marginRight: 100 }}
           fluid
@@ -216,14 +235,15 @@ const Projects = props => {
         </Container>
         <Container style={{ marginTop: 40 }} fluid>
           <Row style={{ marginLeft: 80, marginRight: 80 }}>
-          {allProjects.length == 0 &&  !noProjects? 
-              <ProjectLoader />: null}
-              {
-              noProjects ? (
+            {allProjects.length == 0 && !noProjects ? <ProjectLoader /> : null}
+            {noProjects ? (
               <Container style={{ marginTop: "20vh" }}>
                 <Row className="justify-content-md-center">
                   <Image
-                    src={require("../assets/images/" + emptyImages[Math.floor(Math.random()*emptyImages.length)])}
+                    src={require("../assets/images/" +
+                      emptyImages[
+                        Math.floor(Math.random() * emptyImages.length)
+                      ])}
                     style={{ height: 180 }}
                   />
                 </Row>
