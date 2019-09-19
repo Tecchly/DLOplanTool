@@ -129,17 +129,17 @@ class Project extends React.Component {
     });
 
     if (this.props.location.state.medium == "Presentation") {
-      this.state.availableModes = ["video", "sound", "writing", "image"];
+      this.setState({availableModes:["video", "sound", "writing", "image"]});
     } else if (this.props.location.state.medium == "Screencast") {
-      this.state.availableModes = ["video", "sound", "writing", "image"];
+      this.setState({availableModes:["video", "sound", "writing", "image"]});
     } else if (this.props.location.state.medium == "Animation") {
-      this.state.availableModes = ["video", "sound", "writing", "image"];
-    } else if (this.props.location.state.medium == "Video") {
-      this.state.availableModes = ["sound", "writing", "image"];
+      this.setState({availableModes:["sound", "writing", "image"]});
     } else if (this.props.location.state.medium == "Podcast") {
-      this.state.availableModes = ["sound"];
+      this.setState({availableModes:["sound"]});
     } else if (this.props.location.state.medium == "Film") {
-      this.state.availableModes = ["video", "sound"];
+      this.setState({availableModes:["video", "sound", "writing", "image"]});
+    } else if (this.props.location.state.medium == "Other") {
+      this.setState({availableModes:["video", "sound", "writing", "image"]});
     }
 
     //this.props.location.state.projectID; Get project id.

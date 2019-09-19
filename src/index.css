@@ -501,7 +501,7 @@ margin-left: 30px;
   width: 35px !important;
   height: 23px !important;
 }
-.Video, .Podcast, .Screencast, .Film, .Animation, .Presentation{
+.Other, .Podcast, .Screencast, .Film, .Animation, .Presentation{
   background-color: #4a6583;
   color: white
 }

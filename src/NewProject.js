@@ -128,16 +128,20 @@ class NewProjectPopup extends React.Component {
   }
 
   handleTitleChange =(event)=> {
-    this.setState({ projectTitle: event.target.value }, function() {
-      //Local cache variant
-      this.localCache.setItem("title", this.state.projectTitle);
-    });
+    if (event.target.value.length < 25) {
+      this.setState({ projectTitle: event.target.value }, function() {
+        //Local cache variant
+        this.localCache.setItem("title", this.state.projectTitle);
+      });
+    }  
   }
 
   handleTopicChange = (event) => {
-    this.setState({ projectTopic: event.target.value }, function() {
-      this.localCache.setItem("topic", this.state.projectTopic);
-    });
+    if (event.target.value.length <25) {
+      this.setState({ projectTopic: event.target.value }, function() {
+        this.localCache.setItem("topic", this.state.projectTopic);
+      });
+    }
   }
 
   medChange = (event) =>{
@@ -250,9 +254,9 @@ class NewProjectPopup extends React.Component {
                     <option value="Presentation">Presentation</option>
                     <option value="Screencast">Screencast</option>
                     <option value="Animation">Animation</option>
-                    <option value="Video">Video</option>
                     <option value="Podcast">Podcast</option>
                     <option value="Film">Film</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
               </form>
