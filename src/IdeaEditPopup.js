@@ -73,7 +73,7 @@ class IdeaEditPopup extends React.Component {
                         onChange={this.handleNotesChange}
                         />
                     <div
-                    style={{marginLeft:"25%", marginRight:"25%",display:"flex", flexDirection:"column"}}>
+                    style={{marginLeft:"25%", marginRight:"25%",display:"flex", flexDirection:"row"}}>
                         <button
                             className= "selectButton"
                             onClick ={()=>{

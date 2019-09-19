@@ -104,22 +104,9 @@ class IdeaCard extends React.Component {
 
     //Called to change the icon
     setIcon(mode) {
-        switch (mode){
-            case "video":
-                this.setState({icon:"md-videocam"})
-                break;
-            case "sound":
-                this.setState({icon:"ios-microphone-outline"})
-                break;
-            case "writing":
-                this.setState({icon:"ios-paper"})
-                break;
-            case "image":
-                    this.setState({icon:"ios-image"})
-                break;
-            default:
-                this.setState({icon:""})                
-        }
+        var icon = Utils.modeToIcon(mode);
+
+        this.setState({icon: icon});
     }
 
     componentDidMount() {       
@@ -169,29 +156,35 @@ class IdeaCard extends React.Component {
                     closePopup = {this.closePopup}
                     />
                 ) : null}
-                <div>
+                <div style={{padding: '0 20px 0 20px'}}>
                     <div style = {{
                         font:"Montserrat,sans-serif",
-                        backgroundColor: "#ff0",
+                        backgroundColor: "#fff",
                         fontSize: "18px", 
+                        borderRadius: '10px',
                         textAlign:"center", 
                         width:"150px",
                         height:"100px",
-                        borderRadius:"5px",
                         marginRight: "auto",
                         marginLeft: "auto",
                         marginTop:"1rem",
                         flexShrink:2,
-                        position: "relative"
+                        position: "relative",
+                        boxShadow: "rgba(0, 0, 0, 0.33) 0px 2px 8px 0px"
                         }}
                         >   
                         <div
                             className = {this.props.ideas[this.props.uuid] ? this.props.ideas[this.props.uuid].mode : null }
                             style = {{
                                 cursor: 'pointer',
+                                borderTopLeftRadius: 10,
+                                borderTopRightRadius: 10,
+                                font:"Montserrat,sans-serif",
+                                fontSize: "18px", 
+                                height: '40px'
                             }}
                             onClick={()=> {
-                                if (this.state.icon != ""){
+                                if (this.props.uuid !== "root"){
                                     this.setState({editing:"true"});
                                 }
                             }}>
@@ -199,24 +192,29 @@ class IdeaCard extends React.Component {
                             <Ionicon
                             style={{
                               position: "absolute",
-                              top: 0,
+                              top: 10,
                               left: 10
                             }}
-                            fontSize="30"
+                            fontSize="20"
                             color="#fff"
                             icon= {this.state.icon}
                             />
                             
+                            <div style={{paddingTop: '5px'}}>
+
                             {this.props.ideas[this.props.uuid] ? this.props.ideas[this.props.uuid].mode : null }
+                            </div>
 
                             {this.state.level !== 0 ? <Ionicon
                             style={{
                                 position: "absolute",
-                                right: 0,
-                                top: 2.5,
+                                right: 6,
+                                top: 10,
                                 cursor: 'pointer',
                             }}
                             icon="md-close"
+                            fontSize="20"
+                            color='#fff'
                             onClick={(event)=> {
                                 this.props.handleDelete(this.props.uuid);                                                        
                             }}
@@ -233,7 +231,7 @@ class IdeaCard extends React.Component {
                            <Ionicon
                             style={{
                                 position: "absolute",
-                                right :0,
+                                right :6,
                                 bottom:0,
                                 cursor: 'pointer',
                             }}
