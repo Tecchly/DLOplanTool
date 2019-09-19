@@ -12,7 +12,12 @@ import Utils from "./Utils";
 import firebase from "firebase";
 import Firestore from "./Firestore.js";
 
-
+/** Note When pushing props to enter this component, need to push 
+* projectID 
+* title 
+* subtitle
+* medium
+*/
 class Project extends React.Component {
     
     constructor(props) {
@@ -33,7 +38,6 @@ class Project extends React.Component {
     }
 
     //Get changes from components,
-    //@@TODO make slighltly different arrangements for root. Root change changes topic.
     handleIdeaUpdate = (uuid,data) =>{
         if (uuid==="root") {
             this.setState({topic: data.title});
@@ -48,9 +52,10 @@ class Project extends React.Component {
 
             //@@Test for saving point. Make cleaner later
             var uid = firebase.auth().currentUser.uid;
+            
             for (let idea in this.state.ideas) {
                 //Saving of all ideas. 
-                Firestore.saveIdeaToProject(uid,this.props.location.state.projectID,idea,this.state.ideas[idea]);
+                Firestore.saveSingleIdeaToProject(uid,this.props.location.state.projectID,idea,this.state.ideas[idea]);
             }
         })
     }
@@ -102,7 +107,6 @@ class Project extends React.Component {
 
 
     componentDidMount() {
-        console.log(this.props.location.state.medium);
         this.setState({
             ideas: {
                   ...this.state.ideas,

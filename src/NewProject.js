@@ -141,6 +141,7 @@ class NewProjectPopup extends React.Component {
   }
 
   medChange = (event) =>{
+    //@@TODO maybe local cache this too.
     this.setState({medium: event.target.value});
   }
 

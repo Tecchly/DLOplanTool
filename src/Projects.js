@@ -101,7 +101,7 @@ const Projects = props => {
 
   useEffect(() => {
     var uid = firebase.auth().currentUser.uid;
-    var recents = Firestore.getAllProjectsByUser(uid);
+    var recents = Firestore.getAllProjectsByUser(uid,true);
 
     recents
       .get()

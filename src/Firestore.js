@@ -35,8 +35,18 @@ class Firestore {
         });
     };
 
-    static getAllProjectsByUser(userID) {
-        return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'asc'); 
+   
+    /**
+     *  Gets the collection for all users
+     *  @param orderd: if the output should be ordered by creation time 
+     */
+    static getAllProjectsByUser(userID, ordered = false) {
+        if (ordered) {
+            return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'asc'); 
+        }else {
+            return db.collection("users").doc(userID).collection("projects");
+        }
+        
     };
 
     static getRecentProjectsByUser(userID) {
@@ -44,13 +54,11 @@ class Firestore {
     };
 
     static getProjectById(userID, projectID) {
-        //Can't seem to do doc on the returned query
         return this.getAllProjectsByUser(userID).doc(projectID);
     };
 
     static getAllIdeasByProject(userID, projectID) {
-        //return this.getProjectById(userID, projectID).collection("ideas");
-        return db.collection("users").doc(userID).collection("projects").doc(projectID).collection("ideas");
+        return this.getProjectById(userID, projectID).collection("ideas");
     };
 
     static saveToDBWithDocID(collection, docID, data) {
@@ -62,9 +70,8 @@ class Firestore {
         // })
     };
 
-    //Seems to not work @@TODO fix this.
-    static saveIdeaToProject(userID, projectID, ideas) {
-        
+    //@@TODO maybe deprecated due to storing ideas as an object and not an list 
+    static saveIdeaToProject(userID, projectID, ideas) {        
         var ideaCollection = this.getAllIdeasByProject(userID, projectID);
         ideas.forEach(function(idea) {
             this.saveToDBWithDocID(ideaCollection, idea.id, idea);
@@ -73,7 +80,7 @@ class Firestore {
     };
 
     //save a singular idea to the project.
-    static saveIdeaToProject(userID, projectID, ideaID, idea) {
+    static saveSingleIdeaToProject(userID, projectID, ideaID, idea) {
         var ideaRef = db.collection("users").doc(userID).collection("projects").doc(projectID).collection("ideas").doc(ideaID);
         return ideaRef.set({
                 title: idea.title,
@@ -96,11 +103,11 @@ class Firestore {
 
     static saveNewProject(userID, projectData) {
         this.updateUserDetails();
-        return db.collection("users").doc(userID).collection("projects").add(projectData);
+        return this.getAllProjectsByUser(userID).add(projectData);
     }
 
     static editProjectFields(userID, projectID, data) {
-        var ideaRef = db.collection('users').doc(userID).collection("projects").doc(projectID);
+        var ideaRef = this.getProjectById(userID,projectID);
         return ideaRef.update(data);
     }
     
