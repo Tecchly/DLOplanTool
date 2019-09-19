@@ -50,7 +50,6 @@ export default function ModeSelectionMenu(props) {
     setAnchorEl(null);
   }
 
-
    return (
     <div className={classes.root}>
       <List component="nav" aria-label="Mode mapping" 
@@ -73,7 +72,7 @@ export default function ModeSelectionMenu(props) {
         </ListItemIcon>
           <ListItemText 
                 disableTypography
-                primary={<Typography type="body2" style={{ font:"Montserrat", fontSize: '24px' }}>{options[selectedIndex]}</Typography>}
+                primary={<Typography type="body2" className='modeSelectionTitle' style={{ font:"Montserrat", fontSize: '24px' }}>{options[selectedIndex]}</Typography>}
              />
         </ListItem>
       </List>
@@ -89,6 +88,7 @@ export default function ModeSelectionMenu(props) {
             key={option}
             selected={index === selectedIndex}
             onClick={event => handleMenuItemClick(event, index)}
+
           > 
             <ListItemIcon>
                 <Ionicon

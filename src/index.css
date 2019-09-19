@@ -150,14 +150,17 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
   border-style: none;  
   border-bottom: solid;
   border-bottom-width: 1px; 
-  margin-bottom: 1.5em;
+  margin-bottom: 0.5em;
+  margin-top: 18px;
+  border-color: #e8e8e8;
+  font: 600 15px "Montserrat", sans-serif;
 }
 
 .popup .heading{
   width: 80%;
   margin-right: 10%;
   margin-left: 10%;
-  font-size: 24px;
+  font: 600 20px "Montserrat", sans-serif;
 }
 
 .popup textarea{
@@ -166,6 +169,9 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
   margin-right: 10%;
   margin-left: 10%;
   resize: none;
+  border-color: #e8e8e8;
+  padding:10px;
+  font: 400 15px "Montserrat", sans-serif;
 }
 
 .popup .textInput:focus {
@@ -179,9 +185,12 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
   border-radius: 11;
   box-shadow: 0px 2px 10px -4px rgba(0,0,0,0.5);
   border: none;
+  border-radius: 8px;
   font-family: Montserrat;
-  height: 45;
-  font-weight: 600;
+  height: 45px;
+  font-weight: 400;
+  margin: 10% 10px 0 10px;
+  width: 200px;
 }
 
 .draggedImage{
@@ -333,20 +342,24 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
 }
 
 .video{
-  background-color: #ADD8E6;
+  background-color: #4b7aec;
+  color: white
 }
 
 .image{
-  background-color: #32CD32;
+  background-color: #1fbf6c;
+  color: white
 
 }
 
 .sound{
-  background-color: #F08080;
+  background-color: #fc5c65;
+  color: white
 }
 
 .writing{
-  background-color: #BEBEBE;
+  background-color: #778ca2;
+  color: white
 }
 
 .amplificationTile {
@@ -489,13 +502,13 @@ margin-left: 30px;
   height: 23px !important;
 }
 .Video, .Podcast, .Screencast, .Film, .Animation, .Presentation{
-  background-color: rgb(0, 0, 0);
+  background-color: #4a6583;
   color: white
 }
 
 .custom-select{
   position: relative;
-  font-family: Arial;
+  font: 300 20px "Montserrat", sans-serif !important;
   background-color: rgb(255, 255, 255);
   padding: 8px 16px;
   border-style: none;  
@@ -503,6 +516,10 @@ margin-left: 30px;
   border-bottom-width: 1px; 
 }
 
+.modeSelectionTitle {
+  font: 700 20px "Montserrat", sans-serif !important;
+  color: white;
 
+}
 
 
