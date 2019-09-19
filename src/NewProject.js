@@ -185,7 +185,6 @@ class NewProjectPopup extends React.Component {
 
   render() {
     var togglePopup = this.props.togglePopup;
-    const { history } = this.props;
     return (
       <React.Fragment>
         <div className="popup">
