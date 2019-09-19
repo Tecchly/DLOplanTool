@@ -3,8 +3,14 @@
 
 This is the repository containing all code for the project DLO plan Tool by team Tecchly. This project has been developed with the assistance of our customer Naomi Rosedale from the Woolf Fisher Research Centre. 
 
-Naomi has worked extensively  with 1:1 initiatives (1 device per student) in schools and part of her research involves how the design and creation of Digital learning objects can benefit student learning. Digital learning objects (DLOs) refer to a digital project that students create with the intent on sharing knowledge with their peers. As such, this project seeks to create a framework, with which students of upper primary school age can use to plan out effective DLOs. 
+Naomi has worked extensively  with 1:1 initiatives (1 device per student) in schools and part of her research involves how the design and creation of Digital learning objects can benefit student learning. Digital learning objects (DLOs) refer to a digital project that students create with the intent on sharing knowledge with their peers. As such, this project seeks to create a framework, with which students of upper primary school age can use to plan out effective DLOs.
 
+### Execution Instructions
+
+1. Ensure npm is installed on your machine, you can get it from here https://www.npmjs.com/get-npm
+2. Download/clone this repository
+3. In the root folder (i.e. DLOplanTool) open terminal and run  ```npm install```
+4. Then run ```npm start```
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
