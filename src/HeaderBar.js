@@ -44,6 +44,9 @@ const HeaderBar = () => {
                 fontSize: 22
             }}
             href="#"
+            onClick={() => {
+                history.push("/");
+              }}
             >
             <Image
                 src={require("../assets/images/orange_logop.png")}
