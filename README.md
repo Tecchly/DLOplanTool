@@ -1,9 +1,9 @@
 # Tecchly 
 ### Welcome
 
-This is the repository containing all code for the project DLOplanTool by team Tecchly. This project has been developed with the assistance of Naomi Rosedale from the Woolf Fisher Research Centre. This project seeks to create a framework, with which students of upper primary school age, are able to use to plan out effective Digital Learning Objects (DLO). Digital learning objects refer to a digital project that students create with the intent on sharing knowledge with their peers. Our customer, Naomi has worked extensively  with 1:1 initiatives (1 device per student), part of her research involves how the design and creation of DLOs can benefit student learning. 
+This is the repository containing all code for the project DLO plan Tool by team Tecchly. This project has been developed with the assistance of our customer Naomi Rosedale from the Woolf Fisher Research Centre. 
 
-
+Naomi has worked extensively  with 1:1 initiatives (1 device per student), part of her research involves how the design and creation of Digital learning objects can benefit student learning. Digital learning objects (DLOs) refer to a digital project that students create with the intent on sharing knowledge with their peers. As such, this project seeks to create a framework, with which students of upper primary school age, are able to plan out effective Digital Learning Objects (DLO). 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
