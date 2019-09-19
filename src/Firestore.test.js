@@ -39,7 +39,7 @@ describe("saveWithDocID", () => {
             fail("error saving document: " + error);
         });
     });
-    
+
     it("overrides document", () => {
         return Firestore.saveWithDocID(collectionName, documentName, data2).then(() => {
             return Firestore.getDocument(collectionName, documentName).then(doc => {
@@ -65,7 +65,7 @@ describe("deleteDocument", () => {
     let documentName = "testDocument";
 
     it("deletes document", () => {
-        return Firestore.saveWithDocID(collectionName, documentName, {x: "x"}).then(() => {
+        return Firestore.saveWithDocID(collectionName, documentName, { x: "x" }).then(() => {
             return Firestore.deleteDocument(collectionName, documentName).then(() => {
             }).catch(error => {
                 fail("delete fail, please manually delete document " + documentName + " in collection " + collectionName + ", error: " + error);
@@ -154,7 +154,8 @@ describe("getUserData", () => {
     let id = "";
     let email = "testuser@gmail.com";
     let username = "testUser";
-    
+    let uid = "abcdefghigklmnopqrstuvwxyz";
+
     afterAll(() => {
         return Firestore.deleteDocument("users", id).then(() => {
         }).catch(error => {
@@ -163,14 +164,14 @@ describe("getUserData", () => {
     });
 
     it("gets user data", () => {
-        return Firestore.saveUser(email, username).then(doc => {
+        return Firestore.saveUser(email, username, uid).then(doc => {
             id = doc.id;
             return Firestore.getUserData(id).get().then(doc => {
                 expect(doc.id).toEqual(id);
                 if (doc.exists) {
                     let user = doc.data();
                     expect(user.email).toEqual(email);
-                    expect(user.username).toEqual(username); 
+                    expect(user.Name).toEqual(username);
                 } else {
                     fail("user data missing");
                 }
@@ -187,7 +188,8 @@ describe("saveUser", () => {
     let id = "";
     let email = "testuser@gmail.com";
     let username = "testUser";
-    
+    let uid = "abcdefghigklmnopqrstuvwxyz";
+
     afterAll(() => {
         return Firestore.deleteDocument("users", id).then(() => {
         }).catch(error => {
@@ -197,7 +199,7 @@ describe("saveUser", () => {
 
     it("saves user", () => {
         let beforeSave = Date.now();
-        return Firestore.saveUser(email, username).then(doc => {
+        return Firestore.saveUser(email, username, uid).then(doc => {
             let afterSave = Date.now();
             id = doc.id;
             return doc.get().then(doc => {
@@ -207,7 +209,7 @@ describe("saveUser", () => {
                     expect(user.email).toEqual(email);
                     expect(user.timestamp).toBeGreaterThanOrEqual(beforeSave);
                     expect(afterSave).toBeGreaterThanOrEqual(user.timestamp);
-                    expect(user.username).toEqual(username); 
+                    expect(user.Name).toEqual(username);
                 } else {
                     fail("user data missing");
                 }
@@ -226,6 +228,7 @@ describe("getAllProjectsByUser", () => {
         id: "1",
         val: "x"
     };
+    let uid = "abcdefghigklmnopqrstuvwxyz";
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
@@ -239,7 +242,7 @@ describe("getAllProjectsByUser", () => {
     });
 
     it("gets user projects", () => {
-        return Firestore.saveUser("test@gmail.com", "test").then(doc => {
+        return Firestore.saveUser("test@gmail.com", "test", uid).then(doc => {
             userId = doc.id;
             return Firestore.saveProjectToUser(userId, project).then(() => {
                 return Firestore.getAllProjectsByUser(userId).get().then(projects => {
@@ -282,6 +285,7 @@ describe("getRecentProjectsByUser", () => {
         val: "z",
         creationTime: time
     };
+    let uid = "abcdefghigklmnopqrstuvwxyz";
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
@@ -303,7 +307,7 @@ describe("getRecentProjectsByUser", () => {
     });
 
     it("gets most recent user project", () => {
-        return Firestore.saveUser("test@gmail.com", "test").then(doc => {
+        return Firestore.saveUser("test@gmail.com", "test", uid).then(doc => {
             userId = doc.id;
             return Firestore.saveProjectToUser(userId, project).then(() => {
                 return Firestore.saveProjectToUser(userId, project2).then(() => {
@@ -346,6 +350,7 @@ describe("getProjectById", () => {
         id: "1",
         val: "x"
     };
+    let uid = "abcdefghigklmnopqrstuvwxyz";
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
@@ -359,7 +364,7 @@ describe("getProjectById", () => {
     });
 
     it("retrieves user project", () => {
-        return Firestore.saveUser("test@gmail.com", "test").then(doc => {
+        return Firestore.saveUser("test@gmail.com", "test", uid).then(doc => {
             userId = doc.id;
             return Firestore.saveProjectToUser(userId, project).then(() => {
                 return Firestore.getProjectById(userId, project.id).get().then(retrieved => {
@@ -393,6 +398,7 @@ describe("getAllIdeasByProject", () => {
         id: "2",
         name: "abc"
     };
+    let uid = "abcdefghigklmnopqrstuvwxyz";
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
@@ -410,7 +416,7 @@ describe("getAllIdeasByProject", () => {
     });
 
     it("gets project ideas", () => {
-        return Firestore.saveUser("test@gmail.com", "test").then(doc => {
+        return Firestore.saveUser("test@gmail.com", "test", uid).then(doc => {
             userId = doc.id;
             return Firestore.saveProjectToUser(userId, project).then(() => {
                 return Firestore.saveIdeaToProject(userId, project.id, idea).then(() => {
@@ -449,6 +455,7 @@ describe("saveToDBWithDocID", () => {
         id: "1",
         val: "y"
     };
+    let uid = "abcdefghigklmnopqrstuvwxyz";
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
@@ -462,7 +469,7 @@ describe("saveToDBWithDocID", () => {
     });
 
     it("saves document", () => {
-        return Firestore.saveUser("test@gmail.com", "test").then(doc => {
+        return Firestore.saveUser("test@gmail.com", "test", uid).then(doc => {
             userId = doc.id;
             return Firestore.saveToDBWithDocID(
                 Firestore.getAllProjectsByUser(userId),
@@ -523,6 +530,7 @@ describe("saveIdeaToProject", () => {
         id: "2",
         name: "abc"
     };
+    let uid = "abcdefghigklmnopqrstuvwxyz";
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
@@ -540,7 +548,7 @@ describe("saveIdeaToProject", () => {
     });
 
     it("saves idea", () => {
-        return Firestore.saveUser("test@gmail.com", "test").then(doc => {
+        return Firestore.saveUser("test@gmail.com", "test", uid).then(doc => {
             userId = doc.id;
             return Firestore.saveProjectToUser(userId, project).then(() => {
                 return Firestore.saveIdeaToProject(userId, project.id, idea).then(() => {
@@ -575,6 +583,7 @@ describe("saveProjectToUser", () => {
         id: "1",
         val: "x"
     };
+    let uid = "abcdefghigklmnopqrstuvwxyz";
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
@@ -588,7 +597,7 @@ describe("saveProjectToUser", () => {
     });
 
     it("saves user project", () => {
-        return Firestore.saveUser("test@gmail.com", "test").then(doc => {
+        return Firestore.saveUser("test@gmail.com", "test", uid).then(doc => {
             userId = doc.id;
             return Firestore.saveProjectToUser(userId, project).then(() => {
                 return Firestore.getProjectById(userId, project.id).get().then(retrieved => {
@@ -619,6 +628,7 @@ describe("saveNewProject", () => {
         val: "x"
     };
     let projectId = "";
+    let uid = "abcdefghigklmnopqrstuvwxyz";
 
     afterAll(() => {
         return Firestore.deleteDocument("users", userId).then(() => {
@@ -632,7 +642,7 @@ describe("saveNewProject", () => {
     });
 
     it("saves project", () => {
-        return Firestore.saveUser("test@gmail.com", "test").then(doc => {
+        return Firestore.saveUser("test@gmail.com", "test", uid).then(doc => {
             userId = doc.id;
             return Firestore.saveNewProject(userId, project).then(projectRef => {
                 return projectRef.get().then(retrieved => {

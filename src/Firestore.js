@@ -20,25 +20,26 @@ class Firestore {
     static getDocument(collection, docID) {
         return db.collection(collection).doc(docID).get();
     }
-     
+
     static getUserData(userID) {
         return db.collection("users").doc(userID);
     }
 
-    static saveUser(email, username) {
+    static saveUser(email, username, uid) {
         return db.collection("users").add({
             email: email,
             timestamp: Date.now(),
-            username: username
+            Name: username,
+            uid: uid
         });
     }
 
     static getAllProjectsByUser(userID) {
-        return db.collection("users").doc(userID).collection("projects"); 
+        return db.collection("users").doc(userID).collection("projects");
     };
 
     static getRecentProjectsByUser(userID, number) {
-        return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'desc').limit(number); 
+        return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'desc').limit(number);
     };
 
     static getProjectById(userID, projectID) {
@@ -50,7 +51,7 @@ class Firestore {
     };
 
     static saveToDBWithDocID(collection, docID, data) {
-        return collection.doc(docID).set(data, {merge : true});
+        return collection.doc(docID).set(data, { merge: true });
     };
 
     static saveIdeaToProject(userID, projectID, idea) {
@@ -73,12 +74,12 @@ class Firestore {
         return db.collection("users").doc(userID).collection("projects").add(projectData);
     }
 
-    static updateUserDetails(){
+    static updateUserDetails() {
         var user = firebase.auth().currentUser;
         return db.collection('users').doc(user.uid).set({
-            Name:user.displayName, 
-            email:user.email, 
-            uid:user.uid
+            Name: user.displayName,
+            email: user.email,
+            uid: user.uid
         }, {
             merge: true
         });

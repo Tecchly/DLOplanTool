@@ -23,7 +23,7 @@ class NewProjectPopup extends React.Component {
   }
 
   state = {
-    showMessagePopup : false,
+    showMessagePopup: false,
     projectTitle: "",
     projectTopic: "",
     imageName: "", //The ID of the image, whether from DB or upload
@@ -32,7 +32,7 @@ class NewProjectPopup extends React.Component {
   };
 
   toggleMessagePopup() {
-    this.setState({showMessagePopup: !this.state.showMessagePopup});
+    this.setState({ showMessagePopup: !this.state.showMessagePopup });
   }
 
   componentDidMount() {
@@ -84,14 +84,14 @@ class NewProjectPopup extends React.Component {
         this.toggleMessagePopup();
         return;
       }
-      this.setState({file:file});
+      this.setState({ file: file });
 
-      var uniqueName = this.uuidv4();      
-      this.setState({imageName:uniqueName});
+      var uniqueName = this.uuidv4();
+      this.setState({ imageName: uniqueName });
       this.localCache.setItem("imageName", uniqueName);
 
       var reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         try {
           this.localCache.setItem("image", e.target.result);
         } catch (e) {
@@ -113,12 +113,12 @@ class NewProjectPopup extends React.Component {
     }
 
     //Uploading image    
-    var storageRef = firebase.storage().ref("projectImage/" + this.state.imageName);          
+    var storageRef = firebase.storage().ref("projectImage/" + this.state.imageName);
     var uploadTask = storageRef.put(file);
 
     uploadTask.on(
       "state_changed",
-      function error(err) {},
+      function error(err) { },
       function complete() {
         console.log("successful upload");
       }
@@ -126,14 +126,14 @@ class NewProjectPopup extends React.Component {
   }
 
   handleTitleChange(event) {
-    this.setState({ projectTitle: event.target.value }, function() {
+    this.setState({ projectTitle: event.target.value }, function () {
       //Local cache variant
       this.localCache.setItem("title", this.state.projectTitle);
     });
   }
 
   handleTopicChange(event) {
-    this.setState({ projectTopic: event.target.value }, function() {
+    this.setState({ projectTopic: event.target.value }, function () {
       this.localCache.setItem("topic", this.state.projectTopic);
     });
   }
@@ -154,6 +154,7 @@ class NewProjectPopup extends React.Component {
     }
 
     var uid = firebase.auth().currentUser.uid;
+    Firestore.updateUserDetails();
     Firestore.saveNewProject(uid, data);
     if (this.state.file) {
       this.uploadImage(this.state.file);
@@ -173,11 +174,11 @@ class NewProjectPopup extends React.Component {
 
   //Generate a uuid
   uuidv4() {
-    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
       (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
     )
   }
-  
+
 
   render() {
     var togglePopup = this.props.togglePopup;
@@ -186,11 +187,11 @@ class NewProjectPopup extends React.Component {
       <React.Fragment>
         <div className="popup">
           <div className="inner">
-          {this.state.showMessagePopup ?
-          <MessagePopup 
-            text='Images have to be 5MB or smaller. Please upload an image with a smaller file size.'
-            closeMessagePopup={this.toggleMessagePopup.bind(this)} />
-          : null}
+            {this.state.showMessagePopup ?
+              <MessagePopup
+                text='Images have to be 5MB or smaller. Please upload an image with a smaller file size.'
+                closeMessagePopup={this.toggleMessagePopup.bind(this)} />
+              : null}
             <Ionicon
               style={{
                 position: "absolute",
@@ -227,7 +228,7 @@ class NewProjectPopup extends React.Component {
               </form>
             </div>
             <div
-            className='dropDiv'
+              className='dropDiv'
               style={{
                 marginTop: "10%",
                 marginLeft: "25%",
