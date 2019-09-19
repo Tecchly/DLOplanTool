@@ -151,7 +151,8 @@ const Home = ({ history }) => {
         projectID: x.projectID,
         title: x.title,
         topic: x.subtitle,
-        medium: x.medium
+        medium: x.medium,
+        image: x.image
       }
     });
   };

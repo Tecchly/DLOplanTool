@@ -50,6 +50,7 @@ class ShareProjectPopup extends React.Component {
 
     shareProject() {
         this.isProjectShared = true;
+        
         var data = {
             id: this.props.projectId,
             title: this.props.title,
