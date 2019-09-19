@@ -6,7 +6,7 @@ import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
-import IconButton from "@material-ui/core/IconButton";
+
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import ReactDOM from "react-dom";
@@ -14,7 +14,9 @@ import Backg from "../assets/images/poster2.jpg";
 import { Image } from "react-bootstrap";
 import firebase from "firebase";
 import Firestore from "./Firestore.js";
-import ShareProjectPopup from "./ShareProjectPopup";
+import IconButton from "@material-ui/core/IconButton";
+import SendIcon from "@material-ui/icons/Send";
+
 import Chips, { Chip } from "react-chips";
 import "./index.css";
 const styles = theme => ({
@@ -30,8 +32,6 @@ const styles = theme => ({
     color: "#ababab"
   }
 });
-
-
 
 const DialogTitle = withStyles(styles)(props => {
   const { children, classes, onClose } = props;
@@ -71,20 +71,58 @@ const DialogActions = withStyles(theme => ({
 
 const ProjectView = ({ open, hide, projectInfo, edit }) => {
   const [suggestions, setSuggestions] = useState([]);
-  const [share, setShare] = useState(false); 
+  const [share, setShare] = useState(false);
   const [tags, addTags] = useState([]);
 
   const addTag = t => {
     addTags(t);
   };
   const shareP = () => {
-    setShare(!share)
+    setShare(!share);
   };
   const onChange = tags => {
-    addTag(tags)
+    addTag(tags);
   };
   const addSuggestion = s => {
     setSuggestions(oldArray => [...oldArray, s]);
+  };
+
+  const clearSuggestions = () => {
+    setSuggestions([]);
+  };
+  const shareProject = () => {
+    var data = {
+      id: projectInfo.projectID,
+      title: projectInfo.title,
+      subtitle: projectInfo.subtitle,
+      image: projectInfo.image,
+      shareTime: +new Date(),
+      createUser: "",
+      path: ""
+    };
+
+    var user = firebase.auth().currentUser;
+    data.createUser = user.displayName;
+    data.path = "users/" + user.uid + "/projects/" + data.id; //+ this.projectId
+
+    // var shareEmails = tags;
+    tags.forEach(function(email) {
+      Firestore.queryUserByEmail(email.trim())
+        .get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            // console.log(doc.id + " " + doc.data())
+            Firestore.saveSharedProject(doc.id, data);
+          });
+        })
+        .catch(function(error) {
+          console.log("Error getting documents: ", error);
+        });
+    });
+
+    // this.toggleSharePopup();
+    clearSuggestions;
+    // this.localCache.removeItem("shareEmails");
   };
   useEffect(() => {
     Firestore.getUserEmails().then(querySnapshot => {
@@ -99,9 +137,8 @@ const ProjectView = ({ open, hide, projectInfo, edit }) => {
         console.log(suggestions);
       });
     });
-  },[]);
-  return (
-  open
+  }, []);
+  return open
     ? ReactDOM.createPortal(
         <React.Fragment>
           <Dialog
@@ -123,14 +160,21 @@ const ProjectView = ({ open, hide, projectInfo, edit }) => {
               id="customized-dialog-title"
               onClose={hide}
             ></DialogTitle>
-            {/* <DialogContent dividers style={{display: share? 'block':'none'}}> */}
-            <Chips
-            style={{display: share? 'block':'none'}}
-                  value={tags}
-                  onChange={onChange}
-                  suggestions={suggestions}
-                />
-            {/* </DialogContent> */}
+            <DialogContent
+              dividers
+              style={{ display: share ? "block" : "none" }}
+            >
+              <Chips
+                style={{ display: share ? "block" : "none", float: 'left',
+                width:' 87%'}}
+                value={tags}
+                onChange={onChange}
+                suggestions={suggestions}
+              />
+              <Button onClick={() => {hide(); shareProject();}} color="primary">
+                send
+              </Button>
+            </DialogContent>
             <DialogActions>
               <Button
                 onClick={() => {
@@ -150,24 +194,16 @@ const ProjectView = ({ open, hide, projectInfo, edit }) => {
               >
                 Edit
               </Button>
-              <Button
-                onClick={shareP}
-                color="primary"
-              >
+              <Button onClick={shareP} color="primary">
                 Share
               </Button>
-              <ShareProjectPopup
-                title={projectInfo.title}
-                subtitle={projectInfo.subtitle}
-                image={projectInfo.image}
-                projectId={projectInfo.projectID}
-              />
+
             </DialogActions>
           </Dialog>
         </React.Fragment>,
         document.body
       )
-    : null);
+    : null;
 };
 
 export default ProjectView;
