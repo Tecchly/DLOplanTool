@@ -16,9 +16,8 @@ import retext from "retext";
 import pos from "retext-pos";
 import keywords from "retext-keywords";
 import toString from "nlcst-to-string";
-import mappingData from "../assets/map_data.json";
 
-const Amplification = ({ history }, { props }) => {
+const Amplification = ( props ) => {
   const [ideaKeyWords, pushIdeaKeyWords] = useState([]);
   const addIdea = ideas => {
     pushIdeaKeyWords(oldArray => [...oldArray, ideas]);
@@ -48,83 +47,90 @@ const Amplification = ({ history }, { props }) => {
   };
 
   useEffect(() => {
+
+    var ideas = Firestore.getAllIdeasByProject(firebase.auth().currentUser.uid,props.location.state.projectID);
     let keyWordList = [];
     let topicNotesList = [];
-    var allIdeas = words(props);
-    var mainTopic = topic();
-    console.log(mainTopic);
-    Object.values(allIdeas).forEach(info => {
-      console.log(info);
-      keyWordList = [];
+    words(ideas).then(function (allIdeas){
+      var mainTopic = topic(allIdeas);
+      console.log(mainTopic);
+      Object.values(allIdeas).forEach(info => {
+        console.log(info);
+        keyWordList = [];
+        retext()
+          .use(pos)
+          .use(keywords)
+          .process(info.notes, (err, file) => {
+            if (err) throw err;
+            //keywords
+            file.data.keywords.forEach(function(keyword) {
+              keyWordList.push(toString(keyword.matches[0].node));
+            });
+            //key phrases
+            file.data.keyphrases.forEach(phrase => {
+              keyWordList.push(phrase.matches[0].nodes.map(stringify).join(""));
+              function stringify(value) {
+                return toString(value);
+              }
+            });
+          });
+        info.keywords = keyWordList;
+        addIdea(info);
+      });
       retext()
         .use(pos)
         .use(keywords)
-        .process(info.notes, (err, file) => {
+        .process(mainTopic.notes, (err, file) => {
           if (err) throw err;
           //keywords
           file.data.keywords.forEach(function(keyword) {
-            keyWordList.push(toString(keyword.matches[0].node));
+            topicNotesList.push(toString(keyword.matches[0].node));
           });
           //key phrases
           file.data.keyphrases.forEach(phrase => {
-            keyWordList.push(phrase.matches[0].nodes.map(stringify).join(""));
+            topicNotesList.push(phrase.matches[0].nodes.map(stringify).join(""));
             function stringify(value) {
               return toString(value);
             }
           });
         });
-      info.keywords = keyWordList;
-      addIdea(info);
+  
+      mainTopic["keywords"] = topicNotesList;
+      addTopicNotes(mainTopic);
     });
-    retext()
-      .use(pos)
-      .use(keywords)
-      .process(mainTopic.notes, (err, file) => {
-        if (err) throw err;
-        //keywords
-        file.data.keywords.forEach(function(keyword) {
-          topicNotesList.push(toString(keyword.matches[0].node));
-        });
-        //key phrases
-        file.data.keyphrases.forEach(phrase => {
-          topicNotesList.push(phrase.matches[0].nodes.map(stringify).join(""));
-          function stringify(value) {
-            return toString(value);
-          }
-        });
-      });
-
-    mainTopic["keywords"] = topicNotesList;
-    addTopicNotes(mainTopic);
   }, []);
 
-  function words(props) {
-    var ideas = {};
-    let index = 0;
-    console.log(props);
-    // var ideas = Firestore.getAllIdeasByProject(firebase.auth().currentUser.uid,props.location.state.projectID); 
-    // ideas
-    // .get();
-    console.log(ideas);
-    mappingData.Ideas.map(idea => {
-      ideas[idea.id] = {
-        id: index,
-        mode: idea.mode,
-        title: idea.title,
-        icon: idea.icon,
-        notes: idea.notes.join(" ")
-      };
-      index++;
+  function words(loadIdeas) {
+    var promise1 = new Promise(function(resolve, reject) {
+      var index = 0;
+      var ideas = {};
+      loadIdeas.get().then(function(idea) {
+        idea.forEach(x=>{
+          var data = x.data();
+            let index = 0;
+              ideas[x.id] = {
+                id: index,
+                mode: data.mode,
+                title: data.title,
+                icon: "",
+                notes: data.notes
+              };
+              index++;
+       });
+       console.log(ideas);
+       resolve(ideas);
     });
-    return ideas;
+  });
+  return promise1;
   }
 
-  function topic() {
+  function topic(allideas) {
+    console.log(allideas);
     var topicInfo = {
-      medium: mappingData.Topic.medium,
-      title: mappingData.Topic.title,
-      subtitle: mappingData.Topic.subtitle,
-      notes: mappingData.Topic.notes.join(" ")
+      medium: "Medium",
+      title: "Title",
+      subtitle: "Subtitle",
+      notes: ""
     };
     return topicInfo;
   }
@@ -177,7 +183,7 @@ const Amplification = ({ history }, { props }) => {
                 cursor: "pointer"
               }}
               onClick={() => {
-                history.push("/");
+                props.history.push("/");
               }}
             >
               <Image
@@ -202,7 +208,7 @@ const Amplification = ({ history }, { props }) => {
                 onClick={() => {
                   localStorage.setItem("user", null);
                   app.auth().signOut();
-                  history.push("/login");
+                  props.history.push("/login");
                 }}
               />
             </Nav>
