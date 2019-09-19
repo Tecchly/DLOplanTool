@@ -1,14 +1,6 @@
 import React from "react";
-import { app } from "./Firebase";
-import { Button, Icon } from "antd";
-import firebase from "firebase";
-import Firestore from "./Firestore.js";
-import Ionicon from "react-ionicons";
-import Utils from "./Utils.js";
-import { Select } from '@material-ui/core';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import "./index.css";
+import ModeSelectionMenu from "./ModeSelectionMenu.js"
 
 class IdeaEditPopup extends React.Component {
     constructor(props) {
@@ -19,20 +11,21 @@ class IdeaEditPopup extends React.Component {
     state = {
         title:'',
         mode:'',
-        notes:''
+        notes:'',
+        icon:'ios-bulb'
     }
 
     componentDidMount(){
         if (this.props.title) {
-            this.setState({"title":this.props.title});
+            this.setState({title:this.props.title});
         }
 
         if (this.props.mode) {
-            this.setState({"mode":this.props.mode});
+            this.setState({mode:this.props.mode});
         }
 
         if  (this.props.notes) {
-            this.setState({"notes":this.props.notes});
+            this.setState({notes:this.props.notes});
         }
         
     }
@@ -46,9 +39,9 @@ class IdeaEditPopup extends React.Component {
     handleNotesChange = (event)=> {
         this.setState({notes: event.target.value});
     }
-
-    handleModeChange = (event) => {
-        this.setState({mode:event.target.value});
+    
+    handleModeChange = (mode) => {
+        this.setState({mode:mode}); 
     }
 
     render(){
@@ -58,36 +51,11 @@ class IdeaEditPopup extends React.Component {
             <div className="popup">
                 <div className="inner">
                     <div className = {this.state.mode}>
-                        <h2>
-                        <Ionicon
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              left: 10
-                            }}
-                            fontSize="30"
-                            color="#fff"
-                            icon="ios-bulb"
+                        <ModeSelectionMenu 
+                            availableModes = {this.props.availableModes}
+                            handleModeChange = {this.handleModeChange} 
+                            currentMode = {this.state.mode}
                             />
-                        <FormControl className= "formControl">
-                            <Select
-                            native
-                            value={this.state.mode}
-                            onChange={this.handleModeChange}
-                            inputProps={{
-                                name: 'mode',
-                                id: 'age-native-simple',
-                            }}
-                            >
-                            {this.props.availableModes.map(mode=>
-                                <option 
-                                    key = {mode}
-                                    value = {mode}>
-                                        {mode}
-                                </option>)}
-                            </Select>
-                    </FormControl>
-                        </h2>
                     </div>
                     <input 
                         type="text"

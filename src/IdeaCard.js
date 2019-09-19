@@ -20,7 +20,8 @@ class IdeaCard extends React.Component {
     state = {
         created: false,
         level: 0,
-        childIdeas: [], //@@TODO move this into state.
+        childIdeas: [], 
+        icon: "ios-bulb",
         editing:false
     };
 
@@ -35,7 +36,15 @@ class IdeaCard extends React.Component {
 
     //Add empty child
     addChild(uuid) {
-        if (this.state.childIdeas.length < 4){
+        //Limit the number of child ideas.
+        var max = 4; 
+        if (this.state.level = 1) {
+            max = 2
+        } else if (this.state.level >= 2 ){
+            max = 1
+        }
+
+        if (this.state.childIdeas.length < max){
             //Need to update project
             this.props.handleIdeaUpdate(uuid, {
                 title: "",
@@ -49,7 +58,7 @@ class IdeaCard extends React.Component {
         }
     }
 
-    //Loading multiple children 
+    //Loading multiple children, used when loading to prevent setState race conditions.
     loadChildren(uuidArray) {                
         this.setState({
             childIdeas:this.state.childIdeas.concat(uuidArray)
@@ -65,17 +74,44 @@ class IdeaCard extends React.Component {
             mode : mode
         });
 
+        this.setIcon(mode);
+        
         this.setState({created: true}, () => {
             this.closePopup()
         });
-    }
 
+        //If this node is the root node, changing the text will change main topic too. 
+        //@@TODO Better intergrate this next sprint
+        if (this.props.uuid === "root") {
+            this.props.handleMainTopicChange(title);   
+        }
+    }
     closePopup = () =>{
         this.setState({editing:false});
 
         if (!this.state.created) {
             this.props.handleDelete(this.props.uuid); 
         }       
+    }
+
+    //Called to change the icon
+    setIcon(mode) {
+        switch (mode){
+            case "video":
+                this.setState({icon:"md-videocam"})
+                break;
+            case "sound":
+                this.setState({icon:"ios-microphone-outline"})
+                break;
+            case "writing":
+                this.setState({icon:"ios-paper"})
+                break;
+            case "image":
+                    this.setState({icon:"ios-image"})
+                break;
+            default:
+                this.setState({icon:"ios-bulb"})                
+        }
     }
 
     componentDidMount() {       
@@ -104,8 +140,7 @@ class IdeaCard extends React.Component {
             });
         }
 
-        //Test,
-        this.setState ({mode: "video"}); 
+        this.setIcon(this.props.ideas[this.props.uuid].mode);
     }
 
     render() {
@@ -157,16 +192,16 @@ class IdeaCard extends React.Component {
                             }}
                             fontSize="30"
                             color="#fff"
-                            icon="ios-bulb"
+                            icon= {this.state.icon}
                             />
                             
                             {this.props.ideas[this.props.uuid] ? this.props.ideas[this.props.uuid].mode : null }
 
                             {this.state.level !== 0 ? <Ionicon
                             style={{
-                                float:"right",
-                                left: "15px",
-                                top: "0",
+                                position: "absolute",
+                                right: 0,
+                                top: 2.5,
                                 cursor: 'pointer',
                             }}
                             icon="md-close"
@@ -186,7 +221,7 @@ class IdeaCard extends React.Component {
                            <Ionicon
                             style={{
                                 position: "absolute",
-                                right:0,
+                                right :0,
                                 bottom:0,
                                 cursor: 'pointer',
                             }}

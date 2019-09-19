@@ -74,12 +74,12 @@ class Firestore {
     //save a singular idea to the project.
     static saveIdeaToProject(userID, projectID, ideaID, idea) {
         var ideaRef = db.collection("users").doc(userID).collection("projects").doc(projectID).collection("ideas").doc(ideaID);
-        ideaRef.set({
-            title: idea.title,
-            mode: idea.mode,
-            notes: idea.notes,
-            parentID: idea.parentID,
-        })
+        return ideaRef.set({
+                title: idea.title,
+                mode: idea.mode,
+                notes: idea.notes,
+                parentID: idea.parentID,
+            })
     }
 
     static saveProjectsToUser(userID, projects) {
@@ -95,11 +95,7 @@ class Firestore {
 
     static editProjectFields(userID, projectID, data) {
         var ideaRef = db.collection('users').doc(userID).collection("projects").doc(projectID);
-        ideaRef.set({
-            title: data.title,
-            subtitle: data.subtitle,
-            image: data.image,
-        })
+        return ideaRef.update(data);
     }
 
 };

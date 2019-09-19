@@ -62,10 +62,21 @@ class Project extends React.Component {
             }
         })
     }
+
+    handleMainTopicChange = (newTopic) =>{
+        this.setState({topic:newTopic}, function(){
+            var data = {
+                subtitle:newTopic
+            }
+            var uid = firebase.auth().currentUser.uid;
+            Firestore.editProjectFields(uid,this.props.location.state.projectID,data);
+        });
+    }
     
-    //When loading.
+    //Use only when loading ideas from DB.
     addIdea =(x)=>{
         var data= x.data();
+        //Flag to signify data added was from DB and not added by user, used to prevent default popup in ideaCard.
         data.fromLoad = true; 
         this.setState({
             ideas: {
@@ -111,7 +122,6 @@ class Project extends React.Component {
 
         //@@TODO Medium select to control the available modes. 
         
-        //get all ideas from DB if opening a previously saved project. 
     }
 
 
@@ -133,6 +143,7 @@ class Project extends React.Component {
                         {this.state.loaded ? <IdeaCard 
                             handleIdeaUpdate = {this.handleIdeaUpdate}
                             handleIdeaDeletion = {this.handleIdeaDeletion}
+                            handleMainTopicChange = {this.handleMainTopicChange}
                             uuid = "root"
                             parentID = "none"
                             topic = {this.state.topic}
