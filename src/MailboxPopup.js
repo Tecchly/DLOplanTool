@@ -21,14 +21,16 @@ class MailboxPopup extends React.Component {
                     borderRadius: 11,
                     marginLeft: "90%",
                     width: "10%",
+                    minWidth: 130,
                     marginTop: "-2.5%",
                     height: 35,
+                    minHeight: 35,
                     boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
                     border: "none",
                     fontFamily: "Montserrat",
                     fontWeight: "600"
                 }}
-                    variant="primary" onClick={() => this.toggleMailPopup()}>
+                    onClick={() => this.toggleMailPopup()}>
                     Notifications
                     </Button>
 
@@ -41,8 +43,8 @@ class MailboxPopup extends React.Component {
                     centered
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title id="sharing-messages">
-                            Sharing notices
+                        <Modal.Title id="notifications">
+                            Notifications
                         </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
