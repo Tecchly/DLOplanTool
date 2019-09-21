@@ -7,6 +7,7 @@ import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import history from "./history";
 import Ionicon from "react-ionicons";
 import "./index.css";
+import MailboxPopup from "./MailboxPopup";
 
 //Reusable headerbar component
 const HeaderBar = () => {
@@ -29,6 +30,7 @@ const HeaderBar = () => {
             justifyContent: "center"
         }}
         >
+        
         <Col />
         <Col
             className="justify-content-md-center"
@@ -44,6 +46,9 @@ const HeaderBar = () => {
                 fontSize: 22
             }}
             href="#"
+            onClick={() => {
+                history.push("/");
+              }}
             >
             <Image
                 src={require("../assets/images/orange_logop.png")}
@@ -51,8 +56,10 @@ const HeaderBar = () => {
             />
             Digital Learning
             </Navbar.Brand>
+            <MailboxPopup />
         </Col>
         <Col style={{}}>
+            
             <Nav className="mr-auto"></Nav>
             <Nav>
             <img
