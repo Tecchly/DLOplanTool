@@ -216,7 +216,7 @@ const Home = ({ history }) => {
             <Row style={{ height: 200 }}>
               <Col sm={4}>
                 <Image
-                  src={require("../assets/images/project.svg")}
+                  src={require("./assets/images/project.svg")}
                   style={{ height: 220, width: "83%" }}
                 />
               </Col>
@@ -312,7 +312,7 @@ const Home = ({ history }) => {
               <Container>
                 <Row className="justify-content-md-center">
                   <Image
-                    src={require("../assets/images/" +
+                    src={require("./assets/images/" +
                       emptyImages[
                         Math.floor(Math.random() * emptyImages.length)
                       ])}

@@ -51,7 +51,7 @@ const HeaderBar = () => {
               }}
             >
             <Image
-                src={require("../assets/images/orange_logop.png")}
+                src={require("./assets/images/orange_logop.png")}
                 style={{ height: 30, marginLeft: 5, marginBottom: 2 }}
             />
             Digital Learning

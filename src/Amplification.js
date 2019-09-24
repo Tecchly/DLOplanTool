@@ -11,7 +11,7 @@ import "./index.css";
 import NewProjectPopup from "./NewProject";
 import { useState } from "react";
 import AmplificationTile from "./AmplificationTile";
-import Wave from "../assets/images/wave.png";
+import Wave from "./assets/images/wave.png";
 import retext from "retext";
 import pos from "retext-pos";
 import keywords from "retext-keywords";
@@ -199,7 +199,7 @@ const Amplification = ( props ) => {
               }}
             >
               <Image
-                src={require("../assets/images/orange_logo_white.png")}
+                src={require("./assets/images/orange_logo_white.png")}
                 style={{ height: 30, marginLeft: 5, marginBottom: 2 }}
               />
               Digital Learning

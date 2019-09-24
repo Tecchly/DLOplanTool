@@ -241,7 +241,7 @@ const Projects = props => {
               <Container style={{ marginTop: "20vh" }}>
                 <Row className="justify-content-md-center">
                   <Image
-                    src={require("../assets/images/" +
+                    src={require("./assets/images/" +
                       emptyImages[
                         Math.floor(Math.random() * emptyImages.length)
                       ])}
