@@ -3,7 +3,7 @@ import { withRouter, Redirect } from "react-router";
 import { app, provider } from "./Firebase";
 import { AuthContext } from "./Auth.js";
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
-import BackgroundImage from "../assets/images/background.png";
+import BackgroundImage from "./assets/images/background.png";
 import { Button, Icon } from "antd";
 import Home from "./Home";
 
@@ -60,7 +60,7 @@ const Login = ({ history }) => {
         <Container style={{ marginTop: "20vh" }}>
           <Row className="justify-content-md-center">
             <Image
-              src={require("../assets/images/blue_logo.png")}
+              src={require("./assets/images/blue_logo.png")}
               style={{ height: 220 }}
             />
           </Row>

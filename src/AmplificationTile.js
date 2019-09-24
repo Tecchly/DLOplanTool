@@ -180,12 +180,12 @@ const AplificationTile = props => {
                     : { root: "chipUnclicked" }
                 }
                 clickable
-                onClick={() => {
+                onClick={(event) => { return (
                   selected && selected[i]
                     ? deleteSelect(i)
                     : selected && Object.keys(selected).length < 3
                     ? (addSelect(i), handleClick(event, i))
-                    : null;
+                    : null);
                 }}
               />
             ))
