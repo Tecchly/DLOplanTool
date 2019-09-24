@@ -82,7 +82,7 @@ const Feedback = ({ history }) => {
       <Row></Row>
       <Row className="justify-content-md-center">
         <Image
-          src={require("../assets/images/feedback.svg")}
+          src={require("./assets/images/feedback.svg")}
           style={{ height: 220 }}
         />
       </Row>

@@ -10,7 +10,7 @@ import MuiDialogActions from "@material-ui/core/DialogActions";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import ReactDOM from "react-dom";
-import Backg from "../assets/images/poster2.jpg";
+import Backg from "./assets/images/poster2.jpg";
 import { Image } from "react-bootstrap";
 import firebase from "firebase";
 import Firestore from "./Firestore.js";
@@ -121,7 +121,7 @@ const ProjectView = ({ open, hide, projectInfo, edit }) => {
     });
 
 
-    clearSuggestions;
+    clearSuggestions();
 
   };
   useEffect(() => {
