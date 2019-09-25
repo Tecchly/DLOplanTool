@@ -18,7 +18,7 @@ import IconButton from "@material-ui/core/IconButton";
 import SendIcon from "@material-ui/icons/Send";
 
 import Chips, { Chip } from "react-chips";
-import "./index.css";
+import "./style.scss";
 const styles = theme => ({
   root: {
     margin: 0,

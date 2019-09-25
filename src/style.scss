@@ -1,8 +1,10 @@
-@value
+@import './styling/theme.scss';
+
 body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+
 }
 
 html, body, #app, #app>div, #root,#login {
@@ -305,6 +307,7 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
 
 .projectDialog {
   border-radius: 17px !important;
+  background-color: var(--bg-primary);
 }
 
 .img-fluid{
@@ -319,7 +322,7 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
   margin-left: 15px !important;
   position: absolute !important;
     top: 15px;
-    color: #fff;
+    color: var(--bg-primary) !important;
 }
 
 .projectDialogSubtitle {
@@ -529,4 +532,74 @@ margin-left: 30px;
     left: 0;
 }
 
+// HOME SCREEN
 
+.welcomeTile {
+  background-color: var(--bg-secondary);
+  border-radius: 16px;
+  margin-left: 100px;
+  margin-right: 100px;
+  margin-top: 40px;
+  height: 200px;
+  box-shadow: 0px 2px 10px -4px rgba(0,0,0,0.5);
+}
+
+.welcomeTitle {
+  font: 700 30px "Montserrat", sans-serif !important;
+  color: var(--text-primary);
+}
+.welcomeSubtitle {
+  font: 600 25px "Montserrat", sans-serif !important;
+  color: var(--primary);
+}
+.homeButton {
+  width: 100% !important;
+  box-shadow: 0px 2px 10px -4px rgba(0,0,0,0.5) !important;
+  border: none !important;
+  font: 400 18px "Montserrat", sans-serif !important;
+  border-radius: 17px !important;
+  height: 50px !important;
+  background-color: #ffffff !important;
+  color: var(--primary) !important;
+}
+.homeButtonOrange{
+  width: 100% !important;
+  box-shadow: 0px 2px 10px -4px rgba(0,0,0,0.5) !important;
+  border: none !important;
+  font: 400 18px "Montserrat", sans-serif !important;
+  border-radius: 17px !important;
+  height: 50px !important;
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  
+}
+
+
+// Header bar
+
+.navbarBrand {
+  text-align: center;
+  color: var(--primary) !important;
+  font: 600 22px "Montserrat", sans-serif !important;
+
+}
+
+
+// mailbox popup
+
+.bell {
+  color: var(--primary) !important;
+}
+
+.mailPopupButton {
+  background-color: var(--primary) !important;
+  color: #fff;
+  border-radius: 11px;
+  margin-right: 5%;
+  width: 10%;
+  box-shadow: 0px 2px 10px -4px rgba(0,0,0,0.5);
+  border: none;
+  font: 600 20px "Montserrat", sans-serif !important;
+  height: 35;
+
+}

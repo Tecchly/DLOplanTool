@@ -6,7 +6,8 @@ import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import BackgroundImage from "./assets/images/background.png";
 import { Button, Icon } from "antd";
 import Home from "./Home";
-
+import Firestore from "./Firestore.js";
+import { themeOptions } from './styling/themeOptions';
 const Login = ({ history }) => {
   function handleLogin() {
     app
@@ -23,12 +24,32 @@ const Login = ({ history }) => {
   const { currentUser } = useContext(AuthContext);
 
   if (currentUser) {
+    var recents = Firestore.getUserData(currentUser.uid);
+    recents
+      .get()
+      .then(function(doc) {
+        console.log(doc.data());
+        const selectedTheme =
+          themeOptions.find(t => t.name.toLowerCase() === doc.data().color) || {};
+        const html = document.getElementsByTagName("html")[0];
+        Object.keys(selectedTheme).forEach((property, i) => {
+          if (property === "name") {
+            return;
+          }
+          html.style.setProperty(property, selectedTheme[property]);
+        });
+      })
+      .catch(function(error) {
+        console.log("Error getting document:", error);
+      });
+
     return <Redirect to="/" />;
   }
   return (
-    <div id="login"
+    <div
+      id="login"
       style={{
-        height: "100%",
+        height: "100%"
         // backgroundImage: `url(${BackgroundImage})`,
         // backgroundRepeat: "no-repeat",
         // backgroundPosition: "center",

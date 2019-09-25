@@ -6,7 +6,7 @@ import { Button, Icon } from "antd";
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import history from "./history";
 import Ionicon from "react-ionicons";
-import "./index.css";
+import "./style.scss";
 import MailboxPopup from "./MailboxPopup";
 
 //Reusable headerbar component
@@ -38,13 +38,8 @@ const HeaderBar = () => {
             style={{ textAlign: "center" }}
         >
             <Navbar.Brand
-            style={{
-                textAlign: "center",
-                color: "#FA8231",
-                fontFamily: "Montserrat",
-                fontWeight: "600",
-                fontSize: 22
-            }}
+            className="navbarBrand"
+
             href="#"
             onClick={() => {
                 history.push("/");

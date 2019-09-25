@@ -1,0 +1,21 @@
+  
+@import 'colors.scss';
+@import 'css-vars/css-vars';
+
+$css-vars-use-native: true;
+
+$primary: $orange;
+$backgroundPrimary: $orange;
+$backgroundSecondary: $oSecondary;
+$textPrimary: $darkGrey;
+$textSecondary: $darkGrey;
+$textAlternate: $darkGrey;
+
+@include css-vars((
+  --primary: $primary,
+  --bg-primary: $backgroundPrimary,
+  --bg-secondary: $backgroundSecondary,
+  --text-primary: $textPrimary,
+  --text-secondary: $textSecondary,
+  --text-alternate: $textAlternate
+));
