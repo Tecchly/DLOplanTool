@@ -18,6 +18,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { withStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
+import Icon from '@material-ui/core/Icon';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -70,7 +71,8 @@ const AplificationTile = props => {
   const addSelect = idea => {
     selected[idea] = {
       type: "basic amplification",
-      keyword: props.words.keywords[idea]
+      keyword: props.words.keywords[idea],
+      icon: "cancel",
     };
     pushSelected(selected);
     console.log(selected);
@@ -80,8 +82,9 @@ const AplificationTile = props => {
     pushSelected({ ...selected });
     console.log(selected);
   };
-  const setAmplificationType = (index, type) => {
+  const setAmplificationType = (index, type, icon) => {
     selected[index].type = type;
+    selected[index].icon = icon;
     console.log(selected);
     handleClose();
   };
@@ -167,7 +170,8 @@ const AplificationTile = props => {
                     <Avatar
                       style={{ backgroundColor: "#FA8231", color: "#ffffff67" }}
                     >
-                      <CancelIcon />
+
+                      <Icon color="#fff">{selected[i].icon}</Icon>
                     </Avatar>
                   ) : null
                 }
@@ -199,7 +203,7 @@ const AplificationTile = props => {
           classes={{ paper: "popMenu" }}
         >
           <StyledMenuItem
-            onClick={() => setAmplificationType(currentSelection, "colour")}
+            onClick={() => setAmplificationType(currentSelection, "colour", "color_lens")}
           >
             <ListItemIcon>
               <ColorLensIcon />
@@ -207,7 +211,7 @@ const AplificationTile = props => {
             <ListItemText primary="Colour" />
           </StyledMenuItem>
           <StyledMenuItem
-            onClick={() => setAmplificationType(currentSelection, "highlight")}
+            onClick={() => setAmplificationType(currentSelection, "highlight", "format_paint")}
           >
             <ListItemIcon>
               <FormatPaintIcon />
@@ -215,7 +219,7 @@ const AplificationTile = props => {
             <ListItemText primary="Highlight" />
           </StyledMenuItem>
           <StyledMenuItem
-            onClick={() => setAmplificationType(currentSelection, "move")}
+            onClick={() => setAmplificationType(currentSelection, "move", "control_camera")}
           >
             <ListItemIcon>
               <ControlCameraIcon />
@@ -223,7 +227,7 @@ const AplificationTile = props => {
             <ListItemText primary="Move" />
           </StyledMenuItem>
           <StyledMenuItem
-            onClick={() => setAmplificationType(currentSelection, "enlarge")}
+            onClick={() => setAmplificationType(currentSelection, "enlarge", "zoom_out_map")}
           >
             <ListItemIcon>
               <ZoomIcon />
