@@ -148,6 +148,10 @@ class Firestore {
         return db.collection("users").get();
     };
 
+    static getAllFeedbacks(userID) {
+        return this.getUserData(userID).collection("feedbacks").orderBy('timestamp', 'desc');
+    }
+
 };
 
 export default Firestore;

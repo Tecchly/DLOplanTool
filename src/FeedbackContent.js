@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -15,7 +15,9 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import Button from '@material-ui/core/Button'
+import Button from '@material-ui/core/Button';
+import Firestore from "./Firestore";
+import firebase from "firebase";
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -36,6 +38,8 @@ const rows = [
   createData('Nougat', 360, 19.0, 9, 37.0),
   createData('Oreo', 437, 18.0, 63, 4.0),
 ];
+
+
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -208,13 +212,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function EnhancedTable() {
+export default function FeedbackContent() {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rows, pushRows] = React.useState([]);
 
   function handleRequestSort(event, property) {
     const isDesc = orderBy === property && order === 'desc';
@@ -230,6 +235,25 @@ export default function EnhancedTable() {
     }
     setSelected([]);
   }
+
+  const addRows = row => {
+    pushRows(oldArray => [...oldArray, row]);
+  };
+
+  function getFeedbackList() {
+    var uid = firebase.auth().currentUser.uid;
+    Firestore.getAllFeedbacks(uid).get().then(docs => {
+      docs.forEach(doc => {
+          var feedback = doc.data();
+          addRows(feedback);
+      });
+    });
+  }
+
+  useEffect(() => {
+    getFeedbackList();
+  }, []);
+  
 
   function handleClick(event, name) {
     const selectedIndex = selected.indexOf(name);
@@ -287,17 +311,17 @@ export default function EnhancedTable() {
               {stableSort(rows, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.reviewerName);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={event => handleClick(event, row.name)}
+                      onClick={event => handleClick(event, row.reviewerName)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.reviewerName}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -308,8 +332,8 @@ export default function EnhancedTable() {
                       </TableCell>
                       <TableCell />
                       <TableCell component="th" id={labelId} scope="row" padding="none">
-                        <h3>{row.name + " left feedback on your project"} <a href="aaa">ABC</a>!</h3> 
-                        <a> good job </a>
+                        <h3>{row.reviewerName + " left "+ row.type +" on your project"} <a href={row.path}>ABC</a>!</h3> 
+                        <a>{row.comment}</a>
                       </TableCell>
                       {/* <TableCell align="right">{row.calories}</TableCell>
                       <TableCell align="right">{row.fat}</TableCell>
