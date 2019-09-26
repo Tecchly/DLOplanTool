@@ -9,6 +9,7 @@ import history from "./history";
 import HeaderBar from "./HeaderBar.js"
 import Ionicon from "react-ionicons";
 import "./index.css";
+import FeedbackContent from './FeedbackContent';
 
 
 function beef() {
@@ -151,10 +152,11 @@ const Feedback = ({ history }) => {
         </Container>
         {isEmpty(feedbackData) ? (noFeedback()) : (<Container
               className="d-flex align-items-center"
-              style={{ marginTop: "20vh" }}
+              
             >
-              <Row></Row>
-                {renderFeedbackData()}
+              {/* <Row></Row> */}
+                {/* {renderFeedbackData()} */}
+                <FeedbackContent />
             </Container>)}
       
       </Container>
