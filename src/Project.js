@@ -117,10 +117,9 @@ class Project extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props.location.state.shared);
     this.setState({
       ideas: {
-        ...this.state.ideas,
+        // ...this.state.ideas,
         root: {
           title: this.props.location.state.topic,
           parentID: "none",
@@ -187,6 +186,20 @@ class Project extends React.Component {
   }
 
   componentWillUnmount() {}
+
+  componentDidUpdate (prevProps) {
+    if (prevProps.location.state.projectID !== this.props.location.state.projectID) {
+      this.setState({
+        title: "",
+        topic: "",
+        medium: "",
+        availableModes: ["video", "sound", "writing", "image"],
+        loaded: false,
+        ideas: {}
+      });
+      this.componentDidMount();
+    }
+  }
 
   render() {
     return (
