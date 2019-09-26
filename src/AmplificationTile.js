@@ -4,7 +4,7 @@ import { Row, Col, Container } from "react-bootstrap";
 import Ionicon from "react-ionicons";
 import Chip from "@material-ui/core/Chip";
 import { makeStyles } from "@material-ui/core/styles";
-import "./style.scss";
+import "./index.css";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormatPaintIcon from "@material-ui/icons/FormatPaint";
@@ -18,7 +18,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { withStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
-import theme from './styling/theme.scss';
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
@@ -56,7 +56,7 @@ const StyledMenu = withStyles({
 const StyledMenuItem = withStyles(theme => ({
   root: {
     "&:focus": {
-      backgroundColor: theme.primary,
+      backgroundColor: "#FA8231",
       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
         color: "#fff"
       }
@@ -67,27 +67,26 @@ const AplificationTile = props => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentSelection, setCurrentSelection] = useState(null);
   const [selected, pushSelected] = useState({});
-
   const addSelect = idea => {
     selected[idea] = {
       type: "basic amplification",
       keyword: props.words.keywords[idea]
     };
     pushSelected(selected);
-
+    console.log(selected);
   };
   const deleteSelect = idea => {
     delete selected[idea];
     pushSelected({ ...selected });
-
+    console.log(selected);
   };
   const setAmplificationType = (index, type) => {
     selected[index].type = type;
-
+    console.log(selected);
     handleClose();
   };
   function handleClick(event, index) {
-
+    console.log(index);
     setAnchorEl(event.target);
     setCurrentSelection(index);
   }
@@ -166,8 +165,7 @@ const AplificationTile = props => {
                 avatar={
                   selected && selected[i] ? (
                     <Avatar
-                      className="amplificationChipAvatar"
-                      style={{ backgroundColor: theme.primary, color: "#ffffff67" }}
+                      style={{ backgroundColor: "#FA8231", color: "#ffffff67" }}
                     >
                       <CancelIcon />
                     </Avatar>

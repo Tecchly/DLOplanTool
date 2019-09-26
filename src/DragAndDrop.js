@@ -1,5 +1,5 @@
 import React from 'react'
-import "./style.scss";
+
 class DragAndDrop extends React.Component {
 
     state = {
@@ -53,7 +53,6 @@ class DragAndDrop extends React.Component {
       render() {
         return (
           <div
-          className="newProjectCreateButton"
             style={{
                 display: 'inline-block',
                 position: 'relative',
@@ -64,18 +63,17 @@ class DragAndDrop extends React.Component {
                 paddingBottom: "0.2em",
                 marginBottom: "1em",
                 borderRadius:17,
-
+                backgroundColor: '#FA8231',
                 overflow: 'hidden',
             }}
             ref={this.dropRef}
           >
             {this.state.dragging &&
               <div 
-              className="newProjectCreateButton"
                 style={{
                   // border: 'dashed grey 1px',
                   borderRadius:17,
-
+                  backgroundColor: '#FA8231',
                   position: 'absolute',
                   top: 0,
                   bottom: 0,

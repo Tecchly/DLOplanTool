@@ -8,20 +8,18 @@ import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import HeaderBar from "./HeaderBar.js";
 import history from "./history";
 import Ionicon from "react-ionicons";
-import "./style.scss";
+import "./index.css";
 import NewProjectPopup from "./NewProject";
 import { useState } from "react";
 import ProjectLoader from "./ProjectLoader";
 import ProjectView from "./ProjectView";
 import useProjectDialog from "./useProjectDialog";
-import useSettingsDialog from "./useSettingsDialog";
-import SettingsDialog from "./SettingsDialog";
-import { themeOptions } from "./styling/themeOptions";
-import theme from './styling/theme.scss';
+
 const useStyles = makeStyles(theme => ({
   button: {
     width: "100%",
     boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
+
     border: "none",
     fontFamily: "Montserrat",
     borderRadius: 17,
@@ -79,13 +77,11 @@ const emptyImages = [
 
 const Home = ({ history }) => {
   const { open, toggle } = useProjectDialog();
-  const { settingsOpen, toggleSettings } = useSettingsDialog();
   const classes = useStyles();
   const [showNewProject, setShowNewProject] = useState(false);
   const [noProjects, setNoProjects] = useState(false);
   const [recentProjects, pushRecentProjects] = useState([]);
   const [currentProject, setCurrentProject] = useState(null);
-
   const RecentProject = ({ project }) => <ProjectTile x={project} />;
   var storage = firebase.storage().ref();
 
@@ -95,10 +91,11 @@ const Home = ({ history }) => {
   const clickedProject = project => {
     setCurrentProject(project);
   };
-  
+
   useEffect(() => {
     var uid = firebase.auth().currentUser.uid;
     var recents = Firestore.getRecentProjectsByUser(uid);
+
     recents
       .get()
       .then(function(doc) {
@@ -113,6 +110,7 @@ const Home = ({ history }) => {
               proj.image = url;
               proj.id = x.id;
               addRecentProject(proj);
+              console.log(proj);
             });
         });
       })
@@ -129,24 +127,13 @@ const Home = ({ history }) => {
   function toggleNoProjects() {
     setNoProjects(!noProjects);
   }
-
-  function updateThemeForStyle() {
-    const selectedTheme =
-      themeOptions.find(t => t.name.toLowerCase() === "blue") || {};
-    const html = document.getElementsByTagName("html")[0];
-    Object.keys(selectedTheme).forEach((property, i) => {
-      if (property === "name") {
-        return;
-      }
-      html.style.setProperty(property, selectedTheme[property]);
-    });
-  }
-  const IconButton = ({ icon, text, nav, classVal }) => (
+  const IconButton = ({ bcolor, icon, text, nav, tcolor }) => (
     <Col>
       <Button
         type="primary"
         size={"large"}
-        className={classVal}
+        className={classes.button}
+        style={{ backgroundColor: bcolor, color: tcolor }}
         onClick={() => {
           nav === "/" ? setShowNewProject(true) : history.push(nav);
         }}
@@ -209,13 +196,23 @@ const Home = ({ history }) => {
           projectInfo={currentProject}
           edit={editProject}
         />
-        <SettingsDialog open={settingsOpen} hide={toggleSettings} />
         {showNewProject ? (
           //Popup will live here.
           <NewProjectPopup togglePopup={togglePopup} />
         ) : null}
         <Row>
-          <Container fluid={true} className="welcomeTile">
+          <Container
+            fluid={true}
+            style={{
+              backgroundColor: "#F1D0B2",
+              borderRadius: 16,
+              marginLeft: 100,
+              marginRight: 100,
+              marginTop: 40,
+              height: 200,
+              boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)"
+            }}
+          >
             <Row style={{ height: 200 }}>
               <Col sm={4}>
                 <Image
@@ -231,11 +228,25 @@ const Home = ({ history }) => {
                   justifyContent: "center"
                 }}
               >
-                <h2 className="welcomeTitle">
+                <h2
+                  style={{
+                    color: "#2F4858",
+                    fontFamily: "Montserrat",
+                    fontWeight: "700"
+                  }}
+                >
                   Welcome back,{" "}
                   {app.auth().currentUser.displayName.split(" ")[0]}
                 </h2>
-                <h3 className="welcomeSubtitle">lets create a project!</h3>
+                <h3
+                  style={{
+                    color: "#FA8231",
+                    fontFamily: "Montserrat",
+                    fontWeight: "600"
+                  }}
+                >
+                  lets create a project!
+                </h3>
               </Col>
             </Row>
           </Container>
@@ -245,26 +256,31 @@ const Home = ({ history }) => {
           >
             <Row>
               <IconButton
-                classVal="homeButtonOrange"
+                bcolor="#FA8231"
+                tcolor="#FFF"
                 icon="plus-circle"
                 nav="/"
                 text="New Project"
               />
               <IconButton
-                classVal="homeButton"
+                bcolor="#FFF"
+                tcolor="#FA8231"
                 icon="reconciliation"
                 nav="/feedback"
                 text="Feedback"
               />
               <IconButton
-                classVal="homeButton"
+                bcolor="#FFF"
+                tcolor="#FA8231"
                 icon="project"
                 nav="/projects"
                 text="Your Projects"
               />
               <IconButton
-                classVal="homeButton"
+                bcolor="#FFF"
+                tcolor="#FA8231"
                 icon="question-circle"
+                nav="#"
                 text="Help"
               />
             </Row>

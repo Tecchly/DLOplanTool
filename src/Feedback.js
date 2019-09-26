@@ -6,7 +6,7 @@ import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import history from "./history";
 import HeaderBar from "./HeaderBar.js"
 import Ionicon from "react-ionicons";
-import "./style.scss";
+import "./index.css";
 
 const Feedback = ({ history }) => {
   return (

@@ -5,7 +5,7 @@ import { Button, Icon } from "antd";
 import { withRouter, Redirect } from "react-router";
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import HeaderBar from "./HeaderBar.js";
-import "./style.scss";
+import "./index.css";
 import IdeaCard from "./IdeaCard.js";
 import { maxWidth } from "@material-ui/system";
 import Utils from "./Utils";

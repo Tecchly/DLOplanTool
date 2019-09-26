@@ -6,9 +6,7 @@ import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import BackgroundImage from "./assets/images/background.png";
 import { Button, Icon } from "antd";
 import Home from "./Home";
-import Firestore from "./Firestore.js";
-import "./style.scss";
-import { themeOptions } from "./styling/themeOptions";
+
 const Login = ({ history }) => {
   function handleLogin() {
     app
@@ -25,36 +23,12 @@ const Login = ({ history }) => {
   const { currentUser } = useContext(AuthContext);
 
   if (currentUser) {
-    var recents = Firestore.getUserData(currentUser.uid);
-    recents
-      .get()
-      .then(function(doc) {
-        var chosenColor = doc.data().color ? doc.data().color : "orange"
-        const selectedTheme =
-          themeOptions.find(t => t.name.toLowerCase() === chosenColor) ||
-          {};
-        localStorage.setItem("colorScheme", chosenColor);
-
-        const html = document.getElementsByTagName("html")[0];
-        Object.keys(selectedTheme).forEach((property, i) => {
-          if (property === "name") {
-            return;
-          }
-
-          html.style.setProperty(property, selectedTheme[property]);
-        });
-      })
-      .catch(function(error) {
-        console.log("Error getting document:", error);
-      });
-
     return <Redirect to="/" />;
   }
   return (
-    <div
-      id="login"
+    <div id="login"
       style={{
-        height: "100%"
+        height: "100%",
         // backgroundImage: `url(${BackgroundImage})`,
         // backgroundRepeat: "no-repeat",
         // backgroundPosition: "center",
@@ -71,10 +45,9 @@ const Login = ({ history }) => {
       >
         <Row>
           <h1
-          className="headerRowLoginTitle"
             style={{
               textAlign: "center",
-
+              color: "#E08845",
               fontFamily: "Montserrat",
               fontWeight: "600",
               margin: 20,
@@ -124,8 +97,8 @@ const Login = ({ history }) => {
               type="primary"
               size={"large"}
               onClick={handleLogin}
-              className="loginButton"
               style={{
+                backgroundColor: "#FA8231",
                 paddingLeft: 20,
                 paddingRight: 20,
                 boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
