@@ -12,6 +12,7 @@ import useSettingsDialog from "./useSettingsDialog";
 import SettingsDialog from "./SettingsDialog";
 import IconButton from "@material-ui/core/IconButton";
 import BrushIcon from "@material-ui/icons/ColorLens";
+
 //Reusable headerbar component
 const HeaderBar = () => {
     const { settingsOpen, toggleSettings } = useSettingsDialog();
@@ -50,7 +51,7 @@ const HeaderBar = () => {
                 history.push("/");
               }}
             >
-            <Image
+            <Image className="digitalD"
                 src={require("./assets/images/logo_"+ localStorage.getItem("colorScheme") +".png")}
                 style={{ height: 30, marginLeft: 5, marginBottom: 2 }}
             />

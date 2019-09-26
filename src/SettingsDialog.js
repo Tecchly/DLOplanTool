@@ -35,6 +35,8 @@ const SettingsDialog = ({ open, hide }) => {
     const selectedTheme =
       themeOptions.find(t => t.name.toLowerCase() === color) || {};
     const html = document.getElementsByTagName("html")[0];
+    const logo = document.getElementsByClassName("digitalD")[0];
+    logo.setAttribute("src", require("./assets/images/logo_"+ localStorage.getItem("colorScheme") +".png"));
     Object.keys(selectedTheme).forEach((property, i) => {
       if (property === "name") {
         return;
