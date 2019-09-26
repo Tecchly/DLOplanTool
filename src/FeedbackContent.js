@@ -19,27 +19,6 @@ import Button from '@material-ui/core/Button';
 import Firestore from "./Firestore";
 import firebase from "firebase";
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Donut', 452, 25.0, 51, 4.9),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-  createData('Honeycomb', 408, 3.2, 87, 6.5),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Jelly Bean', 375, 0.0, 94, 0.0),
-  createData('KitKat', 518, 26.0, 65, 7.0),
-  createData('Lollipop', 392, 0.2, 98, 0.0),
-  createData('Marshmallow', 318, 0, 81, 2.0),
-  createData('Nougat', 360, 19.0, 9, 37.0),
-  createData('Oreo', 437, 18.0, 63, 4.0),
-];
-
-
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -242,18 +221,45 @@ export default function FeedbackContent() {
 
   function getFeedbackList() {
     var uid = firebase.auth().currentUser.uid;
-    Firestore.getAllFeedbacks(uid).get().then(docs => {
-      docs.forEach(doc => {
-          var feedback = doc.data();
-          addRows(feedback);
-      });
-    });
+    
+    // Firestore.getAllFeedbacks(uid).get().then(docs => {
+    //   docs.forEach(doc => {
+    //       var feedback = doc.data();
+    //       addRows(feedback);
+    //   });
+    // });
+
+    let projects = Firestore.getAllProjectsByUser(uid);
+        projects.get().then(function (projectSnapshot) {
+          projectSnapshot.forEach(function (project) {
+            let ideas = projects.doc(project.id).collection("ideas");
+            ideas.get().then(function (ideaSnapshot) {
+              ideaSnapshot.forEach(function (idea) {
+                ideas.doc(idea.id).collection("feedbacks").get().then(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let feedback = {
+                      projectTitle: project.data().title,
+                      ideaTitle: idea.data().title,
+                      reviewerName: doc.data().user,
+                      reviewerTime: doc.data().timestamp,
+                      comment: doc.data().comment,
+                      type: doc.data().type,
+                      id: doc.id
+                    };
+                    addRows(feedback);
+                    
+                  });});
+              });
+            });
+          });
+          
+        });
   }
 
   useEffect(() => {
     getFeedbackList();
   }, []);
-  
+
 
   function handleClick(event, name) {
     const selectedIndex = selected.indexOf(name);
@@ -301,8 +307,8 @@ export default function FeedbackContent() {
             <EnhancedTableHead
               classes={classes}
               numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
+              order={"desc"}
+              orderBy={"reviewerTime"}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
@@ -321,7 +327,7 @@ export default function FeedbackContent() {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.reviewerName}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -332,7 +338,7 @@ export default function FeedbackContent() {
                       </TableCell>
                       <TableCell />
                       <TableCell component="th" id={labelId} scope="row" padding="none">
-                        <h3>{row.reviewerName + " left "+ row.type +" on your project"} <a href={row.path}>ABC</a>!</h3> 
+                        <h3>{row.reviewerName + " left "+ row.type +" on your project"} <a href="aaaa">{row.projectTitle}</a>!</h3> 
                         <a>{row.comment}</a>
                       </TableCell>
                       {/* <TableCell align="right">{row.calories}</TableCell>
