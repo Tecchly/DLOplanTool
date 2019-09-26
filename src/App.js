@@ -10,6 +10,7 @@ import { AuthProvider } from "./Auth";
 import PrivateRoute from "./PrivateRoute.js";
 import Amplification from "./Amplification";
 import Project from "./Project.js";
+import SharedProjects from './SharedProjects';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
 
           <PrivateRoute exact path="/" component={Home} />
           <PrivateRoute exact path="/projects" component={Projects} />
+          <PrivateRoute exact path="/sharedprojects" component={SharedProjects} />
           <PrivateRoute exact path="/feedback" component={Feedback} />
           <PrivateRoute exact path="/amplification" component={Amplification} />
           <Route exact path="/login" component={Login} id="login"/>

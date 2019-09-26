@@ -117,6 +117,7 @@ class Project extends React.Component {
   };
 
   componentDidMount() {
+    console.log(this.props.location.state.shared);
     this.setState({
       ideas: {
         ...this.state.ideas,
@@ -210,7 +211,7 @@ class Project extends React.Component {
                 Back
               </h3>
             </div>
-
+            {this.props.location.state.shared ? null : (
             <div style={{ display: "flex", position: "absolute", right: 150 }}>
               <h3
                 style={{
@@ -237,7 +238,7 @@ class Project extends React.Component {
                   cursor: "pointer"
                 }}
               />
-            </div>
+            </div>)}
           </Row>
           <h1
             style={{
@@ -262,6 +263,7 @@ class Project extends React.Component {
                 topic={this.state.topic}
                 ideas={this.state.ideas}
                 availableModes={this.state.availableModes}
+                shared={this.props.location.state.shared}
               />
             ) : null}
           </div>

@@ -264,6 +264,12 @@ const Home = ({ history }) => {
               />
               <IconButton
                 classVal="homeButton"
+                icon="project"
+                nav="/sharedprojects"
+                text="Shared Projects"
+              />
+              <IconButton
+                classVal="homeButton"
                 icon="question-circle"
                 text="Help"
               />

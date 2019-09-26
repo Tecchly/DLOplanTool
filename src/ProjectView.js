@@ -67,7 +67,7 @@ const DialogActions = withStyles(theme => ({
   }
 }))(MuiDialogActions);
 
-const ProjectView = ({ open, hide, projectInfo, edit }) => {
+const ProjectView = ({ open, hide, projectInfo, edit, shared }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [share, setShare] = useState(false);
   const [tags, addTags] = useState([]);
@@ -94,6 +94,7 @@ const ProjectView = ({ open, hide, projectInfo, edit }) => {
       title: projectInfo.title,
       subtitle: projectInfo.subtitle,
       image: projectInfo.image,
+      medium: projectInfo.medium,
       shareTime: +new Date(),
       createUser: "",
       path: ""
@@ -165,6 +166,7 @@ const ProjectView = ({ open, hide, projectInfo, edit }) => {
               </Button>
             </DialogContent>
             <DialogActions>
+              {shared ? null : 
               <Button
                 onClick={() => {
                   archive(projectInfo.projectID);
@@ -174,7 +176,7 @@ const ProjectView = ({ open, hide, projectInfo, edit }) => {
 
               >
                 Archive
-              </Button>
+              </Button> }
               <Button
                 onClick={() => {
                   hide();
@@ -182,12 +184,13 @@ const ProjectView = ({ open, hide, projectInfo, edit }) => {
                 }}
                 classes={{ root: "projectViewPrimary" }}
               >
-                Edit
+                {shared ? "View" : "Edit" }
               </Button>
+              {shared ? null :
               <Button onClick={shareP} classes={{ root: "projectViewPrimary" }}>
                 Share
               </Button>
-
+              }
             </DialogActions>
           </Dialog>
         </React.Fragment>,
