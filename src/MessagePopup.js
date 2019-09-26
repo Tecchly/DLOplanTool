@@ -1,5 +1,5 @@
 import React from "react";
-import "./index.css";
+import "./style.scss";
 import Ionicon from "react-ionicons";
 
 class MessagePopup extends React.Component {

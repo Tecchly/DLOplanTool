@@ -154,6 +154,7 @@ class IdeaCard extends React.Component {
                     handleDelete = {this.handleDelete}
                     availableModes= {this.props.availableModes}
                     closePopup = {this.closePopup}
+                    shared = {this.props.shared}
                     />
                 ) : null}
                 <div style={{padding: '0 20px 0 20px'}}>
@@ -205,7 +206,7 @@ class IdeaCard extends React.Component {
                             {this.props.ideas[this.props.uuid] ? this.props.ideas[this.props.uuid].mode : null }
                             </div>
 
-                            {this.state.level !== 0 ? <Ionicon
+                            {this.state.level !== 0 && !this.props.shared ? <Ionicon
                             style={{
                                 position: "absolute",
                                 right: 6,
@@ -227,7 +228,7 @@ class IdeaCard extends React.Component {
                             {this.props.ideas[this.props.uuid] ? this.props.ideas[this.props.uuid].title : null }
                         </div>     
       
-                        {this.state.level < 3 ? 
+                        {this.state.level < 3 && !this.props.shared ? 
                            <Ionicon
                             style={{
                                 position: "absolute",
@@ -255,7 +256,9 @@ class IdeaCard extends React.Component {
                                         parentID = {this.props.uuid} 
                                         availableModes={this.props.availableModes}
                                         level={this.state.level+1}
-                                        handleDelete = {this.handleDelete}>
+                                        handleDelete = {this.handleDelete}
+                                        shared = {this.props.shared}>
+                                        
                                     </IdeaCard>)}
                     </div>
                 </div>

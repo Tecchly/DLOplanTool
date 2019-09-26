@@ -106,6 +106,10 @@ class Firestore {
         return this.getAllProjectsByUser(userID).add(projectData);
     }
 
+    static setNewColor(userID, color) {
+        return db.collection("users").doc(userID).update({color: color});
+    }
+
 
     static archiveProject(userID, projectID) {
         this.updateUserDetails();
