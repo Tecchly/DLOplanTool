@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SettingsDialog = ({ open, hide }) => {
-  const [colorScheme, setColorScheme] = React.useState("");
+  const [colorScheme, setColorScheme] = React.useState(localStorage.getItem("colorScheme"));
   const [openList, setOpen] = React.useState(false);
   const classes = useStyles();
 
@@ -55,10 +55,6 @@ const SettingsDialog = ({ open, hide }) => {
     localStorage.setItem("colorScheme", event.target.value);
     setColorScheme(event.target.value);
     changeScheme(event.target.value)
-  };
-  const handleCancel = () => {
-    changeScheme(localStorage.getItem("colorScheme"))
-    hide();
   };
 
   const handleOk = () => {
