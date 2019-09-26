@@ -108,9 +108,6 @@ const SettingsDialog = ({ open, hide }) => {
               </FormControl>
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleCancel} color="primary">
-                Cancel
-              </Button>
               <Button onClick={handleOk} color="primary">
                 Ok
               </Button>
