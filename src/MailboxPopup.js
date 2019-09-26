@@ -4,6 +4,8 @@ import { Modal, Button, ButtonToolbar } from "react-bootstrap";
 import IconButton from "@material-ui/core/IconButton";
 import NotificationIcon from "@material-ui/icons/Notifications";
 import "./style.scss";
+import { withRouter, Redirect } from "react-router";
+
 class MailboxPopup extends React.Component {
   constructor(props) {
     super(props);
@@ -12,6 +14,24 @@ class MailboxPopup extends React.Component {
 
   toggleMailPopup() {
     this.setState({ mailModalShow: !this.state.mailModalShow });
+  }
+
+  loadProject = (proj) => {
+    const { history } = this.props;
+    history.push({
+        pathname: "./project",
+        state: {
+          createUser: proj.createUser,
+          projectID: proj.id,
+          medium: proj.medium,
+          title: proj.title,
+          topic: proj.subtitle,
+          image: proj.title,
+          shared: true,
+          path: proj.path
+        }
+      });
+    this.toggleMailPopup();
   }
 
   render() {
@@ -37,7 +57,7 @@ class MailboxPopup extends React.Component {
             <Modal.Title id="notifications">Notifications</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <MailboxListBox pageSize={8} />
+            <MailboxListBox pageSize={8} loadProject={this.loadProject}/>
           </Modal.Body>
           <Modal.Footer>
             <Button
@@ -53,4 +73,4 @@ class MailboxPopup extends React.Component {
   }
 }
 
-export default MailboxPopup;
+export default withRouter(MailboxPopup);

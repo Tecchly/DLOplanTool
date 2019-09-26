@@ -99,7 +99,7 @@ class MailboxListBox extends React.Component {
     render() {
         return (
             <div className="messageBox">
-                <MailboxList data={this.state.data.slice(this.state.offset * this.state.pageSize, (this.state.offset + 1) * this.state.pageSize)} />
+                <MailboxList data={this.state.data.slice(this.state.offset * this.state.pageSize, (this.state.offset + 1) * this.state.pageSize)} loadProject={this.props.loadProject}/>
                 <Pagination onClick={this.handlePageChange}>
                     {this.state.showFirst ? (<Pagination.First />) : null}
                     {this.state.showPrev ? (<Pagination.Prev />) : null}

@@ -155,7 +155,8 @@ const SharedProjects = props => {
         topic: x.subtitle,
         medium: x.medium,
         image: x.image,
-        shared: true
+        shared: true,
+        path: x.path,
       }
     });
   };
