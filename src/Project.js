@@ -117,10 +117,9 @@ class Project extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props.location.state.shared);
     this.setState({
       ideas: {
-        ...this.state.ideas,
+        // ...this.state.ideas,
         root: {
           title: this.props.location.state.topic,
           parentID: "none",
@@ -129,6 +128,8 @@ class Project extends React.Component {
         }
       }
     });
+
+    
 
     if (this.props.location.state.medium == "Presentation") {
       this.state.availableModes = ["video", "sound", "writing", "image"];
@@ -144,9 +145,15 @@ class Project extends React.Component {
       this.state.availableModes = ["video", "sound"];
     }
 
-    //this.props.location.state.projectID; Get project id.
+    //Change the uid if the project is shared
+    var uid = firebase.auth().currentUser.uid; 
+    if (this.props.location.state.shared){
+      var uid = this.props.location.state.path.split("/")[1];     
+    }
+
+    //Load the ideas from the database
     var ideas = Firestore.getAllIdeasByProject(
-      firebase.auth().currentUser.uid,
+      uid,
       this.props.location.state.projectID
     );
     ideas
@@ -179,6 +186,20 @@ class Project extends React.Component {
   }
 
   componentWillUnmount() {}
+
+  componentDidUpdate (prevProps) {
+    if (prevProps.location.state.projectID !== this.props.location.state.projectID) {
+      this.setState({
+        title: "",
+        topic: "",
+        medium: "",
+        availableModes: ["video", "sound", "writing", "image"],
+        loaded: false,
+        ideas: {}
+      });
+      this.componentDidMount();
+    }
+  }
 
   render() {
     return (
