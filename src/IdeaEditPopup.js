@@ -1,5 +1,5 @@
 import React from "react";
-import "./index.css";
+import "./style.scss";
 import ModeSelectionMenu from "./ModeSelectionMenu.js"
 
 class IdeaEditPopup extends React.Component {
@@ -56,9 +56,10 @@ class IdeaEditPopup extends React.Component {
                 <div className="inner">
                     <div className = {this.state.availMode}>
                         <ModeSelectionMenu 
-                            availableModes = {this.props.availableModes}
+                            availableModes = {this.props.shared ? [this.state.mode] : this.props.availableModes}
                             handleModeChange = {this.handleModeChange} 
                             currentMode = {this.state.mode}
+                            disabled = {this.props.shared ? true: false }
                             />
                     </div>
                     <input 
@@ -66,27 +67,30 @@ class IdeaEditPopup extends React.Component {
                         className = "textInput heading"
                         value={this.state.title} 
                         onChange={this.handleTitleChange} 
+                        disabled = {this.props.shared ? true: false }
                         />
                         
                     <textarea 
                         value={this.state.notes} 
                         onChange={this.handleNotesChange}
+                        disabled = {this.props.shared ? true: false }
                         />
                     <div
                     style={{marginLeft:"25%", marginRight:"25%",display:"flex", flexDirection:"row"}}>
+                    {this.props.shared ? null : (
                         <button
                             className= "selectButton"
                             onClick ={()=>{
                                this.props.handleEdit(this.state.title,this.state.notes, this.state.mode);                                
                             }}>
                             Done
-                        </button>
+                        </button>)}
                         <button
                             className= "selectButton"
                             onClick ={()=>{
                                 this.props.closePopup();
                             }}                 
-                        >Cancel
+                        >{this.props.shared ? "Close" : "Cancel" }
                         </button>
                     </div>
 

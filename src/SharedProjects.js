@@ -15,7 +15,7 @@ import ProjectLoader from "./ProjectLoader";
 import ProjectView from "./ProjectView";
 import useProjectDialog from "./useProjectDialog";
 
-import "./style.scss";
+import "./index.css";
 import { useState } from "react";
 const emptyImages = [
   "void.svg",
@@ -79,7 +79,7 @@ const useStyles = makeStyles(theme => ({
     cursor: "pointer"
   }
 }));
-const Projects = props => {
+const SharedProjects = props => {
   const { open, toggle } = useProjectDialog();
   const getGridListCols = () => {
     if (isWidthUp("xl", props.width)) {
@@ -119,7 +119,7 @@ const Projects = props => {
 
   useEffect(() => {
     var uid = firebase.auth().currentUser.uid;
-    var recents = Firestore.getAllProjectsByUser(uid, true);
+    var recents = Firestore.getAllSharedProjectsByUser(uid);
 
     recents
       .get()
@@ -129,14 +129,14 @@ const Projects = props => {
           var proj = x.data();
           proj.projectID = x.id;
 
-          storage
-            .child("projectImage/" + x.data().image)
-            .getDownloadURL()
-            .then(function(url) {
-              proj.image = url;
-              addProject(proj);
+          // storage
+          //   .child("projectImage/" + x.data().image)
+          //   .getDownloadURL()
+          //   .then(function(url) {
+          proj.image = x.data().image;
+          addProject(proj);
               // console.log(proj);
-            });
+            // });
         });
       })
       .catch(function(error) {
@@ -154,7 +154,8 @@ const Projects = props => {
         title: x.title,
         topic: x.subtitle,
         medium: x.medium,
-        image: x.image
+        image: x.image,
+        shared: true
       }
     });
   };
@@ -207,6 +208,7 @@ const Projects = props => {
           hide={toggle}
           projectInfo={currentProject}
           edit={editProject}
+          shared={true}
         />
         <Container
           style={{ marginTop: 40, paddingLeft: 100, marginRight: 100 }}
@@ -230,7 +232,7 @@ const Projects = props => {
                 fontWeight: "700"
               }}
             >
-              Projects
+              Projects shared with you
             </h3>
           </Row>
         </Container>
@@ -253,19 +255,19 @@ const Projects = props => {
                     No Projects!
                   </h1>
                 </Row>
-                <Row className="justify-content-md-center">
+                {/* <Row className="justify-content-md-center">
                   <h2 className="imageSubtitle" style={{ color: "#8fa5b5" }}>
                     Click the 'New Project' button to create your first project!
                   </h2>
-                </Row>
+                </Row> */}
               </Container>
             ) : null}
             <GridList cols={getGridListCols()}>
               {allProjects
-                .sort((a, b) => a.creationTime - b.creationTime)
+                .sort((a, b) => a.shareTime - b.shareTime)
                 .map((project, index) => (
                   <GridListTile
-                    key={project.creationTime}
+                    key={project.shareTime}
                     classes={
                       getGridListCols() == 2
                         ? { root: "rootsm", tile: "tile" }
@@ -292,4 +294,4 @@ const Projects = props => {
   );
 };
 
-export default withWidth()(Projects);
+export default withWidth()(SharedProjects);

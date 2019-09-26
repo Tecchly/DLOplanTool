@@ -8,7 +8,7 @@ import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import history from "./history";
 import HeaderBar from "./HeaderBar.js"
 import Ionicon from "react-ionicons";
-import "./index.css";
+import "./style.scss";
 import FeedbackContent from './FeedbackContent';
 
 
