@@ -9,7 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import Ionicon from "react-ionicons";
 import Typography from '@material-ui/core/Typography';
-import "./index.css";
+import "./style.scss";
 import Utils from "./Utils";
 
 const useStyles = makeStyles(theme => ({

@@ -15,7 +15,7 @@ import ProjectLoader from "./ProjectLoader";
 import ProjectView from "./ProjectView";
 import useProjectDialog from "./useProjectDialog";
 
-import "./index.css";
+import "./style.scss";
 import { useState } from "react";
 const emptyImages = [
   "void.svg",
