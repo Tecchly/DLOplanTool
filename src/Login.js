@@ -29,10 +29,11 @@ const Login = ({ history }) => {
     recents
       .get()
       .then(function(doc) {
+        var chosenColor = doc.data().color ? doc.data().color : "orange"
         const selectedTheme =
-          themeOptions.find(t => t.name.toLowerCase() === doc.data().color) ||
+          themeOptions.find(t => t.name.toLowerCase() === chosenColor) ||
           {};
-        localStorage.setItem("colorScheme", doc.data().color);
+        localStorage.setItem("colorScheme", chosenColor);
 
         const html = document.getElementsByTagName("html")[0];
         Object.keys(selectedTheme).forEach((property, i) => {
