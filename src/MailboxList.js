@@ -13,14 +13,14 @@ class MailboxList extends React.Component {
         history.push({
             pathname: "./project",
             state: {
-              sharing: true,
               createUser: proj.createUser,
-              path: proj.path,
               projectID: proj.id,
               medium: proj.medium,
               title: proj.title,
               topic: proj.subtitle,
-              image: proj.title
+              image: proj.title,
+              shared: true,
+              path: proj.path
             }
           })
     }

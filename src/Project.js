@@ -146,12 +146,10 @@ class Project extends React.Component {
       this.state.availableModes = ["video", "sound"];
     }
 
-
+    //Change the uid if the project is shared
     var uid = firebase.auth().currentUser.uid; 
-    if (this.props.location.state.sharing){
-      var uid = this.props.location.state.path.split("/")[1];
-      console.log(uid);
-      
+    if (this.props.location.state.shared){
+      var uid = this.props.location.state.path.split("/")[1];     
     }
 
     //Load the ideas from the database
