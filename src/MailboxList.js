@@ -7,29 +7,11 @@ class MailboxList extends React.Component {
         data: PropTypes.array.isRequired,
     };
 
-    loadProject(proj) {
-        const { history } = this.props;
-        console.log(proj);
-        history.push({
-            pathname: "./project",
-            state: {
-              createUser: proj.createUser,
-              projectID: proj.id,
-              medium: proj.medium,
-              title: proj.title,
-              topic: proj.subtitle,
-              image: proj.title,
-              shared: true,
-              path: proj.path
-            }
-          })
-    }
-
     render() {
         let messageNodes = this.props.data.map(function (proj) {
             return <li key={proj.id}>{proj.createUser + " shared project "}
                 <a style = {{color:"blue"}} onClick = {()=>{
-                    this.loadProject(proj);
+                    this.props.loadProject(proj);
                 }}>{proj.title}</a>
                 {" with you at "
                     + new Intl.DateTimeFormat('en-US', { year: "numeric", month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).format(proj.shareTime)}
@@ -44,4 +26,4 @@ class MailboxList extends React.Component {
     }
 }
 
-export default withRouter(MailboxList);
+export default MailboxList;
