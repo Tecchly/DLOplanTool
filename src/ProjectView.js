@@ -10,15 +10,13 @@ import MuiDialogActions from "@material-ui/core/DialogActions";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import ReactDOM from "react-dom";
-import Backg from "./assets/images/poster2.jpg";
+
 import { Image } from "react-bootstrap";
 import firebase from "firebase";
 import Firestore from "./Firestore.js";
 import IconButton from "@material-ui/core/IconButton";
-import SendIcon from "@material-ui/icons/Send";
-
-import Chips, { Chip } from "react-chips";
-import "./index.css";
+import Chips from "react-chips";
+import "./style.scss";
 const styles = theme => ({
   root: {
     margin: 0,
@@ -111,7 +109,6 @@ const ProjectView = ({ open, hide, projectInfo, edit, shared }) => {
         .get()
         .then(function(querySnapshot) {
           querySnapshot.forEach(function(doc) {
-            // console.log(doc.id + " " + doc.data())
             Firestore.saveSharedProject(doc.id, data);
           });
         })
@@ -126,12 +123,8 @@ const ProjectView = ({ open, hide, projectInfo, edit, shared }) => {
   };
   useEffect(() => {
     Firestore.getUserEmails().then(querySnapshot => {
-      console.log(querySnapshot);
-
       querySnapshot.forEach(doc => {
         addSuggestion(doc.data().email);
-
-        console.log(suggestions);
       });
     });
   }, []);
@@ -172,30 +165,31 @@ const ProjectView = ({ open, hide, projectInfo, edit, shared }) => {
               </Button>
             </DialogContent>
             <DialogActions>
-              {shared ? null :(
-                  <Button
-                  onClick={() => {
-                    archive(projectInfo.projectID);
-                    hide();
-                  }}
-                  color="secondary"
-                >
-                  Archive
-                </Button>)}
-                <Button
-                  onClick={() => {
-                    hide();
-                    edit(projectInfo);
-                  }}
-                  color="primary"
-                >
-                  {shared ? "View" : "Edit"}
-                </Button>
-                {shared ? null : (
-                <Button onClick={shareP} color="primary">
-                  Share
-                </Button>)
-                }
+              {shared ? null : 
+              <Button
+                onClick={() => {
+                  archive(projectInfo.projectID);
+                  hide();
+                }}
+                classes={{ root: "projectViewSecondary" }}
+
+              >
+                Archive
+              </Button> }
+              <Button
+                onClick={() => {
+                  hide();
+                  edit(projectInfo);
+                }}
+                classes={{ root: "projectViewPrimary" }}
+              >
+                {shared ? "View" : "Edit" }
+              </Button>
+              {shared ? null :
+              <Button onClick={shareP} classes={{ root: "projectViewPrimary" }}>
+                Share
+              </Button>
+              }
             </DialogActions>
           </Dialog>
         </React.Fragment>,

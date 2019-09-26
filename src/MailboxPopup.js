@@ -3,7 +3,7 @@ import MailboxListBox from "./MailboxListBox";
 import { Modal, Button, ButtonToolbar } from "react-bootstrap";
 import IconButton from "@material-ui/core/IconButton";
 import NotificationIcon from "@material-ui/icons/Notifications";
-import "./index.css";
+import "./style.scss";
 class MailboxPopup extends React.Component {
   constructor(props) {
     super(props);
@@ -20,7 +20,7 @@ class MailboxPopup extends React.Component {
         <IconButton
           aria-label="notifications"
           onClick={() => this.toggleMailPopup()}
-          style={{color: "#FA8231"}}
+          className="bell"
         >
           <NotificationIcon fontSize="default" />
         </IconButton>
@@ -41,18 +41,7 @@ class MailboxPopup extends React.Component {
           </Modal.Body>
           <Modal.Footer>
             <Button
-              style={{
-                backgroundColor: "#FA8231",
-                color: "#fff",
-                borderRadius: 11,
-                marginRight: "5%",
-                width: "10%",
-                boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
-                border: "none",
-                fontFamily: "Montserrat",
-                height: 35,
-                fontWeight: "600"
-              }}
+            className="mailPopupButton"
               onClick={() => this.toggleMailPopup()}
             >
               Close

@@ -1,6 +1,6 @@
 import React from "react";
 import { app } from "./Firebase";
-import "./index.css";
+import "./style.scss";
 import { Button, Icon } from "antd";
 import DragAndDrop from "./DragAndDrop.js";
 import { withRouter, Redirect } from "react-router";
@@ -322,8 +322,8 @@ class NewProjectPopup extends React.Component {
                 </DragAndDrop>
                 <br />
                 <Button
+                className="newProjectCreateButton"
                   style={{
-                    backgroundColor: "#FA8231",
                     color: "#fff",
                     marginTop: "5%",
                     borderRadius: 11,

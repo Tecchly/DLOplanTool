@@ -1,5 +1,5 @@
 import React from "react";
-import "./index.css";
+import "./style.scss";
 import ModeSelectionMenu from "./ModeSelectionMenu.js"
 
 class IdeaEditPopup extends React.Component {
