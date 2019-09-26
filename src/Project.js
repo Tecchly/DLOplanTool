@@ -129,6 +129,8 @@ class Project extends React.Component {
       }
     });
 
+    
+
     if (this.props.location.state.medium == "Presentation") {
       this.state.availableModes = ["video", "sound", "writing", "image"];
     } else if (this.props.location.state.medium == "Screencast") {
@@ -143,9 +145,17 @@ class Project extends React.Component {
       this.state.availableModes = ["video", "sound"];
     }
 
-    //this.props.location.state.projectID; Get project id.
+
+    var uid = firebase.auth().currentUser.uid; 
+    if (this.props.location.state.sharing){
+      var uid = this.props.location.state.path.split("/")[1];
+      console.log(uid);
+      
+    }
+
+    //Load the ideas from the database
     var ideas = Firestore.getAllIdeasByProject(
-      firebase.auth().currentUser.uid,
+      uid,
       this.props.location.state.projectID
     );
     ideas

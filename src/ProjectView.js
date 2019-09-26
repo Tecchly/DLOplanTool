@@ -95,6 +95,7 @@ const ProjectView = ({ open, hide, projectInfo, edit }) => {
       id: projectInfo.projectID,
       title: projectInfo.title,
       subtitle: projectInfo.subtitle,
+      medium: projectInfo.medium,
       image: projectInfo.image,
       shareTime: +new Date(),
       createUser: "",
