@@ -2,81 +2,110 @@ import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Dialog from "@material-ui/core/Dialog";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Radio from "@material-ui/core/Radio";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import ReactDOM from "react-dom";
-const options = [
-"Orange",
-"Blue",
-"Green"
-];
+import Firestore from "./Firestore.js";
+import { app } from "./Firebase";
+import { themeOptions } from "./styling/themeOptions";
+
+const useStyles = makeStyles(theme => ({
+  button: {
+    display: "block",
+    marginTop: theme.spacing(2)
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 300
+  }
+}));
 
 const SettingsDialog = ({ open, hide }) => {
-    const radioGroupRef = React.useRef(null);
-    const [value, setValue] = React.useState("Orange");
+  const [colorScheme, setColorScheme] = React.useState("");
+  const [openList, setOpen] = React.useState(false);
+  const classes = useStyles();
 
-    
-      const handleEntering = () => {
-        if (radioGroupRef.current != null) {
-          radioGroupRef.current.focus();
-        }
-      };
-    
+  function changeScheme(color) {
+    const selectedTheme =
+      themeOptions.find(t => t.name.toLowerCase() === color) || {};
+    const html = document.getElementsByTagName("html")[0];
+    Object.keys(selectedTheme).forEach((property, i) => {
+      if (property === "name") {
+        return;
+      }
+      html.style.setProperty(property, selectedTheme[property]);
+    });
+  }
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-    
-      const handleChange = event => {
-        setValue(event.target.value);
-      };
-    const handleCancel = () => {
-        hide();
-      };
-    
-      const handleOk = () => {
-        hide();
-      };
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
+  const handleEntering = () => {};
+  const handleChange = event => {
+    localStorage.setItem("colorScheme", event.target.value);
+    setColorScheme(event.target.value);
+    changeScheme(event.target.value)
+  };
+  const handleCancel = () => {
+    changeScheme(localStorage.getItem("colorScheme"))
+    hide();
+  };
 
+  const handleOk = () => {
+    changeScheme(colorScheme)
+    localStorage.setItem("colorScheme", colorScheme);
+    Firestore.setNewColor(app.auth().currentUser.uid, colorScheme);
+    hide();
+  };
 
   return open
     ? ReactDOM.createPortal(
         <React.Fragment>
           <Dialog
-
             maxWidth="xs"
             onClose={hide}
             onEntering={handleEntering}
             aria-labelledby="confirmation-dialog-title"
             open={open}
-
           >
-            <DialogTitle id="confirmation-dialog-title" onClose={hide}> 
+            <DialogTitle id="confirmation-dialog-title" onClose={hide}>
               Colour Scheme
             </DialogTitle>
             <DialogContent dividers>
-              <RadioGroup
-                ref={radioGroupRef}
-                aria-label="ringtone"
-                name="ringtone"
-                value={value}
-                onChange={handleChange}
-              >
-                {options.map(option => (
-                  <FormControlLabel
-                    value={option}
-                    key={option}
-                    control={<Radio />}
-                    label={option}
-                  />
-                ))}
-              </RadioGroup>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="demo-controlled-open-select">
+                  Colour Scheme
+                </InputLabel>
+                <Select
+                  open={openList}
+                  onClose={handleClose}
+                  onOpen={handleOpen}
+                  value={colorScheme}
+                  onChange={handleChange}
+                  inputProps={{
+                    name: "colorScheme",
+                    id: "open-select"
+                  }}
+                >
+                  <MenuItem value="orange">Orange</MenuItem>
+                  <MenuItem value="blue">Blue</MenuItem>
+                  <MenuItem value="green">Green</MenuItem>
+                  <MenuItem value="vibrant">Vibrant</MenuItem>
+                  <MenuItem value="artsy">Artsy</MenuItem>
+                  <MenuItem value="deep blue">Deep Blue</MenuItem>
+                  <MenuItem value="modern">Modern</MenuItem>
+                </Select>
+              </FormControl>
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCancel} color="primary">

@@ -8,11 +8,16 @@ import history from "./history";
 import Ionicon from "react-ionicons";
 import "./style.scss";
 import MailboxPopup from "./MailboxPopup";
-
+import useSettingsDialog from "./useSettingsDialog";
+import SettingsDialog from "./SettingsDialog";
+import IconButton from "@material-ui/core/IconButton";
+import BrushIcon from "@material-ui/icons/ColorLens";
 //Reusable headerbar component
 const HeaderBar = () => {
+    const { settingsOpen, toggleSettings } = useSettingsDialog();
     return (
     <React.Fragment>
+        <SettingsDialog open={settingsOpen} hide={toggleSettings} />
         <Navbar
         collapseOnSelect
         expand="lg"
@@ -46,7 +51,7 @@ const HeaderBar = () => {
               }}
             >
             <Image
-                src={require("./assets/images/orange_logop.png")}
+                src={require("./assets/images/logo_"+ localStorage.getItem("colorScheme") +".png")}
                 style={{ height: 30, marginLeft: 5, marginBottom: 2 }}
             />
             Digital Learning
@@ -56,6 +61,16 @@ const HeaderBar = () => {
         <Col style={{}}>
             
             <Nav className="mr-auto"></Nav>
+            <div className="customiseButton">
+
+            <IconButton
+          aria-label="notifications"
+          onClick={() => toggleSettings()}
+          className="bell"
+          >
+          <BrushIcon fontSize="default" />
+        </IconButton>
+          </div>
             <Nav>
             <img
                 alt="profile"
@@ -66,6 +81,7 @@ const HeaderBar = () => {
                 borderRadius: 20,
                 cursor: "pointer"
                 }}
+
                 onClick={() => {
                 localStorage.setItem("user", null);
                 app.auth().signOut();

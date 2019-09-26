@@ -17,12 +17,11 @@ import useProjectDialog from "./useProjectDialog";
 import useSettingsDialog from "./useSettingsDialog";
 import SettingsDialog from "./SettingsDialog";
 import { themeOptions } from "./styling/themeOptions";
-
+import theme from './styling/theme.scss';
 const useStyles = makeStyles(theme => ({
   button: {
     width: "100%",
     boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
-
     border: "none",
     fontFamily: "Montserrat",
     borderRadius: 17,
@@ -86,6 +85,7 @@ const Home = ({ history }) => {
   const [noProjects, setNoProjects] = useState(false);
   const [recentProjects, pushRecentProjects] = useState([]);
   const [currentProject, setCurrentProject] = useState(null);
+
   const RecentProject = ({ project }) => <ProjectTile x={project} />;
   var storage = firebase.storage().ref();
 
@@ -95,11 +95,10 @@ const Home = ({ history }) => {
   const clickedProject = project => {
     setCurrentProject(project);
   };
-
+  
   useEffect(() => {
     var uid = firebase.auth().currentUser.uid;
     var recents = Firestore.getRecentProjectsByUser(uid);
-    console.log(app.auth().currentUser.uid);
     recents
       .get()
       .then(function(doc) {
@@ -114,7 +113,6 @@ const Home = ({ history }) => {
               proj.image = url;
               proj.id = x.id;
               addRecentProject(proj);
-              console.log(proj);
             });
         });
       })
@@ -141,7 +139,6 @@ const Home = ({ history }) => {
         return;
       }
       html.style.setProperty(property, selectedTheme[property]);
-      console.log("hellloooo");
     });
   }
   const IconButton = ({ icon, text, nav, classVal }) => (
@@ -284,7 +281,6 @@ const Home = ({ history }) => {
                 fontFamily: "Montserrat",
                 fontWeight: "700"
               }}
-              onClick={() => toggleSettings()}
             >
               Recent Projects
             </h3>

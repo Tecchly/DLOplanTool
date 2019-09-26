@@ -1,11 +1,11 @@
 export const themeOptions = [
     { 
-      '--bg-primary': '#FFFFFF',
-      '--bg-secondary': '#D4FADE',
-      '--primary': '#1FBF6C',
-      '--text-alternate': '#3A4A56',
-      '--text-primary': '#005259',
-      '--text-secondary': '#458084',
+      '--bg-primary': '#5cdb95',
+      '--bg-secondary': '#8ee4af',
+      '--primary': '#5cdb95',
+      '--text-alternate': '#379683',
+      '--text-primary': '#05386B',
+      '--text-secondary': '#05386B',
       name: 'Green'
     },
     { 
@@ -25,6 +25,42 @@ export const themeOptions = [
       '--text-primary': '#3A4A56',
       '--text-secondary': '##2F4858',
       name: 'Orange'
-    }
+    },
+    { 
+      '--bg-primary': '#a8d0e6',
+      '--bg-secondary': '#a8d0e6',
+      '--primary': '#f76c6c',
+      '--text-alternate': '#24305e',
+      '--text-primary': '#24305e',
+      '--text-secondary': '#24305e',
+      name: 'Vibrant'
+    },
+    { 
+      '--bg-primary': '#4056a1',
+      '--bg-secondary': '#c5cbe3',
+      '--primary': '#4056a1',
+      '--text-alternate': '#0C1412',
+      '--text-primary': '#f13c20',
+      '--text-secondary': '#0C1412',
+      name: 'Artsy'
+    },
+    { 
+      '--bg-primary': '#2e9cca',
+      '--bg-secondary': '#29648a',
+      '--primary': '#2e9cca',
+      '--text-alternate': '#25274d',
+      '--text-primary': '#25274d',
+      '--text-secondary': '#25274d',
+      name: 'Deep Blue'
+    },
+    { 
+      '--bg-primary': '#feffff',
+      '--bg-secondary': '#2b7a78',
+      '--primary': '#3aafa9',
+      '--text-alternate': '#17252a',
+      '--text-primary': '#17252a',
+      '--text-secondary': '#17252a',
+      name: 'Modern'
+    },
 
   ];

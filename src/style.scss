@@ -182,7 +182,7 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
 }
 
 .popup .selectButton {
-  background-color: #FA8231;
+  background-color: var(--primary) !important;
   color: #fff;
   margin-top: 5%;
   border-radius: 11;
@@ -322,7 +322,7 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
   margin-left: 15px !important;
   position: absolute !important;
     top: 15px;
-    color: var(--bg-primary) !important;
+    color: #fff;
 }
 
 .projectDialogSubtitle {
@@ -460,7 +460,7 @@ margin-left: 30px;
 }
 
 .chipClicked {
-  background-color: #FA8231 !important;
+  background-color: var(--primary) !important;
   color: #fff !important;
 }
 .chipUnclicked {
@@ -550,7 +550,7 @@ margin-left: 30px;
 }
 .welcomeSubtitle {
   font: 600 25px "Montserrat", sans-serif !important;
-  color: var(--primary);
+  color: var(--text-alternate);
 }
 .homeButton {
   width: 100% !important;
@@ -584,6 +584,12 @@ margin-left: 30px;
 
 }
 
+.customiseButton {
+  right: 71px;
+  position: absolute;
+  
+}
+
 
 // mailbox popup
 
@@ -602,4 +608,37 @@ margin-left: 30px;
   font: 600 20px "Montserrat", sans-serif !important;
   height: 35;
 
+}
+
+// NEW PROJECT POPUP
+
+.newProjectCreateButton {
+  background-color: var(--primary) !important;
+}
+
+//LOGIN
+
+.headerRowLoginTitle {
+  color: var(--primary) !important;
+}
+
+.loginButton {
+  background-color: var(--primary) !important;
+}
+
+// amplification tile
+
+.amplificationChipAvatar {
+  background-color: var(--primary) !important;
+}
+
+
+// Project View 
+
+.projectViewSecondary {
+  color: var(--text-primary) !important;
+}
+
+.projectViewPrimary{
+  color: var(--primary) !important;
 }

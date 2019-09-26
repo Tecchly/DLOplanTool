@@ -7,11 +7,11 @@ import { Button, Icon } from "antd";
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import history from "./history";
 import Ionicon from "react-ionicons";
-import "./index.css";
+import "./style.scss";
 import NewProjectPopup from "./NewProject";
 import { useState } from "react";
 import AmplificationTile from "./AmplificationTile";
-import Wave from "./assets/images/wave.png";
+import Wave from "./assets/images/wave_orange.png";
 import retext from "retext";
 import pos from "retext-pos";
 import keywords from "retext-keywords";
@@ -32,7 +32,6 @@ const Amplification = ( props ) => {
   const [selectedTopic, setSelectedTopic] = useState(0);
   const changeSelect = topic => {
     setSelectedTopic(topic);
-    console.log(selectedTopic);
   };
 
   const [amplificationOptions, addAmplificationOptions] = useState({});
@@ -40,7 +39,6 @@ const Amplification = ( props ) => {
   const saveTopicAmplifications = (topic, options, next) => {
     amplificationOptions[topic] = options;
     addAmplificationOptions(amplificationOptions);
-    console.log(amplificationOptions);
     if (next) changeSelect(next)
     //if next is null then it is the last section so all sections
     //are complete so save to firestore here
@@ -54,9 +52,9 @@ const Amplification = ( props ) => {
     let topicNotesList = [];
     words(ideas).then(function (result){
       var mainTopic = topic(result["topic"]);
-      console.log(mainTopic);
+
       Object.values(result["ideas"]).forEach(info => {
-        console.log(info);
+
         keyWordList = [];
         retext()
           .use(pos)
@@ -127,9 +125,9 @@ const Amplification = ( props ) => {
               index++;
             }
        });
-       console.log(ideas);
+
        var result = {ideas, topic};
-       console.log(result);
+
        resolve(result);
     });
   });
@@ -137,7 +135,7 @@ const Amplification = ( props ) => {
   }
 
   function topic(topic) {
-    console.log(topic);
+
     var topicInfo = {
       medium: topic.medium,
       title: props.location.state.title,
@@ -156,7 +154,7 @@ const Amplification = ( props ) => {
           width: "100%",
           height: 188,
           position: "absolute",
-          backgroundImage: `url(${Wave})`,
+          backgroundImage: `url(${require("./assets/images/wave_" + localStorage.getItem("colorScheme") + ".png")})`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "bottom",
           backgroundSize: "cover"

@@ -19,3 +19,12 @@ $textAlternate: $darkGrey;
   --text-secondary: $textSecondary,
   --text-alternate: $textAlternate
 ));
+
+:export {
+  primary: $primary;
+  bgprimary: $backgroundPrimary;
+  bgsecondary: $backgroundSecondary;
+  textprimary: $textPrimary;
+  textsecondary: $textSecondary;
+  textalternate: $textAlternate;
+}
