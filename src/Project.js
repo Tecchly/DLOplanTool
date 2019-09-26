@@ -117,6 +117,7 @@ class Project extends React.Component {
   };
 
   componentDidMount() {
+    console.log(this.props.location.state.shared);
     this.setState({
       ideas: {
         ...this.state.ideas,
@@ -262,6 +263,7 @@ class Project extends React.Component {
                 topic={this.state.topic}
                 ideas={this.state.ideas}
                 availableModes={this.state.availableModes}
+                shared={this.props.location.state.shared}
               />
             ) : null}
           </div>

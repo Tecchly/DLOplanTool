@@ -279,6 +279,13 @@ const Home = ({ history }) => {
               <IconButton
                 bcolor="#FFF"
                 tcolor="#FA8231"
+                icon="project"
+                nav="/sharedprojects"
+                text="Shared Projects"
+              />
+              <IconButton
+                bcolor="#FFF"
+                tcolor="#FA8231"
                 icon="question-circle"
                 nav="#"
                 text="Help"
