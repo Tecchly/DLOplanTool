@@ -1,8 +1,13 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
+
 import Button from '@material-ui/core/Button';
+import Map from "@material-ui/icons/Map";
+import Face from "@material-ui/icons/Face";
+import Autorenew from "@material-ui/icons/Autorenew";
+import VolumeUp from "@material-ui/icons/VolumeUp";
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -14,11 +19,16 @@ const useStyles = makeStyles(theme => ({
       marginLeft:10,
       marginRight:10,
   },
-  typography: {
-    padding: theme.spacing(2),
-  },
 }));
 
+const StyleTooltip = withStyles(theme => ({
+    tooltip: {
+      fontSize: theme.typography.pxToRem(16),
+    },
+  }))(Tooltip);
+
+
+//Need to pass in prop of commends
 export default function FeedbackBar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -30,6 +40,7 @@ export default function FeedbackBar() {
 
   const handleCommend = event => {
       console.log(event.currentTarget.value);
+      setCommend(event.currentTarget.value);
   }
 
   const handleClose = () => {
@@ -58,10 +69,26 @@ export default function FeedbackBar() {
           horizontal: 'center',
         }}
       >
-        <Button onClick={handleCommend} value="mapping">Good Mapping</Button>
-        <Button onClick={handleCommend} value="amplification">Good Amplification</Button>
-        <Button onClick={handleCommend} value="personalsation">Good Personalisation</Button>
-        <Button onClick={handleCommend} value="coherance">Good Coherance</Button>
+        <StyleTooltip placement = "top" title="thought this was a good mapping">
+            <Button onClick={handleCommend} value="mapping">
+                <Map/>
+            </Button>
+        </StyleTooltip>
+        <StyleTooltip placement = "top" title="thought this was a good amplification">
+            <Button onClick={handleCommend} value="amplification">
+                <VolumeUp/>
+            </Button>
+        </StyleTooltip>   
+        <StyleTooltip placement = "top" title ="thought this was good personalization">
+            <Button onClick={handleCommend} value="personalsation">
+                <Face/>
+            </Button>
+        </StyleTooltip>
+        <StyleTooltip placement = "top" title = "thought this was very coherent with the project">
+            <Button onClick={handleCommend} value="coherance">
+                <Autorenew/>
+            </Button>
+        </StyleTooltip>    
       </Popover>
     </div>
   );
