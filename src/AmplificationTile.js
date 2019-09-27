@@ -93,7 +93,7 @@ const AplificationTile = props => {
   const setAmplificationType = (index, type, icon) => {
     selected[index].type = type;
     selected[index].icon = icon;
-    console.log(selected);
+
     handleClose();
   };
   function handleClick(event, index) {
@@ -181,7 +181,7 @@ const AplificationTile = props => {
                         color: "#ffffff67"
                       }}
                     >
-                      <Icon color="#fff">{selected[i].icon}</Icon>
+                      <Icon>{selected[i].icon}</Icon>
                     </Avatar>
                   ) : null
                 }
