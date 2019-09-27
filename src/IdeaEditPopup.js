@@ -1,6 +1,7 @@
 import React from "react";
 import "./style.scss";
 import ModeSelectionMenu from "./ModeSelectionMenu.js"
+import FeedbackBar from "./FeedbackBar.js"
 
 class IdeaEditPopup extends React.Component {
     constructor(props) {
@@ -69,12 +70,12 @@ class IdeaEditPopup extends React.Component {
                         onChange={this.handleTitleChange} 
                         disabled = {this.props.shared ? true: false }
                         />
-                        
                     <textarea 
                         value={this.state.notes} 
                         onChange={this.handleNotesChange}
                         disabled = {this.props.shared ? true: false }
                         />
+                    <FeedbackBar/>
                     <div
                     style={{marginLeft:"25%", marginRight:"25%",display:"flex", flexDirection:"row"}}>
                     {this.props.shared ? null : (
