@@ -148,6 +148,11 @@ class Firestore {
         return db.collection("users").doc(userID).collection("sharedProjects").orderBy('shareTime', 'desc');
     };
 
+    static shareListener(userID) {
+        return db.collection("users").doc(userID).collection("sharedProjects");
+            
+    }
+
     static getUserEmails() {
         return db.collection("users").get();
     };
