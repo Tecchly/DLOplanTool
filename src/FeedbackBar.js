@@ -19,6 +19,12 @@ const useStyles = makeStyles(theme => ({
       marginLeft:10,
       marginRight:10,
   },
+  selected: {
+      backgroundColor: "#1fbf6c",
+      '&:hover': {
+        background: "#32CD32",
+     },
+  }, 
 }));
 
 const StyleTooltip = withStyles(theme => ({
@@ -29,7 +35,8 @@ const StyleTooltip = withStyles(theme => ({
 
 
 //Need to pass in prop of commends
-export default function FeedbackBar() {
+//Also needs a handler to save commends to DB.
+export default function FeedbackBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [commend, setCommend] = React.useState();
@@ -39,8 +46,10 @@ export default function FeedbackBar() {
   };
 
   const handleCommend = event => {
-      console.log(event.currentTarget.value);
-      setCommend(event.currentTarget.value);
+      //TODO handle toggling off.
+      if (props.shared) {
+        setCommend(event.currentTarget.value);
+      }     
   }
 
   const handleClose = () => {
@@ -53,7 +62,7 @@ export default function FeedbackBar() {
   return (
     <div className = {classes.root}>
       <Button aria-describedby={id} variant="contained"  className = {classes.button} onClick={handleClick}>
-        Commend Project
+        {props.shared ? "Commend Project": "Commendations"}
       </Button>
       <Popover
         id={id}
@@ -69,23 +78,23 @@ export default function FeedbackBar() {
           horizontal: 'center',
         }}
       >
-        <StyleTooltip placement = "top" title="thought this was a good mapping">
-            <Button onClick={handleCommend} value="mapping">
+        <StyleTooltip placement = "top" title=" thought this was a good mapping">
+            <Button onClick={handleCommend} value="mapping" className = {commend === "mapping"? classes.selected : null}>
                 <Map/>
             </Button>
         </StyleTooltip>
-        <StyleTooltip placement = "top" title="thought this was a good amplification">
-            <Button onClick={handleCommend} value="amplification">
+        <StyleTooltip placement = "top" title=" thought this was a good amplification">
+            <Button onClick={handleCommend} value="amplification" className = {commend === "amplification"? classes.selected : null}>
                 <VolumeUp/>
             </Button>
         </StyleTooltip>   
-        <StyleTooltip placement = "top" title ="thought this was good personalization">
-            <Button onClick={handleCommend} value="personalsation">
+        <StyleTooltip placement = "top" title =" thought this was good personalization">
+            <Button onClick={handleCommend} value="personalisation" className = {commend === "personalisation"? classes.selected : null}>
                 <Face/>
             </Button>
         </StyleTooltip>
-        <StyleTooltip placement = "top" title = "thought this was very coherent with the project">
-            <Button onClick={handleCommend} value="coherance">
+        <StyleTooltip placement = "top" title = " thought this was very coherent with the project">
+            <Button onClick={handleCommend} value="coherence" className = {commend === "coherence"? classes.selected : null}>
                 <Autorenew/>
             </Button>
         </StyleTooltip>    
