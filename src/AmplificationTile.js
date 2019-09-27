@@ -18,7 +18,9 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { withStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
-import theme from './styling/theme.scss';
+import theme from "./styling/theme.scss";
+import Icon from "@material-ui/core/Icon";
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
@@ -67,27 +69,34 @@ const AplificationTile = props => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentSelection, setCurrentSelection] = useState(null);
   const [selected, pushSelected] = useState({});
+  const selectLimit =
+    props.words && props.words.keywords
+      ? props.words.keywords.length > 5
+        ? 3
+        : props.words.keywords.length === 1
+        ? 1
+        : Math.floor(props.words.keywords.length / 2)
+      : 0;
 
   const addSelect = idea => {
     selected[idea] = {
       type: "basic amplification",
-      keyword: props.words.keywords[idea]
+      keyword: props.words.keywords[idea],
+      icon: "cancel"
     };
     pushSelected(selected);
-
   };
   const deleteSelect = idea => {
     delete selected[idea];
     pushSelected({ ...selected });
-
   };
-  const setAmplificationType = (index, type) => {
+  const setAmplificationType = (index, type, icon) => {
     selected[index].type = type;
+    selected[index].icon = icon;
 
     handleClose();
   };
   function handleClick(event, index) {
-
     setAnchorEl(event.target);
     setCurrentSelection(index);
   }
@@ -136,7 +145,7 @@ const AplificationTile = props => {
                   aria-label="add"
                   className={classes.chip2}
                   classes={
-                    selected && Object.keys(selected).length == 3
+                    selected && Object.keys(selected).length == selectLimit
                       ? { root: "amplificationDone", sizeSmall: "smallFab" }
                       : {
                           root: "amplificationDoneDisabled",
@@ -167,9 +176,12 @@ const AplificationTile = props => {
                   selected && selected[i] ? (
                     <Avatar
                       className="amplificationChipAvatar"
-                      style={{ backgroundColor: theme.primary, color: "#ffffff67" }}
+                      style={{
+                        backgroundColor: theme.primary,
+                        color: "#ffffff67"
+                      }}
                     >
-                      <CancelIcon />
+                      <Icon>{selected[i].icon}</Icon>
                     </Avatar>
                   ) : null
                 }
@@ -177,17 +189,17 @@ const AplificationTile = props => {
                 classes={
                   selected && selected[i]
                     ? { root: "chipClicked" }
-                    : selected && Object.keys(selected).length == 3
+                    : selected && Object.keys(selected).length == selectLimit
                     ? { root: "chipDisabled" }
                     : { root: "chipUnclicked" }
                 }
                 clickable
-                onClick={(event) => { return (
-                  selected && selected[i]
+                onClick={event => {
+                  return selected && selected[i]
                     ? deleteSelect(i)
-                    : selected && Object.keys(selected).length < 3
+                    : selected && Object.keys(selected).length < selectLimit
                     ? (addSelect(i), handleClick(event, i))
-                    : null);
+                    : null;
                 }}
               />
             ))
@@ -201,7 +213,9 @@ const AplificationTile = props => {
           classes={{ paper: "popMenu" }}
         >
           <StyledMenuItem
-            onClick={() => setAmplificationType(currentSelection, "colour")}
+            onClick={() =>
+              setAmplificationType(currentSelection, "colour", "color_lens")
+            }
           >
             <ListItemIcon>
               <ColorLensIcon />
@@ -209,7 +223,13 @@ const AplificationTile = props => {
             <ListItemText primary="Colour" />
           </StyledMenuItem>
           <StyledMenuItem
-            onClick={() => setAmplificationType(currentSelection, "highlight")}
+            onClick={() =>
+              setAmplificationType(
+                currentSelection,
+                "highlight",
+                "format_paint"
+              )
+            }
           >
             <ListItemIcon>
               <FormatPaintIcon />
@@ -217,7 +237,9 @@ const AplificationTile = props => {
             <ListItemText primary="Highlight" />
           </StyledMenuItem>
           <StyledMenuItem
-            onClick={() => setAmplificationType(currentSelection, "move")}
+            onClick={() =>
+              setAmplificationType(currentSelection, "move", "control_camera")
+            }
           >
             <ListItemIcon>
               <ControlCameraIcon />
@@ -225,7 +247,9 @@ const AplificationTile = props => {
             <ListItemText primary="Move" />
           </StyledMenuItem>
           <StyledMenuItem
-            onClick={() => setAmplificationType(currentSelection, "enlarge")}
+            onClick={() =>
+              setAmplificationType(currentSelection, "enlarge", "zoom_out_map")
+            }
           >
             <ListItemIcon>
               <ZoomIcon />
@@ -234,11 +258,11 @@ const AplificationTile = props => {
           </StyledMenuItem>
         </StyledMenu>
       </Col>
-      {props.last ? null : (
+      {/* {props.last || !(props.words && props.words.keywords) ? null : (
         <div className={props.active ? "outer" : "outerClosed"}>
           <div className={props.active ? "inner" : "innerClosed"}></div>
         </div>
-      )}
+      )} */}
     </Row>
   );
 };
