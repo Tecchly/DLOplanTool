@@ -49,11 +49,19 @@ export default function FeedbackBar(props) {
       //TODO handle toggling off.
       if (props.shared) {
         setCommend(event.currentTarget.value);
+
+        //Handle the commendation
+        props.handleCommend(
+            props.uuid,
+            {commndation:event.currentTarget.value}
+            )
       }     
   }
 
   const handleClose = () => {
     setAnchorEl(null);
+    //Send the commendation to DB
+
   };
 
   const open = Boolean(anchorEl);
@@ -62,7 +70,7 @@ export default function FeedbackBar(props) {
   return (
     <div className = {classes.root}>
       <Button aria-describedby={id} variant="contained"  className = {classes.button} onClick={handleClick}>
-        {props.shared ? "Commend Project": "Commendations"}
+        {props.shared ? "Commend Idea": "Commendations"}
       </Button>
       <Popover
         id={id}
@@ -78,22 +86,22 @@ export default function FeedbackBar(props) {
           horizontal: 'center',
         }}
       >
-        <StyleTooltip placement = "top" title=" thought this was a good mapping">
+        <StyleTooltip placement = "top" title=" thought this idea is a good mapping">
             <Button onClick={handleCommend} value="mapping" className = {commend === "mapping"? classes.selected : null}>
                 <Map/>
             </Button>
         </StyleTooltip>
-        <StyleTooltip placement = "top" title=" thought this was a good amplification">
+        <StyleTooltip placement = "top" title=" thought this idea has good amplification">
             <Button onClick={handleCommend} value="amplification" className = {commend === "amplification"? classes.selected : null}>
                 <VolumeUp/>
             </Button>
         </StyleTooltip>   
-        <StyleTooltip placement = "top" title =" thought this was good personalization">
+        <StyleTooltip placement = "top" title =" thought this idea has good personalization">
             <Button onClick={handleCommend} value="personalisation" className = {commend === "personalisation"? classes.selected : null}>
                 <Face/>
             </Button>
         </StyleTooltip>
-        <StyleTooltip placement = "top" title = " thought this was very coherent with the project">
+        <StyleTooltip placement = "top" title = " thought this idea is very coherent with the project">
             <Button onClick={handleCommend} value="coherence" className = {commend === "coherence"? classes.selected : null}>
                 <Autorenew/>
             </Button>

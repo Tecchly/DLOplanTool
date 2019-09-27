@@ -75,7 +75,7 @@ class IdeaEditPopup extends React.Component {
                         onChange={this.handleNotesChange}
                         disabled = {this.props.shared ? true: false }
                         />
-                    <FeedbackBar shared ={this.props.shared}/>
+                    <FeedbackBar shared ={this.props.shared} handleCommend ={this.props.handleCommend} uuid = {this.props.uuid}/>
                     <div
                     style={{marginLeft:"25%", marginRight:"25%",display:"flex", flexDirection:"row"}}>
                     {this.props.shared ? null : (

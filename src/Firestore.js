@@ -157,6 +157,14 @@ class Firestore {
         return db.collection("users").get();
     };
 
+    static getAllIdeaCommendations(userID, projectID, ideaID) {
+        return this.getProjectById(userID, projectID).collection("ideas").doc(ideaID).collection("commendations");
+    }
+
+    static saveCommendation(userID, projectID, ideaID, commenterID, commendation) {
+        return this.getProjectById(userID, projectID).collection("ideas").doc(ideaID).collection("commendations").doc(commenterID).set(commendation);
+    }
+
 };
 
 export default Firestore;
