@@ -18,7 +18,6 @@ import useSettingsDialog from "./useSettingsDialog";
 import SettingsDialog from "./SettingsDialog";
 import { themeOptions } from "./styling/themeOptions";
 import theme from './styling/theme.scss';
-import Guidance from './Guidance';
 const useStyles = makeStyles(theme => ({
   button: {
     width: "100%",
@@ -258,23 +257,27 @@ const Home = ({ history }) => {
                 icon="reconciliation"
                 nav="/feedback"
                 text="Feedback"
+                guide="feedback"
               />
               <IconButton
                 classVal="homeButton"
                 icon="project"
                 nav="/projects"
                 text="Your Projects"
+                guide="yourProjects"
               />
               <IconButton
                 classVal="homeButton"
                 icon="project"
                 nav="/sharedprojects"
                 text="Shared Projects"
+                guide="sharedProjects"
               />
               <IconButton
                 classVal="homeButton"
                 icon="question-circle"
                 text="Help"
+                guide="help"
               />
             </Row>
           </Container>
@@ -296,7 +299,7 @@ const Home = ({ history }) => {
           </Row>
         </Container>
 
-        <Container style={{ marginTop: 40 }} fluid>
+        <Container style={{ marginTop: 40 }} fluid className="recentProjects">
           <Row style={{ marginLeft: 80, marginRight: 80 }}>
             {recentProjects.length == 0 && !noProjects ? (
               <ProjectLoader />
@@ -339,11 +342,23 @@ const Home = ({ history }) => {
 const steps = [
   {
     selector: '[guide="newProject"]',
-    content: 'click this button will show you project creating screen'
+    content: (<h5>Lets create a project!</h5>)
   },
   {
-    selector: '',
-    content: ''
+    selector: '[guide="yourProjects"]',
+    content: (<h6>Once you created a project, you can find it by clicking this button!</h6>)
+  },
+  {
+    selector: '.recentProjects',
+    content: (<h6>Your latest four projects will be shown here!</h6>)
+  },
+  {
+    selector: '[guide="sharedProjects"]',
+    content: (<h6>Your friends may share projects with you, you can find them here!</h6>)
+  },
+  {
+    selector: '.bell',
+    content: (<h6>Also, you will receive a notice when your friend shared a project with you!</h6>)
   }
 ];
 
