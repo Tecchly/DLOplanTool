@@ -17,6 +17,7 @@ class IdeaEditPopup extends React.Component {
         commendations: [],
     }
 
+    //Use for loading commendations
     addCommendations = x =>{
         var data = x.data();
         this.setState({
@@ -45,16 +46,15 @@ class IdeaEditPopup extends React.Component {
             this.setState({availMode:["Audio"]});
         }
 
-        //Do a then to resolve the promise
+        //Loading the commendations of the idea
         this.props.loadCommendations(this.props.uuid)
         .get()
         .then(
             function(commendations){
                 commendations.forEach(x=>{
-                    //add the commendatiosn as a index to an array.
+                    //add the commendation as a index to an array.
                     this.addCommendations(x);
                 })
-                //Stuff
             }.bind(this)
         );        
     }

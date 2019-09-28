@@ -74,10 +74,12 @@ export default function FeedbackBar(props) {
     var c = 0;
     
     //Commends by the user, updates on change
+    //@@TODO, need to account for if commendations don't exists yet.
     var uid = firebase.auth().currentUser.uid;
     if (commend === undefined && uid in props.commendations) {
       setCommend(props.commendations[uid].commendation);
     }
+
     switch(commend){
       case "mapping":
         m=1;
@@ -112,13 +114,13 @@ export default function FeedbackBar(props) {
             c++;
             break;
         }
-      }     
-
+      }
+    } 
+    
       setMapping(m);
       setAmplification(a);
       setPersonalisation(p);
       setCoherance(c);
-    }
   });
 
   const pluralise = (num) =>{
