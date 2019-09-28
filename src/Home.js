@@ -18,6 +18,7 @@ import useSettingsDialog from "./useSettingsDialog";
 import SettingsDialog from "./SettingsDialog";
 import { themeOptions } from "./styling/themeOptions";
 import theme from './styling/theme.scss';
+import Guidance from './Guidance';
 const useStyles = makeStyles(theme => ({
   button: {
     width: "100%",
@@ -141,12 +142,13 @@ const Home = ({ history }) => {
       html.style.setProperty(property, selectedTheme[property]);
     });
   }
-  const IconButton = ({ icon, text, nav, classVal }) => (
+  const IconButton = ({ icon, text, nav, classVal, guide }) => (
     <Col>
       <Button
         type="primary"
         size={"large"}
         className={classVal}
+        guide={guide}
         onClick={() => {
           nav === "/" ? setShowNewProject(true) : history.push(nav);
         }}
@@ -201,7 +203,7 @@ const Home = ({ history }) => {
 
   return (
     <React.Fragment>
-      <HeaderBar />
+      <HeaderBar steps={steps} />
       <Container fluid={true}>
         <ProjectView
           open={open}
@@ -249,6 +251,7 @@ const Home = ({ history }) => {
                 icon="plus-circle"
                 nav="/"
                 text="New Project"
+                guide="newProject"
               />
               <IconButton
                 classVal="homeButton"
@@ -332,5 +335,16 @@ const Home = ({ history }) => {
     </React.Fragment>
   );
 };
+
+const steps = [
+  {
+    selector: '[guide="newProject"]',
+    content: 'click this button will show you project creating screen'
+  },
+  {
+    selector: '',
+    content: ''
+  }
+];
 
 export default Home;
