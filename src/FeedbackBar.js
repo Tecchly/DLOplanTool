@@ -58,7 +58,11 @@ export default function FeedbackBar(props) {
         //Handle the commendation, i.e sent to DB
         props.handleCommend(
             props.uuid,
-            {commendation:event.currentTarget.value}
+            {
+              commendation:event.currentTarget.value, 
+              commendUser: firebase.auth().currentUser.displayName,
+              commendTime: +new Date()
+            }
             )
       }     
   }
