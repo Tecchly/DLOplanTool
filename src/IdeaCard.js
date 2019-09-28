@@ -155,6 +155,7 @@ class IdeaCard extends React.Component {
                     handleEdit = {this.handleEdit}                      //Handle Card being edited
                     handleDelete = {this.handleDelete}
                     handleCommend ={this.props.handleCommend}
+                    loadCommendations = {this.props.loadCommendations}
                     availableModes= {this.props.availableModes}
                     closePopup = {this.closePopup}
                     shared = {this.props.shared}
@@ -256,6 +257,7 @@ class IdeaCard extends React.Component {
                                         handleIdeaUpdate = {this.props.handleIdeaUpdate}
                                         handleIdeaDeletion = {this.props.handleIdeaDeletion}
                                         handleCommend ={this.props.handleCommend}
+                                        loadCommendations = {this.props.loadCommendations}
                                         ideas = {this.props.ideas}
                                         parentID = {this.props.uuid} 
                                         availableModes={this.props.availableModes}

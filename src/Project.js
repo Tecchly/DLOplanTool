@@ -104,14 +104,17 @@ class Project extends React.Component {
     });
   };
 
-  //@params:uuid, uuid of the idea with which the commendation being sent, 
-  //        commend: type of commend being sent through
+  /**
+   * @params:uuid, uuid of the idea with which the commendation being sent,
+   * commend: type of commend being sent through
+   */
+  
   handleCommend = (ideaID,commend) => {
     var ownerID = firebase.auth().currentUser.uid; 
     if (this.props.location.state.shared){
       var ownerID = this.props.location.state.path.split("/")[1];     
     }
-
+    
     Firestore.saveCommendation(
         ownerID,
         this.props.location.state.projectID,
@@ -119,6 +122,23 @@ class Project extends React.Component {
         firebase.auth().currentUser.uid,
         commend
     )
+  }
+
+  loadCommendations = (ideaID) => {
+    var commendations = [];
+
+    var ownerID = firebase.auth().currentUser.uid; 
+    if (this.props.location.state.shared){
+      var ownerID = this.props.location.state.path.split("/")[1];     
+    }
+    
+    var ideaQuery = Firestore.getAllIdeaCommendations(
+      ownerID,
+      this.props.location.state.projectID,
+      ideaID,
+    );
+
+    return ideaQuery;
   }
 
 
@@ -299,6 +319,7 @@ class Project extends React.Component {
                 handleIdeaDeletion={this.handleIdeaDeletion}
                 handleMainTopicChange={this.handleMainTopicChange}
                 handleCommend={this.handleCommend}
+                loadCommendations = {this.loadCommendations}
                 uuid="root"
                 parentID="none"
                 topic={this.state.topic}

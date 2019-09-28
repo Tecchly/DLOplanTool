@@ -14,6 +14,17 @@ class IdeaEditPopup extends React.Component {
         mode:'',
         notes:'',
         icon:'ios-bulb',
+        commendations: [],
+    }
+
+    addCommendations = x =>{
+        var data = x.data();
+        this.setState({
+            commendations: {
+              ...this.state.commendations,
+              [`${x.id}`]: data
+            }
+          });
     }
 
     componentDidMount(){
@@ -33,7 +44,19 @@ class IdeaEditPopup extends React.Component {
         if  (this.props.mode == "Podcast") {
             this.setState({availMode:["Audio"]});
         }
-        
+
+        //Do a then to resolve the promise
+        this.props.loadCommendations(this.props.uuid)
+        .get()
+        .then(
+            function(commendations){
+                commendations.forEach(x=>{
+                    //add the commendatiosn as a index to an array.
+                    this.addCommendations(x);
+                })
+                //Stuff
+            }.bind(this)
+        );        
     }
 
     handleTitleChange = (event)=> {
@@ -75,7 +98,11 @@ class IdeaEditPopup extends React.Component {
                         onChange={this.handleNotesChange}
                         disabled = {this.props.shared ? true: false }
                         />
-                    <FeedbackBar shared ={this.props.shared} handleCommend ={this.props.handleCommend} uuid = {this.props.uuid}/>
+                    <FeedbackBar
+                        shared ={this.props.shared} 
+                        handleCommend ={this.props.handleCommend}
+                        uuid = {this.props.uuid} 
+                        commendations = {this.state.commendations}/>
                     <div
                     style={{marginLeft:"25%", marginRight:"25%",display:"flex", flexDirection:"row"}}>
                     {this.props.shared ? null : (
