@@ -9,6 +9,7 @@ import Autorenew from "@material-ui/icons/Autorenew";
 import VolumeUp from "@material-ui/icons/VolumeUp";
 import Tooltip from '@material-ui/core/Tooltip';
 import firebase from "firebase";
+import Badge from '@material-ui/core/Badge';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -123,11 +124,12 @@ export default function FeedbackBar(props) {
       setCoherance(c);
   });
 
+  //Cute function for gramatical correctness
   const pluralise = (num) =>{
-    if (num <= 1) {
-      return "user"
+    if (num === 1) {
+      return "person"
     }else {
-      return "users"
+      return "people"
     }
   }
 
@@ -136,9 +138,11 @@ export default function FeedbackBar(props) {
 
   return (
     <div className = {classes.root}>
-      <Button aria-describedby={id} variant="contained"  className = {classes.button} onClick={handleClick}>
-        {props.shared ? "Commend Idea": "Commendations"}
-      </Button>
+      <Badge color="primary" invisible={anchorEl===null} badgeContent={Object.keys(props.commendations).length}>
+        <Button aria-describedby={id} variant="contained"  className = {classes.button} onClick={handleClick}>
+          {props.shared ? "Commend Idea": "Commendations"}
+        </Button>      
+      </Badge>
       <Popover
         id={id}
         open={open}
@@ -155,7 +159,7 @@ export default function FeedbackBar(props) {
       >
         <StyleTooltip placement = "top" title= {mapping +  " " + pluralise(mapping) +" thought this idea is a good mapping"}>
             <Button onClick={handleCommend} value="mapping" className = {commend === "mapping"? classes.selected : null}>
-                <Map/>
+                  <Map/>
             </Button>
         </StyleTooltip>
         <StyleTooltip placement = "top" title={amplification + " " +pluralise(amplification) + " thought this idea has good amplification"}>
@@ -174,6 +178,7 @@ export default function FeedbackBar(props) {
             </Button>
         </StyleTooltip>    
       </Popover>
+      
     </div>
   );
 }
