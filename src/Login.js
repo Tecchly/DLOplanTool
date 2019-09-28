@@ -23,7 +23,7 @@ const Login = ({ history }) => {
   }
 
   const { currentUser } = useContext(AuthContext);
-
+  localStorage.setItem("colorScheme", "orange");
   if (currentUser) {
     var recents = Firestore.getUserData(currentUser.uid);
     recents
