@@ -14,7 +14,7 @@ import { relative } from "path";
 class IdeaCard extends React.Component {
     constructor(props) {
         super(props)
-        //@@TODO make all the states take from project. 
+
     }
 
     state = {
@@ -94,6 +94,8 @@ class IdeaCard extends React.Component {
             this.props.handleMainTopicChange(title);   
         }
     }
+
+
     closePopup = () =>{
         this.setState({editing:false});
 
@@ -149,9 +151,11 @@ class IdeaCard extends React.Component {
                     title ={this.props.ideas[this.props.uuid].title} 
                     mode={this.props.ideas[this.props.uuid].mode} 
                     notes ={this.props.ideas[this.props.uuid].notes} 
-                    handleEdit = {this.handleEdit}
-                    uuid = {this.props.uuid}
+                    uuid = {this.props.uuid}                            //IdeaID
+                    handleEdit = {this.handleEdit}                      //Handle Card being edited
                     handleDelete = {this.handleDelete}
+                    handleCommend ={this.props.handleCommend}
+                    loadCommendations = {this.props.loadCommendations}
                     availableModes= {this.props.availableModes}
                     closePopup = {this.closePopup}
                     shared = {this.props.shared}
@@ -252,6 +256,8 @@ class IdeaCard extends React.Component {
                                         uuid = {uuid}
                                         handleIdeaUpdate = {this.props.handleIdeaUpdate}
                                         handleIdeaDeletion = {this.props.handleIdeaDeletion}
+                                        handleCommend ={this.props.handleCommend}
+                                        loadCommendations = {this.props.loadCommendations}
                                         ideas = {this.props.ideas}
                                         parentID = {this.props.uuid} 
                                         availableModes={this.props.availableModes}

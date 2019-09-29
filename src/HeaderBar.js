@@ -18,49 +18,49 @@ const HeaderBar = (props) => {
     const { settingsOpen, toggleSettings } = useSettingsDialog();
     return (
     <React.Fragment>
-        <SettingsDialog open={settingsOpen} hide={toggleSettings} />
-        <Navbar
+      <SettingsDialog open={settingsOpen} hide={toggleSettings} />
+      <Navbar
         collapseOnSelect
         expand="lg"
         bg="light"
         variant="light"
         style={{
-        boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.2)"
+          boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.2)"
         }}
-    >
+      >
         <Container
-        fluid
-        style={{
+          fluid
+          style={{
             alignSelf: "center",
             alignContent: "center",
-            justifyContent: "center"
-        }}
+            justifyContent: "center",
+            flexWrap: "nowrap"
+          }}
         >
-        
-        <Col />
-        <Col
+          <Col />
+          <Col
             className="justify-content-md-center"
             xs={11}
             style={{ textAlign: "center" }}
-        >
+          >
             <Navbar.Brand
-            className="navbarBrand"
-
-            href="#"
-            onClick={() => {
+              className="navbarBrand"
+              href="#"
+              onClick={() => {
                 history.push("/");
               }}
             >
-            <Image
-                src={require("./assets/images/logo_"+ localStorage.getItem("colorScheme") +".png")}
+              <Image
+                src={require("./assets/images/logo_" +
+                  localStorage.getItem("colorScheme") +
+                  ".png")}
                 style={{ height: 30, marginLeft: 5, marginBottom: 2 }}
-            />
-            Digital Learning
+              />
+              Digital Learning
             </Navbar.Brand>
             <MailboxPopup />
-        </Col>
-        <Col style={{}}>
-            
+          </Col>
+          <Col style={{}}>
             <Nav className="mr-auto"></Nav>
             <div className="customiseButton">
 
@@ -74,28 +74,27 @@ const HeaderBar = (props) => {
             </div>
             {props.steps ? <div className="guidanceButton"><Guidance steps={props.steps} /> </div> : null}
             <Nav>
-            <img
+              <img
                 alt="profile"
                 src={app.auth().currentUser.photoURL}
                 style={{
-                width: 40,
-                height: 40,
-                borderRadius: 20,
-                cursor: "pointer"
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                  cursor: "pointer"
                 }}
-
                 onClick={() => {
-                localStorage.setItem("user", null);
-                app.auth().signOut();
-                history.push("/login");
+                  localStorage.setItem("user", null);
+                  app.auth().signOut();
+                  history.push("/login");
                 }}
-            />
+              />
             </Nav>
-        </Col>
+          </Col>
         </Container>
-    </Navbar>
-  </React.Fragment>
-    
-  )}
+      </Navbar>
+    </React.Fragment>
+  );
+};
 
-  export default HeaderBar;
+export default HeaderBar;

@@ -1,4 +1,4 @@
-import Tour from '@rrrapha/reactour';
+import Tour from 'reactour';
 import React from "react";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import HelpIcon from '@material-ui/icons/Help';
