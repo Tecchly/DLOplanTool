@@ -3,6 +3,8 @@ import React from "react";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import HelpIcon from '@material-ui/icons/Help';
 import IconButton from "@material-ui/core/IconButton";
+import Firestore from './Firestore';
+import firebase from 'firebase';
 
 class Guidance extends React.Component {
     constructor(props) {
@@ -12,8 +14,29 @@ class Guidance extends React.Component {
       };
     }
   
+    isNew() {
+      var open = false;
+      var userData = Firestore.getUserData(firebase.auth().currentUser.uid);
+      userData.get().then(doc => {
+        if (!doc.exists) {
+          open = true;
+          Firestore.updateUserDetails();
+        }
+        if (open) {
+          this.openTour();
+        }
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+
     componentDidMount() {
       window.addEventListener("keyup", this.keyHandling);
+      this.isNew();   
+    }
+
+    componentWillUpdate(prevProps) {
+      // this.isNew();
     }
   
     componentWillUnmount() {
