@@ -15,13 +15,7 @@ jobs:
       - name: Create NEWLINE
         run: NEWLINE=$'\n'
       - name: Create .env
-        run: echo "## Firebase"  >> .env
-        run: echo "REACT_APP_FIREBASE_KEY=\"${{ secrets.FIREBASE_KEY }}\"  >> .env
-        run: echo "REACT_APP_FIREBASE_DOMAIN=\"${{ secrets.FIREBASE_DOMAIN }}\"  >> .env
-        run: echo "REACT_APP_FIREBASE_DATABASE=\"${{ secrets.FIREBASE_DATABASE }}\"  >> .env
-        run: echo "REACT_APP_FIREBASE_PROJECT_ID=\"${{ secrets.FIREBASE_PROJECT_ID }}\"  >> .env
-        run: echo "REACT_APP_FIREBASE_STORAGE_BUCKET=\"${{ secrets.FIREBASE_STORAGE_BUCKET }}\"  >> .env
-        run: echo "REACT_APP_FIREBASE_SENDER_ID=${{ secrets.FIREBASE_SENDER_ID }}" >> .env
+        run: printf "## Firebase${NEWLINE}REACT_APP_FIREBASE_KEY=\"${{ secrets.FIREBASE_KEY }}\"${NEWLINE}REACT_APP_FIREBASE_DOMAIN=\"${{ secrets.FIREBASE_DOMAIN }}\"${NEWLINE}REACT_APP_FIREBASE_DATABASE=\"${{ secrets.FIREBASE_DATABASE }}\"${NEWLINE}REACT_APP_FIREBASE_PROJECT_ID=\"${{ secrets.FIREBASE_PROJECT_ID }}\"${NEWLINE}REACT_APP_FIREBASE_STORAGE_BUCKET=\"${{ secrets.FIREBASE_STORAGE_BUCKET }}\"${NEWLINE}REACT_APP_FIREBASE_SENDER_ID=${{ secrets.FIREBASE_SENDER_ID }}" >> .env
       - name: Display .env
         run: head .env
       - name: Install Dependencies
