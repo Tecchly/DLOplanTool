@@ -6,7 +6,6 @@ import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
-
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import ReactDOM from "react-dom";
@@ -15,6 +14,7 @@ import { Image } from "react-bootstrap";
 import firebase from "firebase";
 import Firestore from "./Firestore.js";
 import IconButton from "@material-ui/core/IconButton";
+import SendIcon from "@material-ui/icons/Send";
 import Chips from "react-chips";
 import "./style.scss";
 const styles = theme => ({
@@ -69,14 +69,13 @@ const DialogActions = withStyles(theme => ({
 
 const ProjectView = ({ open, hide, projectInfo, edit, shared }) => {
   const [suggestions, setSuggestions] = useState([]);
-  const [share, setShare] = useState(false);
   const [tags, addTags] = useState([]);
 
+  const clearTags = () => {
+    addTags([]);
+  }
   const addTag = t => {
     addTags(t);
-  };
-  const shareP = () => {
-    setShare(!share);
   };
   const onChange = tags => {
     addTag(tags);
@@ -119,9 +118,7 @@ const ProjectView = ({ open, hide, projectInfo, edit, shared }) => {
         });
     });
 
-
     clearSuggestions();
-
   };
   useEffect(() => {
     Firestore.getUserEmails().then(querySnapshot => {
@@ -134,13 +131,13 @@ const ProjectView = ({ open, hide, projectInfo, edit, shared }) => {
     ? ReactDOM.createPortal(
         <React.Fragment>
           <Dialog
-            onClose={hide}
+            onClose={()=> { clearTags(); hide();}}
             aria-labelledby="customized-dialog-title"
             open={open}
             classes={{ paper: "projectDialog" }}
           >
-            <div>
-              <Image fluid src={projectInfo.image} />
+            <div >
+              <Image fluid src={projectInfo.image} style={{borderTopLeftRadius: 17, borderTopRightRadius: 17 }}/>
               <h3 className="projectDialogTitle">{projectInfo.title}</h3>
               <br />
               <h3 className="projectDialogSubtitle">{projectInfo.subtitle}</h3>
@@ -150,48 +147,62 @@ const ProjectView = ({ open, hide, projectInfo, edit, shared }) => {
             </div>
             <DialogTitle
               id="customized-dialog-title"
-              onClose={hide}
+              onClose={()=> { clearTags(); hide();}}
             ></DialogTitle>
             <DialogContent
               dividers
-              style={{ display: share ? "block" : "none" }}
+              style={{ overflow: 'visible' }}
             >
+              <h3 className="shareHeaderProjectView">
+                Share Project
+              </h3>
+              <div className="recipientField">
               <Chips
-                style={{ display: share ? "block" : "none"}}
+
                 value={tags}
+                placeholder="recipients"
                 onChange={onChange}
                 suggestions={suggestions}
               />
-              <Button onClick={() => {hide(); shareProject();}} color="primary">
-                send
-              </Button>
+              </div>
+              <div >
+              <IconButton
+                aria-label="send"
+                onClick={() => {
+                  clearTags();
+                  hide();
+                  shareProject();
+                }}
+                className={tags.length==0?"sendPlaneDisabled":"sendPlane"}
+                disabled={tags.length==0}
+              >
+                <SendIcon fontSize="default" />
+              </IconButton>
+              </div>
             </DialogContent>
             <DialogActions>
-              {shared ? null : 
+              {shared ? null : (
+                <Button
+                  onClick={() => {
+                    archive(projectInfo.projectID);
+                    clearTags();
+                    hide();
+                  }}
+                  classes={{ root: "projectViewSecondary" }}
+                >
+                  Archive
+                </Button>
+              )}
               <Button
                 onClick={() => {
-                  archive(projectInfo.projectID);
-                  hide();
-                }}
-                classes={{ root: "projectViewSecondary" }}
-
-              >
-                Archive
-              </Button> }
-              <Button
-                onClick={() => {
+                  clearTags();
                   hide();
                   edit(projectInfo);
                 }}
                 classes={{ root: "projectViewPrimary" }}
               >
-                {shared ? "View" : "Edit" }
+                {shared ? "View" : "Edit"}
               </Button>
-              {shared ? null :
-              <Button onClick={shareP} classes={{ root: "projectViewPrimary" }}>
-                Share
-              </Button>
-              }
             </DialogActions>
           </Dialog>
         </React.Fragment>,
