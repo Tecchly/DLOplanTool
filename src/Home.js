@@ -211,10 +211,10 @@ const Home = ({ history }) => {
           edit={editProject}
         />
         <SettingsDialog open={settingsOpen} hide={toggleSettings} />
-        {showNewProject ? (
+        <div className="newProjectPopup">{showNewProject ? (
           //Popup will live here.
           <NewProjectPopup togglePopup={togglePopup} />
-        ) : null}
+        ) : null} </div>
         <Row>
           <Container fluid={true} className="welcomeTile">
             <Row style={{ height: 200 }}>
@@ -342,7 +342,28 @@ const Home = ({ history }) => {
 const steps = [
   {
     selector: '[guide="newProject"]',
-    content: (<h5>Lets create a project!</h5>)
+    content: (<h5>Lets start with creating a new project!</h5>),
+    observe: '.newProjectPopup'
+  },
+  {
+    selector: '[guide="inputProjectTitle"]',
+    content: (<h5>input your meaningful project title here!</h5>)
+  },
+  {
+    selector: '[guide="inputProjectTopic"]',
+    content: (<h5>input your short description for the project here!</h5>)
+  },
+  {
+    selector: '.chooseMedium',
+    content: (<h6>Choose which type of medium you like to use in this project!</h6>)
+  },
+  {
+    selector: '.draggedImage',
+    content: 'you can drag an image to here to represent your main idea of this project or just skip this step!'
+  },
+  {
+    selector: '[guide="newProjectCreateButton"]',
+    content: 'click here to initialize you project and start making mapping with your idea!'
   },
   {
     selector: '[guide="yourProjects"]',

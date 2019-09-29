@@ -1,4 +1,4 @@
-import Tour from 'reactour';
+import Tour from '@rrrapha/reactour';
 import React from "react";
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import HelpIcon from '@material-ui/icons/Help';
@@ -10,7 +10,7 @@ class Guidance extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        isTourOpen: false
+        isTourOpen: this.props.isTourOpen ? this.props.isTourOpen : false
       };
     }
   
@@ -32,11 +32,9 @@ class Guidance extends React.Component {
 
     componentDidMount() {
       window.addEventListener("keyup", this.keyHandling);
-      this.isNew();   
-    }
-
-    componentWillUpdate(prevProps) {
-      // this.isNew();
+      if (!this.state.isTourOpen) {
+        this.isNew();   
+      }
     }
   
     componentWillUnmount() {

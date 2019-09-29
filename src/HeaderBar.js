@@ -72,7 +72,7 @@ const HeaderBar = (props) => {
                 <BrushIcon fontSize="default" />
             </IconButton>    
             </div>
-            {props.steps ? <div className="guidanceButton"><Guidance steps={props.steps} /> </div> : null}
+            {props.steps ? <div className="guidanceButton"><Guidance steps={props.steps} isTourOpen={props.isTourOpen}/> </div> : null}
             <Nav>
               <img
                 alt="profile"
