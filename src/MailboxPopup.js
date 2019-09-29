@@ -15,16 +15,13 @@ import NotificationTable from './NotificationTable';
 class MailboxPopup extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { mailModalShow: false, notification: false };
     var user = firebase.auth().currentUser;
     this.createFnCounter = this.createFnCounter.bind(this);
     this.handleActivitySubscription = this.handleActivitySubscription.bind(this);
-    // Firestore.shareListener(user.uid).onSnapshot(() => {
-    //   this.setState({ notification: true });
-    // });
 
     const handleActivitySubscriptionWithCounter = this.createFnCounter(this.handleActivitySubscription,1);
-    Firestore.shareListener(user.uid).onSnapshot(handleActivitySubscriptionWithCounter);
+    const listener = Firestore.shareListener(user.uid).onSnapshot(handleActivitySubscriptionWithCounter);
+    this.state = { mailModalShow: false, notification: false, listener: listener };
   }
 
   handleActivitySubscription(snapshot) {
@@ -58,6 +55,10 @@ class MailboxPopup extends React.Component {
         return fn(args, count);
       }
     };
+  }
+
+  componentWillUnmount() {
+    this.state.listener();
   }
 
   toggleMailPopup() {
