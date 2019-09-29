@@ -643,6 +643,31 @@ margin-left: 30px;
 .projectViewPrimary{
   color: var(--primary) !important;
 }
+.recipientField {
+  width: 86% !important;
+  float: left !important;
+
+}
+
+.sendPlane {
+  color: var(--primary) !important;
+  float: left;
+  left: 15px;
+  bottom: 5px;
+}
+.sendPlaneDisabled {
+  color: var(--primary) !important;
+  opacity: 0.5;
+  float: left;
+  left: 15px;
+  bottom: 5px;
+}
+
+.shareHeaderProjectView {
+  font: 700 20px "Montserrat", sans-serif !important;
+  color: var(--text-primary) !important;
+  margin-left: 3px !important;
+} 	
 
 //Notification table
 
