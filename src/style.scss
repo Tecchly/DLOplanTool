@@ -605,7 +605,7 @@ margin-left: 30px;
   width: 10%;
   box-shadow: 0px 2px 10px -4px rgba(0,0,0,0.5);
   border: none;
-  font: 600 20px "Montserrat", sans-serif !important;
+  font: 500 17px "Montserrat", sans-serif !important;
   height: 35;
 
 }
@@ -641,4 +641,19 @@ margin-left: 30px;
 
 .projectViewPrimary{
   color: var(--primary) !important;
+}
+
+//Notification table
+
+.notificationTableCell {
+  border-bottom: none !important;
+  font: 500 22px "Montserrat", sans-serif !important;
+}
+
+.sharedProjectLink{
+  color: var(--primary) !important;
+}
+
+.notificationsTitle {
+  font: 600 30px "Montserrat", sans-serif !important;
 }
