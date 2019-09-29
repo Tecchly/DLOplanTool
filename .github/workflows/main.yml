@@ -1,5 +1,3 @@
-- name: GitHub Action for Firebase
-  uses: w9jds/firebase-action@v1.1.0
 
 name: Build and Deploy
 on:
@@ -17,7 +15,7 @@ jobs:
       - name: Install Dependencies
         run: npm install
       - name: Build
-        run: npm run build-prod
+        run: npm run build
       - name: Archive Production Artifact
         uses: actions/upload-artifact@master
         with:
