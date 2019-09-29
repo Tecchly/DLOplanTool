@@ -5,6 +5,7 @@ import HelpIcon from '@material-ui/icons/Help';
 import IconButton from "@material-ui/core/IconButton";
 import Firestore from './Firestore';
 import firebase from 'firebase';
+import { withRouter } from "react-router"
 
 class Guidance extends React.Component {
     constructor(props) {
@@ -12,29 +13,46 @@ class Guidance extends React.Component {
       this.state = {
         isTourOpen: this.props.isTourOpen ? this.props.isTourOpen : false
       };
+      this.localCache = window.localStorage;
     }
   
     isNew() {
       var open = false;
-      var userData = Firestore.getUserData(firebase.auth().currentUser.uid);
-      userData.get().then(doc => {
-        if (!doc.exists) {
-          open = true;
-          Firestore.updateUserDetails();
-        }
-        if (open) {
-          this.openTour();
-        }
-      }).catch(error => {
-        console.log(error);
-      });
-    }
+      var path = this.props.location.pathname;
+      if (path === "/") {
+        var userData = Firestore.getUserData(firebase.auth().currentUser.uid);
+        userData.get().then(doc => {
+          if (!doc.exists) {
+            open = true;
+            Firestore.updateUserDetails();
+            this.localCache.setItem("showProjectTour", true);
+            this.localCache.setItem("showAmplifyTour", true);
+            this.localCache.setItem("showSharedProjectsTour", true);
+            this.localCache.setItem("showYourProjectsTour", true);
+            this.localCache.setItem("showOtherGuide", true);
+          }
+          if (open) {
+            this.openTour();
+          }
+        }).catch(error => {
+          console.log(error);
+        });
+      }
+    } 
 
     componentDidMount() {
       window.addEventListener("keyup", this.keyHandling);
       if (!this.state.isTourOpen) {
         this.isNew();   
       }
+      var path = this.props.location.pathname;
+      if ( ( path === "/project" && this.localCache.getItem("showProjectTour")) 
+                  || (this.localCache.getItem("showOtherGuide") && path === "/")
+                  || (this.localCache.getItem("showAmplifyTour") && path === "/amplification") 
+                  || (this.localCache.getItem("showYourProjectsTour") && path === "/sharedprojects") 
+                  || (this.localCache.getItem("showSharedProjectsTour") && path === "/project" && (this.props.location.state? this.props.location.state.shared : false)) ) {
+        this.openTour();
+      } 
     }
   
     componentWillUnmount() {
@@ -84,4 +102,4 @@ class Guidance extends React.Component {
     }
   }
   
-  export default Guidance;
+  export default withRouter(Guidance);

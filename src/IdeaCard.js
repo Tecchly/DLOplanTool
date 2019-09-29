@@ -159,6 +159,7 @@ class IdeaCard extends React.Component {
                     availableModes= {this.props.availableModes}
                     closePopup = {this.closePopup}
                     shared = {this.props.shared}
+                    guide = {this.props.guide}
                     />
                 ) : null}
                 <div style={{padding: '0 20px 0 20px'}}>
@@ -234,6 +235,7 @@ class IdeaCard extends React.Component {
       
                         {this.state.level < 3 && !this.props.shared ? 
                            <Ionicon
+                            className= "addSubIdeasButton"
                             style={{
                                 position: "absolute",
                                 right :6,
