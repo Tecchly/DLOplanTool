@@ -111,7 +111,7 @@ class MailboxPopup extends React.Component {
           centered
         >
           <Modal.Header closeButton>
-            <Modal.Title id="notifications">Notifications</Modal.Title>
+            <Modal.Title id="notifications" className="notificationsTitle">Notifications</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <NotificationTable pageSize={10} loadProject={this.loadProject} />
