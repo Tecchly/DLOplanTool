@@ -1,5 +1,4 @@
 import React from "react";
-import MailboxListBox from "./MailboxListBox";
 import { Modal, Button, ButtonToolbar } from "react-bootstrap";
 import IconButton from "@material-ui/core/IconButton";
 import NotificationIcon from "@material-ui/icons/Notifications";
@@ -7,11 +6,12 @@ import Firestore from "./Firestore";
 import firebase from "firebase";
 import Badge from "@material-ui/core/Badge";
 import "./style.scss";
-import { withRouter, Redirect } from "react-router";
-import { notification } from "antd";
+import { withRouter } from "react-router";
 import ReactNotification from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 import { store } from 'react-notifications-component';
+import NotificationTable from './NotificationTable';
+
 class MailboxPopup extends React.Component {
   constructor(props) {
     super(props);
@@ -114,7 +114,7 @@ class MailboxPopup extends React.Component {
             <Modal.Title id="notifications">Notifications</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <MailboxListBox pageSize={8} loadProject={this.loadProject} />
+            <NotificationTable pageSize={10} loadProject={this.loadProject} />
           </Modal.Body>
           <Modal.Footer>
             <Button
