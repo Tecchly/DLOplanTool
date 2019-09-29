@@ -174,7 +174,8 @@ const Amplification = ( props ) => {
           style={{
             alignSelf: "center",
             alignContent: "center",
-            justifyContent: "center"
+            justifyContent: "center",
+            flexWrap: "nowrap"
           }}
         >
           <Col />
