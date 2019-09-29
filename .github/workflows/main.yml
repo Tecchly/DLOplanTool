@@ -14,6 +14,14 @@ jobs:
         uses: actions/checkout@master
       - name: Create .env
         run: printf "## Firebase\nREACT_APP_FIREBASE_KEY=\"${{ secrets.FIREBASE_KEY }}\"\nREACT_APP_FIREBASE_DOMAIN=\"${{ secrets.FIREBASE_DOMAIN }}\"\nREACT_APP_FIREBASE_DATABASE=\"${{ secrets.FIREBASE_DATABASE }}\"\nREACT_APP_FIREBASE_PROJECT_ID=\"${{ secrets.FIREBASE_PROJECT_ID }}\"\nREACT_APP_FIREBASE_STORAGE_BUCKET=\"${{ secrets.FIREBASE_STORAGE_BUCKET }}\"\nREACT_APP_FIREBASE_SENDER_ID=${{ secrets.FIREBASE_SENDER_ID }}" >> .env
+        env:
+          FIREBASE_KEY: ${{ secrets.FIREBASE_KEY }}
+          FIREBASE_DOMAIN: ${{ secrets.FIREBASE_DOMAIN }}
+          FIREBASE_DATABASE: ${{ secrets.FIREBASE_DATABASE }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_SENDER_ID: ${{ secrets.FIREBASE_SENDER_ID }}
+
       - name: Display .env
         run: head .env
       - name: Install Dependencies
