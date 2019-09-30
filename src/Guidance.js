@@ -11,7 +11,8 @@ class Guidance extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        isTourOpen: this.props.isTourOpen ? this.props.isTourOpen : false
+        isTourOpen: this.props.isTourOpen ? this.props.isTourOpen : false,
+        goToStep: 0
       };
       this.localCache = window.localStorage;
     }
@@ -29,7 +30,6 @@ class Guidance extends React.Component {
             this.localCache.setItem("showAmplifyTour", true);
             this.localCache.setItem("showSharedProjectsTour", true);
             this.localCache.setItem("showYourProjectsTour", true);
-            this.localCache.setItem("showOtherGuide", true);
           }
           if (open) {
             this.openTour();
@@ -53,6 +53,9 @@ class Guidance extends React.Component {
                   || (this.localCache.getItem("showSharedProjectsTour") && path === "/project" && (this.props.location.state? this.props.location.state.shared : false)) ) {
         this.openTour();
       } 
+      if (this.localCache.getItem("showOtherGuide") && path === "/") {
+        this.setState({goToStep : 7});
+      }
     }
   
     componentWillUnmount() {
@@ -77,6 +80,7 @@ class Guidance extends React.Component {
     render() {
       const { isTourOpen } = this.state;
       const accentColor = "#5cb7b7";
+      console.log(this.props.goToStep);
       return (
         <div>
             <IconButton
@@ -90,6 +94,7 @@ class Guidance extends React.Component {
                 onRequestClose={this.closeTour}
                 steps={this.props.steps}
                 isOpen={isTourOpen}
+                goToStep={this.state.goToStep > 0 ? this.state.goToStep : undefined}
                 maskClassName="mask"
                 className="helper"
                 rounded={5}

@@ -257,7 +257,7 @@ class Project extends React.Component {
           <Row
             style={{ textAlign: "center", marginTop: 40, position: "relative" }}
           >
-            <div style={{ display: "flex", position: "absolute", left: 100 }}>
+            <div style={{ display: "flex", position: "absolute", left: 100 }} guide="goBack">
               <Icon
                 type="arrow-left"
                 onClick={() => {
@@ -374,14 +374,22 @@ const steps = [
     selector: '[guide="chooseModeType"]',
     content: (<h5>choose the mode type of this idea here!</h5>),
     action: node => {
-      node.focus();
+      try {
+        node.focus();
+      } catch (e) {
+        console.log(e)
+      }
     }
   },
   {
     selector: '[guide="inputIdeaTitle"]',
     content: (<h6>give a title of your idea here!</h6>),
     action: node => {
-      node.focus();
+      try {
+        node.focus();
+      } catch (e) {
+        console.log(e)
+      }
       // node.value="Rain";
     }
   },
@@ -389,7 +397,11 @@ const steps = [
     selector: '[guide="inputIdeaNotes"]',
     content: (<h6>add more detailed informations for this idea here!</h6>),
     action: node => {
-      node.focus();
+      try {
+        node.focus();
+      } catch (e) {
+        console.log(e)
+      }
       // node.value="rain is a type of water falls from sky";
     }
   },
@@ -402,8 +414,11 @@ const steps = [
     content: (<h6>click here to finish editing this idea!</h6>)
   },
   {
-    selector: '[guide="goToAmplify"]',
-    content: (<h6>Afer you finish editing your ideas, click here and go next step!</h6>)
+    selector: '[guide="goBack"]',
+    content: (<h6>You may add more ideas later, but now lets click here and go back to the home page!</h6>),
+    action: node => {
+      window.localStorage.setItem("showOtherGuide", true);
+    }
   }
 ];
 

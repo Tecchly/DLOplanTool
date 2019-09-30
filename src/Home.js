@@ -85,7 +85,6 @@ const Home = ({ history }) => {
   const [noProjects, setNoProjects] = useState(false);
   const [recentProjects, pushRecentProjects] = useState([]);
   const [currentProject, setCurrentProject] = useState(null);
-  const [showOtherGuide, setOtherGuide] = useState(false);
 
   const RecentProject = ({ project }) => <ProjectTile x={project} />;
   var storage = firebase.storage().ref();
@@ -122,9 +121,6 @@ const Home = ({ history }) => {
         toggleNoProjects();
       });
     var localCache = window.localStorage;
-    if (localCache.getItem("showOtherGuide")) {
-      setOtherGuide(true);
-    }
     return function cleanup() {
       if (localCache.getItem("showOtherGuide")) {
         localCache.removeItem("showOtherGuide");
@@ -212,7 +208,7 @@ const Home = ({ history }) => {
 
   return (
     <React.Fragment>
-      <HeaderBar steps={showOtherGuide? otherSteps : steps} />
+      <HeaderBar steps={steps} />
       <Container fluid={true}>
         <ProjectView
           open={open}
@@ -351,16 +347,23 @@ const Home = ({ history }) => {
 
 const steps = [
   {
+    selector: '.welcomestep',
+    content: (<h3>Welcome to DLOPlanTool!</h3>),
+  },
+  {
     selector: '[guide="newProject"]',
-    content: (<h5>Lets start with creating a new project!</h5>),
+    content: (<h5>Now lets start with creating a new project!</h5>),
     observe: '.newProjectPopup',
-    position: 'left'
   },
   {
     selector: '[guide="inputProjectTitle"]',
     content: (<h5>input your meaningful project title here! such as "The Water Cycle"</h5>),
     action: node => {
-      node.focus();
+      try {
+        node.focus();
+      } catch (e) {
+        console.log(e)
+      }
       // node.value="the water cycle";
     }
   },
@@ -368,7 +371,11 @@ const steps = [
     selector: '[guide="inputProjectTopic"]',
     content: (<h5>input your short description for the project here!</h5>),
     action: node => {
-      node.focus();
+      try {
+        node.focus();
+      } catch (e) {
+        console.log(e)
+      }
       // node.value="rain, river, ocean, cloud"
     }
   },
@@ -376,7 +383,11 @@ const steps = [
     selector: '.chooseMedium',
     content: (<h6>Choose which type of medium you like to use in this project!</h6>),
     action: node => {
-      node.focus();
+      try {
+        node.focus();
+      } catch (e) {
+        console.log(e)
+      }
     }
   },
   {
@@ -385,18 +396,21 @@ const steps = [
   },
   {
     selector: '[guide="newProjectCreateButton"]',
-    content: (<h6>Click here to initialize you project and start making mapping with your idea!</h6>)
-  }
-];
-
-const otherSteps = [
+    content: (<h6>Now click here to finish initializing your project!</h6>)
+  },
   {
     selector: '[guide="yourProjects"]',
-    content: (<h6>Once you created a project, you can find it by clicking this button!</h6>)
+    content: (<h6>You can find the projects you created here! Or...</h6>),
+    action: () => {
+      var localCache = window.localStorage;
+      if (localCache.getItem("showOtherGuide")) {
+        localCache.removeItem("showOtherGuide");
+      }
+    }
   },
   {
     selector: '.recentProjects',
-    content: (<h6>Your latest four projects will be shown here!</h6>)
+    content: (<h6>Find your latest 4 projects here!</h6>)
   },
   {
     selector: '[guide="sharedProjects"]',
