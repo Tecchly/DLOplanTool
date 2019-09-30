@@ -18,6 +18,10 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import Firestore from "./Firestore";
 import firebase from "firebase";
+import moment from "moment";
+import {withRouter} from "react-router";
+import { Container, Row, Image } from "react-bootstrap";
+import history from "./history";
 
 
 function desc(a, b, orderBy) {
@@ -191,7 +195,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function FeedbackContent() {
+const FeedbackContent = (props) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -229,25 +233,26 @@ export default function FeedbackContent() {
     //   });
     // });
 
-    let projects = Firestore.getAllProjectsByUser(uid);
+    let projects = Firestore.getProjectsCollection(uid);
         projects.get().then(function (projectSnapshot) {
           projectSnapshot.forEach(function (project) {
             let ideas = projects.doc(project.id).collection("ideas");
             ideas.get().then(function (ideaSnapshot) {
               ideaSnapshot.forEach(function (idea) {
-                ideas.doc(idea.id).collection("feedbacks").get().then(function (querySnapshot) {
+                ideas.doc(idea.id).collection("commendations").get().then(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let feedback = {
-                      projectTitle: project.data().title,
-                      ideaTitle: idea.data().title,
-                      reviewerName: doc.data().user,
-                      reviewerTime: doc.data().timestamp,
+                      ideaId: idea.id,
+                      idea: idea.data(),
+                      reviewerName: doc.data().commendUser,
+                      reviewTime: doc.data().commendTime,
                       comment: doc.data().comment,
-                      type: doc.data().type,
-                      id: doc.id
+                      type: doc.data().commendation,
+                      id: doc.id + "-" + idea.id,
+                      projectId:  project.id,
+                      project: project.data(),
                     };
                     addRows(feedback);
-                    
                   });});
               });
             });
@@ -294,17 +299,66 @@ export default function FeedbackContent() {
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+  const noFeedback = () => {
+    return (<Container
+      className="d-flex align-items-center"
+      style={{ marginTop: "20vh", flexDirection: 'column' }}
+    >
+      <Row></Row>
+      <Row className="justify-content-md-center">
+        <Image
+          src={require("./assets/images/feedback.svg")}
+          style={{ height: 220 }}
+        />
+      </Row>
+      <Row className="justify-content-md-center">
+        <h1
+          style={{
+            textAlign: "center",
+            color: "#3A4A56",
+            fontFamily: "Montserrat",
+            fontWeight: "700",
+            textAlign: "center",
+            fontSize: 30
+          }}
+        >
+          No Feedback
+        </h1>
+      </Row>
+      <Row className="justify-content-md-center">
+        <h2
+          style={{
+            textAlign: "center",
+            color: "#8fa5b5",
+            fontFamily: "Montserrat",
+            fontWeight: "600",
+            textAlign: "center",
+            fontSize: 15
+          }}
+        >
+          <br />
+          <br />
+          When feedback is given, you will see it here!
+        </h2>
+      </Row>
+    </Container>);
+  }
+
   return (
+    rows.length === 0 ? noFeedback() : ( 
+      <Container
+      className="d-flex align-items-center"
+    >
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <div className={classes.tableWrapper}>
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
             size={'medium'}
           >
-            <EnhancedTableHead
+            {/* <EnhancedTableHead
               classes={classes}
               numSelected={selected.length}
               order={"desc"}
@@ -312,9 +366,9 @@ export default function FeedbackContent() {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
-            />
+            /> */}
             <TableBody>
-              {stableSort(rows, getSorting(order, orderBy))
+              {stableSort(rows, getSorting("desc", "reviewTime"))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.reviewerName);
@@ -330,17 +384,32 @@ export default function FeedbackContent() {
                       key={row.id}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
+                      {/* <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
-                      </TableCell>
-                      <TableCell />
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        <h3>{row.reviewerName + " left "+ row.type +" on your project"} <a href="aaaa">{row.projectTitle}</a>!</h3> 
-                        <a>{row.comment}</a>
-                      </TableCell>
+                      </TableCell> */}
+                      {/* <TableCell /> */}
+                      <TableCell component="th" id={labelId} scope="row" padding="none">                      
+                      <h6 style={{ float: "left" }}>
+                          {row.reviewerName + " thought your idea "}
+                          <a className="sharedProjectLink" onClick={() => {props.loadProject(row);}}> {row.idea.title} </a> {" of project "}
+                          <a
+                          className="sharedProjectLink"
+                            onClick={() => {
+                              props.loadProject(row);
+                            } }
+                          >
+                            {row.project.title}
+                          </a>
+                          {" has a good " + row.type + "."}
+                        </h6>
+                        <h6 style={{ textAlign: "right", float: "right" }}>
+                          {moment(row.reviewTime).isSame(moment(), 'day') ? moment(row.reviewTime).format('LT') : moment(row.reviewTime).format('MMM D')}
+
+                        </h6>
+                        </TableCell>
                       {/* <TableCell align="right">{row.calories}</TableCell>
                       <TableCell align="right">{row.fat}</TableCell>
                       <TableCell align="right">{row.carbs}</TableCell>
@@ -348,11 +417,6 @@ export default function FeedbackContent() {
                     </TableRow>
                   );
                 })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
             </TableBody>
           </Table>
         </div>
@@ -373,5 +437,8 @@ export default function FeedbackContent() {
         />
       </Paper>
     </div>
+    </Container>)
   );
 }
+
+export default withRouter(FeedbackContent);

@@ -10,6 +10,7 @@ import HeaderBar from "./HeaderBar.js"
 import Ionicon from "react-ionicons";
 import "./style.scss";
 import FeedbackContent from './FeedbackContent';
+import { withRouter } from 'react-router';
 
 
 function beef() {
@@ -75,50 +76,19 @@ var feedbackData = [
 
 const Feedback = ({ history }) => {
 
-  const noFeedback = () => {
-    return (<Container
-      className="d-flex align-items-center"
-      style={{ marginTop: "20vh", flexDirection: 'column' }}
-    >
-      <Row></Row>
-      <Row className="justify-content-md-center">
-        <Image
-          src={require("./assets/images/feedback.svg")}
-          style={{ height: 220 }}
-        />
-      </Row>
-      <Row className="justify-content-md-center">
-        <h1
-          style={{
-            textAlign: "center",
-            color: "#3A4A56",
-            fontFamily: "Montserrat",
-            fontWeight: "700",
-            textAlign: "center",
-            fontSize: 30
-          }}
-        >
-          No Feedback
-        </h1>
-      </Row>
-      <Row className="justify-content-md-center">
-        <h2
-          style={{
-            textAlign: "center",
-            color: "#8fa5b5",
-            fontFamily: "Montserrat",
-            fontWeight: "600",
-            textAlign: "center",
-            fontSize: 15
-          }}
-        >
-          <br />
-          <br />
-          When feedback is given, you will see it here!
-        </h2>
-      </Row>
-    </Container>);
+  const loadProject = row => {
+    var proj = row.project;
+    history.push({
+      pathname: "./project",
+      state: {
+        projectID: row.projectId,
+        medium: proj.medium,
+        title: proj.title,
+        topic: proj.subtitle,
+        image: proj.image,
+    }});
   }
+  
 
   return (
     <React.Fragment>
@@ -150,18 +120,11 @@ const Feedback = ({ history }) => {
             </h3>
           </Row>
         </Container>
-        {isEmpty(feedbackData) ? (noFeedback()) : (<Container
-              className="d-flex align-items-center"
-              
-            >
-              {/* <Row></Row> */}
-                {/* {renderFeedbackData()} */}
-                <FeedbackContent />
-            </Container>)}
+        <FeedbackContent loadProject={loadProject}/>
       
       </Container>
     </React.Fragment>
   );
 };
 
-export default Feedback;
+export default withRouter(Feedback);

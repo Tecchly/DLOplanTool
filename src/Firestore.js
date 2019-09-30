@@ -118,9 +118,9 @@ class Firestore {
         return getCommendationsReference(userID, projectID, ideaID);
     }
 
-    static getAllFeedbacks(userID) {
-        return this.getUserData(userID).collection("feedbacks").orderBy('timestamp', 'desc');
-    }
+    static getProjectsCollection(userID) {
+        return getProjectsReference(userID);
+    };
 
 };
 

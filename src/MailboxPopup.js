@@ -76,7 +76,7 @@ class MailboxPopup extends React.Component {
         medium: proj.medium,
         title: proj.title,
         topic: proj.subtitle,
-        image: proj.title,
+        image: proj.image,
         shared: true,
         path: proj.path
       }
