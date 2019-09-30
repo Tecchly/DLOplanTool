@@ -24,7 +24,7 @@ class NewProjectPopup extends React.Component {
   }
 
   state = {
-    showMessagePopup : false,
+    showMessagePopup: false,
     projectTitle: "",
     projectTopic: "",
     medium: "",
@@ -34,7 +34,7 @@ class NewProjectPopup extends React.Component {
   };
 
   toggleMessagePopup() {
-    this.setState({showMessagePopup: !this.state.showMessagePopup});
+    this.setState({ showMessagePopup: !this.state.showMessagePopup });
   }
 
   componentDidMount() {
@@ -86,14 +86,14 @@ class NewProjectPopup extends React.Component {
         this.toggleMessagePopup();
         return;
       }
-      this.setState({file:file});
+      this.setState({ file: file });
 
       var uniqueName = Utils.uuid();      
       this.setState({imageName:uniqueName});
       this.localCache.setItem("imageName", uniqueName);
 
       var reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         try {
           this.localCache.setItem("image", e.target.result);
         } catch (e) {
@@ -115,12 +115,12 @@ class NewProjectPopup extends React.Component {
     }
 
     //Uploading image    
-    var storageRef = firebase.storage().ref("projectImage/" + this.state.imageName);          
+    var storageRef = firebase.storage().ref("projectImage/" + this.state.imageName);
     var uploadTask = storageRef.put(file);
 
     uploadTask.on(
       "state_changed",
-      function error(err) {},
+      function error(err) { },
       function complete() {
         console.log("successful upload");
       }
@@ -173,7 +173,12 @@ class NewProjectPopup extends React.Component {
 
     const { history } = this.props;
     var uid = firebase.auth().currentUser.uid;
-    Firestore.saveNewProject(uid, data).then(function(docRef){
+    Firestore.updateUserDetails().then(() => {
+        console.log("User details updated.");
+    }).catch(error => {
+        console.error("Couldn't update user details, " + error);
+    });
+    Firestore.saveProject(uid, data).then(function(docRef){
      
       history.push({
         pathname: "./project",
@@ -186,9 +191,10 @@ class NewProjectPopup extends React.Component {
           creationTime: + new Date()
         }
       })
-    }.bind(this));
+    }.bind(this)).catch(error => {
+        console.error("Save project failure, " + error);
+    });
   }
-
 
   render() {
     var togglePopup = this.props.togglePopup;
@@ -196,11 +202,11 @@ class NewProjectPopup extends React.Component {
       <React.Fragment>
         <div className="popup">
           <div className="inner">
-          {this.state.showMessagePopup ?
-          <MessagePopup 
-            text='Images have to be 5MB or smaller. Please upload an image with a smaller file size.'
-            closeMessagePopup={this.toggleMessagePopup.bind(this)} />
-          : null}
+            {this.state.showMessagePopup ?
+              <MessagePopup
+                text='Images have to be 5MB or smaller. Please upload an image with a smaller file size.'
+                closeMessagePopup={this.toggleMessagePopup.bind(this)} />
+              : null}
             <Ionicon
               style={{
                 position: "absolute",
@@ -260,7 +266,7 @@ class NewProjectPopup extends React.Component {
               </form>
             </div>
             <div
-            className='dropDiv'
+              className='dropDiv'
               style={{
                 marginTop: "10%",
                 marginLeft: "25%",

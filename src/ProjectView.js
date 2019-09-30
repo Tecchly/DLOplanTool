@@ -51,7 +51,10 @@ const DialogTitle = withStyles(styles)(props => {
 
 const archive = projectID => {
   var uid = firebase.auth().currentUser.uid;
-  Firestore.archiveProject(uid, projectID);
+  Firestore.archiveProject(uid, projectID).then(() => {
+  }).catch(error => {
+    console.error("Archive project failure, " + error);
+  });
 };
 
 const DialogContent = withStyles(theme => ({
@@ -106,22 +109,23 @@ const ProjectView = ({ open, hide, projectInfo, edit, shared }) => {
 
     // var shareEmails = tags;
     tags.forEach(function(email) {
-      Firestore.queryUserByEmail(email.trim())
-        .get()
+      Firestore.getUsersByEmail(email.trim())
         .then(function(querySnapshot) {
           querySnapshot.forEach(function(doc) {
-            Firestore.saveSharedProject(doc.id, data);
+            Firestore.shareProject(doc.id, data).then(() => {
+            }).catch(error => {
+              console.error("Project share failure, " + error);
+            });
           });
-        })
-        .catch(function(error) {
-          console.log("Error getting documents: ", error);
+        }).catch(function(error) {
+          console.error("Error getting documents, " + error);
         });
     });
 
     clearSuggestions();
   };
   useEffect(() => {
-    Firestore.getUserEmails().then(querySnapshot => {
+    Firestore.getUsers().then(querySnapshot => {
       querySnapshot.forEach(doc => {
         addSuggestion(doc.data().email);
       });

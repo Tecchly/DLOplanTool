@@ -76,13 +76,18 @@ const NotificationTable = props => {
 
   function getShareList() {
     var user = firebase.auth().currentUser;
-    var sharedProjects = Firestore.getAllSharedProjectsByUser(user.uid);
-    sharedProjects.get().then(docs => {
-      docs.forEach(doc => {
-        var proj = doc.data();
-        addRows(proj);
+    if (user) {
+      Firestore.getSharedProjects(user.uid).then(docs => {
+        docs.forEach(doc => {
+          var proj = doc.data();
+          addRows(proj);
+        });
+      }).catch(error => {
+        console.error("Get shared projects failure, " + error);
       });
-    });
+    } else {
+      console.error("Not authenticated.");
+    }
   }
 
   useEffect(() => {

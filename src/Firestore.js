@@ -1,88 +1,44 @@
 import { app } from "./Firebase";
-import firestore from "firebase/firestore";
 import firebase from "firebase";
 
-var db = app.firestore();
+let firestore = app.firestore();
+
+let users = firestore.collection("users");
+
+let getProjectsReference = userID => users.doc(userID).collection("projects");
+let getSharedProjectsReference = userID => users.doc(userID).collection("sharedProjects");
+let getIdeasReference = (userID, projectID) => getProjectsReference(userID).doc(projectID).collection("ideas");
+let getCommendationsReference = (userID, projectID, ideaID) => getIdeasReference(userID, projectID).doc(ideaID).collection("commendations");
+
 class Firestore {
-
-    static saveWithDocID(collection, docID, data) {
-        return db.collection(collection).doc(docID).set(data, { merge: true })
-        // .then(function() {
-        //     // console.log("written doc " + docID + " successfully to collection " + collection);
-        // }).catch(function (error) {
-        //     console.error("Error writing document: ", error);
-        // })
-    };
-
-    static getCollection(collection) {
-        return db.collection(collection).get();
-    };
-
-    static getUserData(userID) {
-        return db.collection("users").doc(userID);
+    
+    static getUser(userID) {
+        return users.doc(userID).get();
     }
-
-    static getDocData(collection, docID) {
-        var docRef = db.collection(collection).doc(docID);
-        docRef.get().then(function (doc) {
-            if (doc.exists) {
-                return doc.data();
-            } else {
-                console.log("No such document!");
-            }
-        }).catch(function (error) {
-            console.log("Error getting document:", error);
-        });
-    };
-
 
     /**
      *  Gets the collection for all users
      *  @param orderd: if the output should be ordered by creation time 
      */
-    static getAllProjectsByUser(userID, ordered = false) {
+    static getProjects(userID, ordered = false) {
+        let projects = getProjectsReference(userID);
         if (ordered) {
-            return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'asc');
-        } else {
-            return db.collection("users").doc(userID).collection("projects");
+            projects = projects.orderBy('creationTime', 'asc');
         }
-
+        return projects.get();
     };
 
-    static getRecentProjectsByUser(userID) {
-        return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'desc').limit(4);
+    static getRecentProjects(userID, number) {
+        return getProjectsReference(userID).orderBy('creationTime', 'desc').limit(number).get();
     };
 
-    static getProjectById(userID, projectID) {
-        return this.getAllProjectsByUser(userID).doc(projectID);
-    };
-
-    static getAllIdeasByProject(userID, projectID) {
-        return this.getProjectById(userID, projectID).collection("ideas");
-    };
-
-    static saveToDBWithDocID(collection, docID, data) {
-        return collection.doc(docID).set(data, { merge: true })
-        // .then(function () {
-        //     console.log("written doc " + docID + " successfully");
-        // }).catch(function (error) {
-        //     console.error("Error writing document: ", error);
-        // })
-    };
-
-    //@@TODO maybe deprecated due to storing ideas as an object and not an list 
-    static saveIdeaToProject(userID, projectID, ideas) {
-        var ideaCollection = this.getAllIdeasByProject(userID, projectID);
-        ideas.forEach(function (idea) {
-            this.saveToDBWithDocID(ideaCollection, idea.id, idea);
-        });
-
+    static getIdeas(userID, projectID) {
+        return getIdeasReference(userID, projectID).get();
     };
 
     //save a singular idea to the project.
-    static saveSingleIdeaToProject(userID, projectID, ideaID, idea) {
-        var ideaRef = db.collection("users").doc(userID).collection("projects").doc(projectID).collection("ideas").doc(ideaID);
-        return ideaRef.set({
+    static saveIdea(userID, projectID, ideaID, idea) {
+        return getIdeasReference(userID, projectID).doc(ideaID).set({
             title: idea.title,
             mode: idea.mode,
             notes: idea.notes,
@@ -90,79 +46,76 @@ class Firestore {
         })
     }
 
-    static deleteIdeafromProject(userID, projectID, ideaID) {
-        var ideaRef = db.collection("users").doc(userID).collection("projects").doc(projectID).collection("ideas").doc(ideaID).delete();
+    static deleteIdea(userID, projectID, ideaID) {
+        return getIdeasReference(userID, projectID).doc(ideaID).delete();
     }
 
-    static saveProjectsToUser(userID, projects) {
-        var projectCollection = this.getAllProjectsByUser(userID);
-        projects.forEach(function (project) {
-            this.saveToDBWithDocID(projectCollection, project.id, project);
+    static saveProject(userID, project) {
+        return getProjectsReference(userID).add(project);
+    }
+
+    static setColor(userID, color) {
+        return users.doc(userID).update({
+            color: color
         });
-    };
-
-    static saveNewProject(userID, projectData) {
-        this.updateUserDetails();
-        return this.getAllProjectsByUser(userID).add(projectData);
     }
-
-    static setNewColor(userID, color) {
-        return db.collection("users").doc(userID).update({color: color});
-    }
-
 
     static archiveProject(userID, projectID) {
-        this.updateUserDetails();
-        return db.collection("users").doc(userID).collection("projects").doc(projectID).update({
+        return getProjectsReference(userID).doc(projectID).update({
             archived: true
         });
     }
 
-
-    static editProjectFields(userID, projectID, data) {
-        var ideaRef = this.getProjectById(userID, projectID);
-        return ideaRef.update(data);
+    static editProject(userID, projectID, data) {
+        return getProjectsReference(userID).doc(projectID).update(data);
     }
 
+    static getUsersByEmail(email) {
+        return users.where("email", "==", email).get();
+    }
+
+    static shareProject(userID, sharedProject) {
+        return getSharedProjectsReference(userID).doc(sharedProject.id).set(
+            sharedProject, 
+            { 
+                merge: true 
+            }
+        );
+    }
+
+    static getSharedProjects(userID) {
+        return getSharedProjectsReference(userID).orderBy('shareTime', 'desc').get();
+    };
+
+    static saveCommendation(userID, projectID, ideaID, commenterID, commendation) {
+        return getCommendationsReference(userID, projectID, ideaID).doc(commenterID).set(commendation);
+    }
 
     static updateUserDetails() {
         var user = firebase.auth().currentUser;
-        return db.collection('users').doc(user.uid).set({
-            Name: user.displayName,
-            email: user.email,
-            uid: user.uid
-        }, { merge: true });
+        if (user) {
+            return users.doc(user.uid).set({
+                username: user.displayName,
+                email: user.email,
+                uid: user.uid
+            }, { 
+                merge: true 
+            });
+        } else {
+            Promise.reject(new Error('Not authenticated.'));
+        }
     }
 
-    static queryUserByEmail(email) {
-        return db.collection("users").where("email", "==", email);
-    }
-
-    static saveSharedProject(uid, sharedProjectData) {
-        return db.collection("users").doc(uid)
-            .collection("sharedProjects").doc(sharedProjectData.id)
-            .set(sharedProjectData, { merge: true });
-    }
-
-    static getAllSharedProjectsByUser(userID) {
-        return db.collection("users").doc(userID).collection("sharedProjects").orderBy('shareTime', 'desc');
+    static getUsers() {
+        return users.get();
     };
 
     static shareListener(userID) {
-        return db.collection("users").doc(userID).collection("sharedProjects");
-            
+        return getSharedProjectsReference(userID);
     }
 
-    static getUserEmails() {
-        return db.collection("users").get();
-    };
-
-    static getAllIdeaCommendations(userID, projectID, ideaID) {
-        return this.getProjectById(userID, projectID).collection("ideas").doc(ideaID).collection("commendations");
-    }
-
-    static saveCommendation(userID, projectID, ideaID, commenterID, commendation) {
-        return this.getProjectById(userID, projectID).collection("ideas").doc(ideaID).collection("commendations").doc(commenterID).set(commendation);
+    static getCommendations(userID, projectID, ideaID) {
+        return getCommendationsReference(userID, projectID, ideaID);
     }
 
 };

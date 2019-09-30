@@ -47,7 +47,7 @@ const Amplification = ( props ) => {
 
   useEffect(() => {
 
-    var ideas = Firestore.getAllIdeasByProject(firebase.auth().currentUser.uid,props.location.state.projectID);
+    var ideas = Firestore.getIdeas(firebase.auth().currentUser.uid,props.location.state.projectID);
     let keyWordList = [];
     let topicNotesList = [];
     words(ideas).then(function (result){
@@ -104,7 +104,7 @@ const Amplification = ( props ) => {
       var index = 0;
       var ideas = {};
       var topic = {}
-      loadIdeas.get().then(function(idea) {
+      loadIdeas.then(function(idea) {
         idea.forEach(x=>{
           var data = x.data();
           if (x.id == "root"){
