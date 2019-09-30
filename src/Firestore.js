@@ -1,89 +1,123 @@
 import { app } from "./Firebase";
-import firestore from "firebase/firestore";
 import firebase from "firebase";
 
-var db = app.firestore();
+let firestore = app.firestore();
+
+let users = firestore.collection("users");
+
+let getProjectsReference = userID => users.doc(userID).collection("projects");
+let getSharedProjectsReference = userID => users.doc(userID).collection("sharedProjects");
+let getIdeasReference = (userID, projectID) => getProjectsReference(userID).doc(projectID).collection("ideas");
+let getCommendationsReference = (userID, projectID, ideaID) => getIdeasReference(userID, projectID).doc(ideaID).collection("commendations");
+
 class Firestore {
+    
+    static getUser(userID) {
+        return users.doc(userID).get();
+    }
 
-    static saveWithDocID(collection, docID, data) {
-        return db.collection(collection).doc(docID).set(data, { merge: true });
+    /**
+     *  Gets the collection for all users
+     *  @param orderd: if the output should be ordered by creation time 
+     */
+    static getProjects(userID, ordered = false) {
+        let projects = getProjectsReference(userID);
+        if (ordered) {
+            projects = projects.orderBy('creationTime', 'asc');
+        }
+        return projects.get();
     };
 
-    static deleteDocument(collection, docID) {
-        return db.collection(collection).doc(docID).delete();
-    }
-
-    static getCollection(collection) {
-        return db.collection(collection).get();
+    static getRecentProjects(userID, number) {
+        return getProjectsReference(userID).orderBy('creationTime', 'desc').limit(number).get();
     };
 
-    static getDocument(collection, docID) {
-        return db.collection(collection).doc(docID).get();
+    static getIdeas(userID, projectID) {
+        return getIdeasReference(userID, projectID).get();
+    };
+
+    //save a singular idea to the project.
+    static saveIdea(userID, projectID, ideaID, idea) {
+        return getIdeasReference(userID, projectID).doc(ideaID).set({
+            title: idea.title,
+            mode: idea.mode,
+            notes: idea.notes,
+            parentID: idea.parentID,
+        })
     }
 
-    static getUserData(userID) {
-        return db.collection("users").doc(userID);
+    static deleteIdea(userID, projectID, ideaID) {
+        return getIdeasReference(userID, projectID).doc(ideaID).delete();
     }
 
-    static saveUser(email, username, uid) {
-        return db.collection("users").add({
-            email: email,
-            timestamp: Date.now(),
-            Name: username,
-            uid: uid
+    static saveProject(userID, project) {
+        return getProjectsReference(userID).add(project);
+    }
+
+    static setColor(userID, color) {
+        return users.doc(userID).update({
+            color: color
         });
     }
 
-    static getAllProjectsByUser(userID) {
-        return db.collection("users").doc(userID).collection("projects");
-    };
+    static archiveProject(userID, projectID) {
+        return getProjectsReference(userID).doc(projectID).update({
+            archived: true
+        });
+    }
 
-    static getRecentProjectsByUser(userID, number) {
-        return db.collection("users").doc(userID).collection("projects").orderBy('creationTime', 'desc').limit(number);
-    };
+    static editProject(userID, projectID, data) {
+        return getProjectsReference(userID).doc(projectID).update(data);
+    }
 
-    static getProjectById(userID, projectID) {
-        return this.getAllProjectsByUser(userID).doc(projectID);
-    };
+    static getUsersByEmail(email) {
+        return users.where("email", "==", email).get();
+    }
 
-    static getAllIdeasByProject(userID, projectID) {
-        return this.getProjectById(userID, projectID).collection("Ideas");
-    };
-
-    static saveToDBWithDocID(collection, docID, data) {
-        return collection.doc(docID).set(data, { merge: true });
-    };
-
-    static saveIdeaToProject(userID, projectID, idea) {
-        return this.saveToDBWithDocID(
-            this.getAllIdeasByProject(userID, projectID),
-            idea.id,
-            idea
+    static shareProject(userID, sharedProject) {
+        return getSharedProjectsReference(userID).doc(sharedProject.id).set(
+            sharedProject, 
+            { 
+                merge: true 
+            }
         );
+    }
+
+    static getSharedProjects(userID) {
+        return getSharedProjectsReference(userID).orderBy('shareTime', 'desc').get();
     };
 
-    static saveProjectToUser(userID, project) {
-        return this.saveToDBWithDocID(
-            this.getAllProjectsByUser(userID),
-            project.id,
-            project
-        );
-    };
-
-    static saveNewProject(userID, projectData) {
-        return db.collection("users").doc(userID).collection("projects").add(projectData);
+    static saveCommendation(userID, projectID, ideaID, commenterID, commendation) {
+        return getCommendationsReference(userID, projectID, ideaID).doc(commenterID).set(commendation);
     }
 
     static updateUserDetails() {
         var user = firebase.auth().currentUser;
-        return db.collection('users').doc(user.uid).set({
-            Name: user.displayName,
-            email: user.email,
-            uid: user.uid
-        }, {
-            merge: true
-        });
+        if (user) {
+            return users.doc(user.uid).set({
+                username: user.displayName,
+                email: user.email,
+                uid: user.uid
+            }, { 
+                merge: true 
+            });
+        } else {
+            Promise.reject(new Error('Not authenticated.'));
+        }
     }
+
+    static getUsers() {
+        return users.get();
+    };
+
+    static shareListener(userID) {
+        return getSharedProjectsReference(userID);
+    }
+
+    static getCommendations(userID, projectID, ideaID) {
+        return getCommendationsReference(userID, projectID, ideaID);
+    }
+
 };
 
 export default Firestore;

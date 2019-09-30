@@ -5,18 +5,23 @@ import Firestore from "./Firestore.js";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Icon } from "antd";
 import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
-import HeaderBar from "./HeaderBar.js"
+import HeaderBar from "./HeaderBar.js";
 import history from "./history";
 import Ionicon from "react-ionicons";
-import "./index.css";
+import "./style.scss";
 import NewProjectPopup from "./NewProject";
 import { useState } from "react";
 import ProjectLoader from "./ProjectLoader";
+import ProjectView from "./ProjectView";
+import useProjectDialog from "./useProjectDialog";
+import useSettingsDialog from "./useSettingsDialog";
+import SettingsDialog from "./SettingsDialog";
+import { themeOptions } from "./styling/themeOptions";
+import theme from './styling/theme.scss';
 const useStyles = makeStyles(theme => ({
   button: {
     width: "100%",
     boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)",
-
     border: "none",
     fontFamily: "Montserrat",
     borderRadius: 17,
@@ -64,46 +69,55 @@ const useStyles = makeStyles(theme => ({
     cursor: "pointer"
   }
 }));
-const emptyImages = ["void.svg","empty.svg","empty_1.svg","empty_2.svg","empty_3.svg"]
+const emptyImages = [
+  "void.svg",
+  "empty.svg",
+  "empty_1.svg",
+  "empty_2.svg",
+  "empty_3.svg"
+];
 
 const Home = ({ history }) => {
+  const { open, toggle } = useProjectDialog();
+  const { settingsOpen, toggleSettings } = useSettingsDialog();
   const classes = useStyles();
   const [showNewProject, setShowNewProject] = useState(false);
   const [noProjects, setNoProjects] = useState(false);
   const [recentProjects, pushRecentProjects] = useState([]);
+  const [currentProject, setCurrentProject] = useState(null);
+
   const RecentProject = ({ project }) => <ProjectTile x={project} />;
   var storage = firebase.storage().ref();
 
   const addRecentProject = project => {
     pushRecentProjects(oldArray => [...oldArray, project]);
   };
-
+  const clickedProject = project => {
+    setCurrentProject(project);
+  };
+  
   useEffect(() => {
     var uid = firebase.auth().currentUser.uid;
-    var recents = Firestore.getRecentProjectsByUser(uid, 4);
-
-    recents
-      .get()
+    Firestore.getRecentProjects(uid, 4)
       .then(function(doc) {
-        if (doc.empty) toggleNoProjects()
+        if (doc.empty) toggleNoProjects();
         doc.forEach(x => {
           var proj = x.data();
+          proj.projectID = x.id;
           storage
             .child("projectImage/" + x.data().image)
             .getDownloadURL()
             .then(function(url) {
               proj.image = url;
+              proj.id = x.id;
               addRecentProject(proj);
-              console.log(proj);
-
             });
         });
       })
       .catch(function(error) {
         console.log("Error getting document:", error);
-        toggleNoProjects()
+        toggleNoProjects();
       });
-
   }, []);
 
   function togglePopup() {
@@ -112,15 +126,25 @@ const Home = ({ history }) => {
 
   function toggleNoProjects() {
     setNoProjects(!noProjects);
-
   }
-  const IconButton = ({ bcolor, icon, text, nav, tcolor }) => (
+
+  function updateThemeForStyle() {
+    const selectedTheme =
+      themeOptions.find(t => t.name.toLowerCase() === "blue") || {};
+    const html = document.getElementsByTagName("html")[0];
+    Object.keys(selectedTheme).forEach((property, i) => {
+      if (property === "name") {
+        return;
+      }
+      html.style.setProperty(property, selectedTheme[property]);
+    });
+  }
+  const IconButton = ({ icon, text, nav, classVal }) => (
     <Col>
       <Button
         type="primary"
         size={"large"}
-        className={classes.button}
-        style={{ backgroundColor: bcolor, color: tcolor }}
+        className={classVal}
         onClick={() => {
           nav === "/" ? setShowNewProject(true) : history.push(nav);
         }}
@@ -130,6 +154,19 @@ const Home = ({ history }) => {
       </Button>
     </Col>
   );
+
+  const editProject = x => {
+    history.push({
+      pathname: "./project",
+      state: {
+        projectID: x.projectID,
+        title: x.title,
+        topic: x.subtitle,
+        medium: x.medium,
+        image: x.image
+      }
+    });
+  };
 
   const ProjectTile = ({ x }) => (
     <Col
@@ -141,6 +178,10 @@ const Home = ({ history }) => {
         backgroundPosition: "center",
         backgroundSize: "cover",
         padding: 0
+      }}
+      onClick={() => {
+        toggle();
+        clickedProject(x);
       }}
     >
       <Container fluid className={classes.projectOverlay}>
@@ -158,30 +199,26 @@ const Home = ({ history }) => {
 
   return (
     <React.Fragment>
-      <HeaderBar/>
+      <HeaderBar />
       <Container fluid={true}>
+        <ProjectView
+          open={open}
+          hide={toggle}
+          projectInfo={currentProject}
+          edit={editProject}
+        />
+        <SettingsDialog open={settingsOpen} hide={toggleSettings} />
         {showNewProject ? (
           //Popup will live here.
           <NewProjectPopup togglePopup={togglePopup} />
         ) : null}
         <Row>
-          <Container
-            fluid={true}
-            style={{
-              backgroundColor: "#F1D0B2",
-              borderRadius: 16,
-              marginLeft: 100,
-              marginRight: 100,
-              marginTop: 40,
-              height: 200,
-              boxShadow: "0px 2px 10px -4px rgba(0,0,0,0.5)"
-            }}
-          >
+          <Container fluid={true} className="welcomeTile">
             <Row style={{ height: 200 }}>
               <Col sm={4}>
                 <Image
-                  src={require("../assets/images/book.svg")}
-                  style={{ height: 220 }}
+                  src={require("./assets/images/project.svg")}
+                  style={{ height: 220, width: "83%" }}
                 />
               </Col>
               <Col
@@ -192,25 +229,11 @@ const Home = ({ history }) => {
                   justifyContent: "center"
                 }}
               >
-                <h2
-                  style={{
-                    color: "#2F4858",
-                    fontFamily: "Montserrat",
-                    fontWeight: "700"
-                  }}
-                >
+                <h2 className="welcomeTitle">
                   Welcome back,{" "}
                   {app.auth().currentUser.displayName.split(" ")[0]}
                 </h2>
-                <h3
-                  style={{
-                    color: "#FA8231",
-                    fontFamily: "Montserrat",
-                    fontWeight: "600"
-                  }}
-                >
-                  lets create a project!
-                </h3>
+                <h3 className="welcomeSubtitle">lets create a project!</h3>
               </Col>
             </Row>
           </Container>
@@ -220,31 +243,32 @@ const Home = ({ history }) => {
           >
             <Row>
               <IconButton
-                bcolor="#FA8231"
-                tcolor="#FFF"
+                classVal="homeButtonOrange"
                 icon="plus-circle"
                 nav="/"
                 text="New Project"
               />
               <IconButton
-                bcolor="#FFF"
-                tcolor="#FA8231"
+                classVal="homeButton"
                 icon="reconciliation"
                 nav="/feedback"
                 text="Feedback"
               />
               <IconButton
-                bcolor="#FFF"
-                tcolor="#FA8231"
+                classVal="homeButton"
                 icon="project"
                 nav="/projects"
                 text="Your Projects"
               />
               <IconButton
-                bcolor="#FFF"
-                tcolor="#FA8231"
+                classVal="homeButton"
+                icon="project"
+                nav="/sharedprojects"
+                text="Shared Projects"
+              />
+              <IconButton
+                classVal="homeButton"
                 icon="question-circle"
-                nav="/"
                 text="Help"
               />
             </Row>
@@ -269,30 +293,27 @@ const Home = ({ history }) => {
 
         <Container style={{ marginTop: 40 }} fluid>
           <Row style={{ marginLeft: 80, marginRight: 80 }}>
-            {recentProjects.length == 0 &&  !noProjects? 
-              <ProjectLoader />: null}
-              {
-              noProjects ? (
-              <Container >
+            {recentProjects.length == 0 && !noProjects ? (
+              <ProjectLoader />
+            ) : null}
+            {noProjects ? (
+              <Container>
                 <Row className="justify-content-md-center">
                   <Image
-                    src={require("../assets/images/" + emptyImages[Math.floor(Math.random()*emptyImages.length)])}
+                    src={require("./assets/images/" +
+                      emptyImages[
+                        Math.floor(Math.random() * emptyImages.length)
+                      ])}
                     style={{ height: 180 }}
                   />
                 </Row>
                 <Row className="justify-content-md-center">
-                  <h1
-                    className="imageTitle"
-                    style={{color: "#3A4A56"}}
-                  >
+                  <h1 className="imageTitle" style={{ color: "#3A4A56" }}>
                     No Recent Projects!
                   </h1>
                 </Row>
                 <Row className="justify-content-md-center">
-                  <h2
-                  className="imageSubtitle"
-                    style={{color: "#8fa5b5"}}
-                  >
+                  <h2 className="imageSubtitle" style={{ color: "#8fa5b5" }}>
                     Click the 'New Project' button to create your first project!
                   </h2>
                 </Row>

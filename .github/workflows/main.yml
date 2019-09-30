@@ -1,0 +1,51 @@
+
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Create .env
+        env:
+          FIREBASE_KEY: ${{ secrets.FIREBASE_KEY }}
+          FIREBASE_DOMAIN: ${{ secrets.FIREBASE_DOMAIN }}
+          FIREBASE_DATABASE: ${{ secrets.FIREBASE_DATABASE }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_SENDER_ID: ${{ secrets.FIREBASE_SENDER_ID }}
+        run: printf "## Firebase\nREACT_APP_FIREBASE_KEY=\"$FIREBASE_KEY\"\nREACT_APP_FIREBASE_DOMAIN=\"$FIREBASE_DOMAIN\"\nREACT_APP_FIREBASE_DATABASE=\"$FIREBASE_DATABASE\"\nREACT_APP_FIREBASE_PROJECT_ID=\"$FIREBASE_PROJECT_ID\"\nREACT_APP_FIREBASE_STORAGE_BUCKET=\"$FIREBASE_STORAGE_BUCKET\"\nREACT_APP_FIREBASE_SENDER_ID=$FIREBASE_SENDER_ID" >> .env
+      - name: Display .env
+        run: head .env
+      - name: Install Dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Archive Production Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: dist
+          path: build
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Download Artifact
+        uses: actions/download-artifact@master
+        with:
+          name: dist
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

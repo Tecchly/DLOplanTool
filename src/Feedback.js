@@ -6,12 +6,12 @@ import { Container, Navbar, Nav, Row, Col, Image } from "react-bootstrap";
 import history from "./history";
 import HeaderBar from "./HeaderBar.js"
 import Ionicon from "react-ionicons";
-import "./index.css";
+import "./style.scss";
 
 const Feedback = ({ history }) => {
   return (
     <React.Fragment>
-      <HeaderBar/>
+      <HeaderBar />
       <Container fluid={true}>
         <Container
           style={{ marginTop: 40, marginLeft: 100, marginRight: 100 }}
@@ -41,12 +41,12 @@ const Feedback = ({ history }) => {
         </Container>
         <Container
           className="d-flex align-items-center"
-          style={{ marginTop: "20vh" }}
+          style={{ marginTop: "20vh", flexDirection: 'column' }}
         >
           <Row></Row>
           <Row className="justify-content-md-center">
             <Image
-              src={require("../assets/images/feedback.svg")}
+              src={require("./assets/images/feedback.svg")}
               style={{ height: 220 }}
             />
           </Row>
@@ -75,6 +75,8 @@ const Feedback = ({ history }) => {
                 fontSize: 15
               }}
             >
+              <br />
+              <br />
               When feedback is given, you will see it here!
             </h2>
           </Row>
