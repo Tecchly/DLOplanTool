@@ -21,8 +21,8 @@ class Guidance extends React.Component {
       var open = false;
       var path = this.props.location.pathname;
       if (path === "/") {
-        var userData = Firestore.getUserData(firebase.auth().currentUser.uid);
-        userData.get().then(doc => {
+        var userData = Firestore.getUser(firebase.auth().currentUser.uid);
+        userData.then(doc => {
           if (!doc.exists) {
             open = true;
             Firestore.updateUserDetails();
