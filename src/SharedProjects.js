@@ -118,12 +118,9 @@ const SharedProjects = props => {
   };
 
   useEffect(() => {
-    var uid = firebase.auth().currentUser.uid;
-    var recents = Firestore.getAllSharedProjectsByUser(uid);
-
-    recents
-      .get()
-      .then(function(doc) {
+    let user = firebase.auth().currentUser;
+    if (user) {
+    Firestore.getSharedProjects(user.uid).then(function(doc) {
         if (doc.empty) toggleNoProjects();
         doc.forEach(x => {
           var proj = x.data();
@@ -138,10 +135,12 @@ const SharedProjects = props => {
               // console.log(proj);
             // });
         });
-      })
-      .catch(function(error) {
-        console.log("Error getting document:", error);
+      }).catch(function(error) {
+        console.log("Error getting document, " + error);
       });
+    } else {
+      console.error("Not authenticated.");
+    }
   }, []);
   function toggleNoProjects() {
     setNoProjects(!noProjects);

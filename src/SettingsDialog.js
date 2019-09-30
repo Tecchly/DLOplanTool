@@ -60,7 +60,10 @@ const SettingsDialog = ({ open, hide }) => {
   const handleOk = () => {
     changeScheme(colorScheme)
     localStorage.setItem("colorScheme", colorScheme);
-    Firestore.setNewColor(app.auth().currentUser.uid, colorScheme);
+    Firestore.setColor(app.auth().currentUser.uid, colorScheme).then(() => {
+    }).catch(error => {
+        console.error("Set color failure, " + error);
+    });
     hide();
   };
 

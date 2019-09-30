@@ -31,7 +31,7 @@ class ShareProjectPopup extends React.Component {
     if (shareEmails) {
       this.setState({ shareEmails: shareEmails });
     }
-    Firestore.getUserEmails().then(querySnapshot => {
+    Firestore.getUsers().then(querySnapshot => {
       console.log(querySnapshot);
       // this.setState({suggestions: [...suggestions, ...qu]})
       querySnapshot.forEach(doc => {
@@ -84,15 +84,16 @@ class ShareProjectPopup extends React.Component {
 
     var shareEmails = this.state.shareEmails;
     shareEmails.split(/[,|\n]/).forEach(function(email) {
-      Firestore.queryUserByEmail(email.trim())
-        .get()
+      Firestore.getUsersByEmail(email.trim())
         .then(function(querySnapshot) {
           querySnapshot.forEach(function(doc) {
-            Firestore.saveSharedProject(doc.id, data);
+            Firestore.shareProject(doc.id, data).then(() => {
+            }).catch(error => {
+              console.error("Project share failure, " + error);
+            });
           });
-        })
-        .catch(function(error) {
-          console.log("Error getting documents: ", error);
+        }).catch(function(error) {
+          console.log("Error getting documents, " + error);
         });
     });
 
