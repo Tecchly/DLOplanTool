@@ -23,11 +23,9 @@ const Login = ({ history }) => {
   }
 
   const { currentUser } = useContext(AuthContext);
-
+  localStorage.setItem("colorScheme", "orange");
   if (currentUser) {
-    var recents = Firestore.getUserData(currentUser.uid);
-    recents
-      .get()
+    Firestore.getUser(currentUser.uid)
       .then(function(doc) {
         var chosenColor = doc.data().color ? doc.data().color : "orange"
         const selectedTheme =

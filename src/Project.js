@@ -49,12 +49,12 @@ class Project extends React.Component {
         }
       },
       () => {
-        //@@Test for saving point. Make cleaner later
+       
         var uid = firebase.auth().currentUser.uid;
 
         for (let idea in this.state.ideas) {
           //Saving of all ideas.
-          Firestore.saveSingleIdeaToProject(
+          Firestore.saveIdea(
             uid,
             this.props.location.state.projectID,
             idea,
@@ -78,30 +78,83 @@ class Project extends React.Component {
       this.setState({
         ideas: replacement
       });
-      var uid = firebase.auth().currentUser.uid;
-      Firestore.deleteIdeafromProject(
-        uid,
-        this.props.location.state.projectID,
-        uuid
-      );
+      let user = firebase.auth().currentUser;
+      if (user) {
+        Firestore.deleteIdea(
+          user.uid,
+          this.props.location.state.projectID,
+          uuid
+        ).then(() => {
+        }).catch(error => {
+          console.error("Idea deletion failure, " + error);
+        });
+      } else {
+        console.error("Not authenticated.");
+      }
     };
     recursiveDelete(uuid);
     console.log(this.state.ideas);
   };
 
+  //Handle the root node changing, may be deprecated
   handleMainTopicChange = newTopic => {
     this.setState({ topic: newTopic }, function() {
       var data = {
         subtitle: newTopic
       };
       var uid = firebase.auth().currentUser.uid;
-      Firestore.editProjectFields(
+      Firestore.editProject(
         uid,
         this.props.location.state.projectID,
         data
-      );
+      ).then(() => {
+      }).catch(error => {
+        console.error("Edit project failure, " + error);
+      });
     });
   };
+
+  /**
+   * @params:uuid, uuid of the idea with which the commendation being sent,
+   * commend: type of commend being sent through
+   */
+  
+  handleCommend = (ideaID,commend) => {
+    var ownerID = firebase.auth().currentUser.uid; 
+    if (this.props.location.state.shared){
+      var ownerID = this.props.location.state.path.split("/")[1];     
+    }
+    
+    Firestore.saveCommendation(
+        ownerID,
+        this.props.location.state.projectID,
+        ideaID,
+        firebase.auth().currentUser.uid,
+        commend
+    ).then(() => {
+    }).catch(error => {
+       console.error("Commendation save failure, " + error);
+    });
+  }
+
+  loadCommendations = (ideaID) => {
+    var commendations = [];
+
+    var ownerID = firebase.auth().currentUser.uid; 
+    if (this.props.location.state.shared){
+      var ownerID = this.props.location.state.path.split("/")[1];     
+    }
+    
+    var ideaQuery = Firestore.getCommendations(
+      ownerID,
+      this.props.location.state.projectID,
+      ideaID,
+    );
+
+    return ideaQuery;
+  }
+
+
 
   //Use only when loading ideas from DB.
   addIdea = x => {
@@ -152,24 +205,20 @@ class Project extends React.Component {
     }
 
     //Load the ideas from the database
-    var ideas = Firestore.getAllIdeasByProject(
+    Firestore.getIdeas(
       uid,
       this.props.location.state.projectID
+    ).then(
+      function(idea) {
+        idea.forEach(x => {
+          this.addIdea(x);
+        });
+      }.bind(this)
+    ).then(
+      function() {
+        this.setState({ loaded: true });
+      }.bind(this)
     );
-    ideas
-      .get()
-      .then(
-        function(idea) {
-          idea.forEach(x => {
-            this.addIdea(x);
-          });
-        }.bind(this)
-      )
-      .then(
-        function() {
-          this.setState({ loaded: true });
-        }.bind(this)
-      );
 
     if (this.props.location.state.title) {
       this.setState({ title: this.props.location.state.title });
@@ -179,7 +228,6 @@ class Project extends React.Component {
       this.setState({ topic: this.props.location.state.topic });
     }
 
-    //@@TODO Medium select to control the available modes.
     if (this.props.location.state.medium) {
       this.setState({ medium: this.props.location.state.medium });
     }
@@ -279,6 +327,8 @@ class Project extends React.Component {
                 handleIdeaUpdate={this.handleIdeaUpdate}
                 handleIdeaDeletion={this.handleIdeaDeletion}
                 handleMainTopicChange={this.handleMainTopicChange}
+                handleCommend={this.handleCommend}
+                loadCommendations = {this.loadCommendations}
                 uuid="root"
                 parentID="none"
                 topic={this.state.topic}

@@ -308,6 +308,7 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
 .projectDialog {
   border-radius: 17px !important;
   background-color: var(--bg-primary);
+  overflow: visible !important;
 }
 
 .img-fluid{
@@ -426,7 +427,7 @@ margin-left: 30px;
 .outer {
   z-index: 1;
   width: 4px;
-  height: 400px;
+  height: 300px;
   position: absolute;
   overflow: hidden;
   margin-left: 52px;
@@ -585,7 +586,7 @@ margin-left: 30px;
 }
 
 .customiseButton {
-  right: 71px;
+  right: 100%;
   position: absolute;
   
 }
@@ -605,7 +606,7 @@ margin-left: 30px;
   width: 10%;
   box-shadow: 0px 2px 10px -4px rgba(0,0,0,0.5);
   border: none;
-  font: 600 20px "Montserrat", sans-serif !important;
+  font: 500 17px "Montserrat", sans-serif !important;
   height: 35;
 
 }
@@ -641,4 +642,44 @@ margin-left: 30px;
 
 .projectViewPrimary{
   color: var(--primary) !important;
+}
+.recipientField {
+  width: 86% !important;
+  float: left !important;
+
+}
+
+.sendPlane {
+  color: var(--primary) !important;
+  float: left;
+  left: 15px;
+  bottom: 5px;
+}
+.sendPlaneDisabled {
+  color: var(--primary) !important;
+  opacity: 0.5;
+  float: left;
+  left: 15px;
+  bottom: 5px;
+}
+
+.shareHeaderProjectView {
+  font: 700 20px "Montserrat", sans-serif !important;
+  color: var(--text-primary) !important;
+  margin-left: 3px !important;
+} 	
+
+//Notification table
+
+.notificationTableCell {
+  border-bottom: none !important;
+  font: 500 22px "Montserrat", sans-serif !important;
+}
+
+.sharedProjectLink{
+  color: var(--primary) !important;
+}
+
+.notificationsTitle {
+  font: 600 30px "Montserrat", sans-serif !important;
 }
