@@ -27,9 +27,9 @@ class Guidance extends React.Component {
             open = true;
             Firestore.updateUserDetails();
             this.localCache.setItem("showProjectTour", true);
-            this.localCache.setItem("showAmplifyTour", true);
-            this.localCache.setItem("showSharedProjectsTour", true);
-            this.localCache.setItem("showYourProjectsTour", true);
+            // this.localCache.setItem("showAmplifyTour", true);
+            // this.localCache.setItem("showSharedProjectsTour", true);
+            // this.localCache.setItem("showYourProjectsTour", true);
           }
           if (open) {
             this.openTour();

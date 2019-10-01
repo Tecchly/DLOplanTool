@@ -380,9 +380,9 @@ const steps = [
         localCache.removeItem("showProjectTour");
         console.log("remove local cache showProjectTour");
       }
-      if (this.props.location.state.shared && localCache.getItem("showSharedProjectsTour")) {
-        localCache.removeItem("showSharedProjectsTour");
-      }
+      // if (this.props.location.state.shared && localCache.getItem("showSharedProjectsTour")) {
+      //   localCache.removeItem("showSharedProjectsTour");
+      // }
     }
   },
   {
