@@ -12,68 +12,6 @@ import "./style.scss";
 import FeedbackContent from './FeedbackContent';
 import { withRouter } from 'react-router';
 
-
-function beef() {
-  console.log(app.auth().currentUser.uid);
-}
-
-
-function isEmpty(obj) {
-  for (var key in obj) {
-    if (obj[key].projectID) 
-      return false;
-  }
-  return true;
-}
-
-function renderFeedbackData() {
-  var feedback;
-
-  feedbackData.forEach(item => {
-    console.log(app.firestore().collection("users").doc(item.reviewerID).projects);
-    feedback += app.firestore().collection("users").doc(item.reviewerID).Name + " left feedback on your project " + item.projectID;
-    feedback += "";
-    feedback += item.type == "praise" ?  " COMMEND IMG": "";
-    feedback += item.comment;
-
-  });
-
-  return feedback;
-}
-
-// mock test data
-
-var feedbackData1 = [
-    { "projectID": "",
-      "reviewerID": "",
-      "timestamp": "",
-      "type": "",
-      "comment": ""
-    }
-];
-
-var feedbackData = [
-  { "projectID": "7bw8VvWbHKdY3AXxKMPF",
-    "reviewerID": "bn2YITj65beCuLnQmEfVdE6Qfup2",
-    "timestamp": "September 2 2019 13:32",
-    "type": "feedback",
-    "comment": "Well done overall, looking forward to seeing the finished project!"
-  },
-  { "projectID": "7bw8VvWbHKdY3AXxKMPF",
-    "reviewerID": "bn2YITj65beCuLnQmEfVdE6Qfup2",
-    "timestamp": "August 31 2019 12:20" ,
-    "type": "praise",
-    "comment": "Good mapping to mode"
-  },
-  { "projectID": "cABtDFfLjeubLrsHOwbV",
-    "reviewerID": "bn2YITj65beCuLnQmEfVdE6Qfup2",
-    "timestamp": "August 31 2019 12:22",
-    "type": "comment",
-    "comment": "I think you should look into a different methond of expressing the idea."
-  }
-];
-
-
 const Feedback = ({ history }) => {
 
   const loadProject = row => {
