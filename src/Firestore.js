@@ -118,6 +118,10 @@ class Firestore {
         return getCommendationsReference(userID, projectID, ideaID);
     }
 
+    static getProjectsCollection(userID) {
+        return getProjectsReference(userID);
+    };
+
 };
 
 export default Firestore;

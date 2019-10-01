@@ -1,3 +1,5 @@
+import firestore from "firebase/firestore";
+import Firestore from "./Firestore.js";
 import React from "react";
 import { app } from "./Firebase";
 import { makeStyles } from "@material-ui/core/styles";
@@ -7,8 +9,25 @@ import history from "./history";
 import HeaderBar from "./HeaderBar.js"
 import Ionicon from "react-ionicons";
 import "./style.scss";
+import FeedbackContent from './FeedbackContent';
+import { withRouter } from 'react-router';
 
 const Feedback = ({ history }) => {
+
+  const loadProject = row => {
+    var proj = row.project;
+    history.push({
+      pathname: "./project",
+      state: {
+        projectID: row.projectId,
+        medium: proj.medium,
+        title: proj.title,
+        topic: proj.subtitle,
+        image: proj.image,
+    }});
+  }
+  
+
   return (
     <React.Fragment>
       <HeaderBar />
@@ -39,52 +58,11 @@ const Feedback = ({ history }) => {
             </h3>
           </Row>
         </Container>
-        <Container
-          className="d-flex align-items-center"
-          style={{ marginTop: "20vh", flexDirection: 'column' }}
-        >
-          <Row></Row>
-          <Row className="justify-content-md-center">
-            <Image
-              src={require("./assets/images/feedback.svg")}
-              style={{ height: 220 }}
-            />
-          </Row>
-          <Row className="justify-content-md-center">
-            <h1
-              style={{
-                textAlign: "center",
-                color: "#3A4A56",
-                fontFamily: "Montserrat",
-                fontWeight: "700",
-                textAlign: "center",
-                fontSize: 30
-              }}
-            >
-              No Feedback
-            </h1>
-          </Row>
-          <Row className="justify-content-md-center">
-            <h2
-              style={{
-                textAlign: "center",
-                color: "#8fa5b5",
-                fontFamily: "Montserrat",
-                fontWeight: "600",
-                textAlign: "center",
-                fontSize: 15
-              }}
-            >
-              <br />
-              <br />
-              When feedback is given, you will see it here!
-            </h2>
-          </Row>
-        </Container>
+        <FeedbackContent loadProject={loadProject}/>
       
       </Container>
     </React.Fragment>
   );
 };
 
-export default Feedback;
+export default withRouter(Feedback);

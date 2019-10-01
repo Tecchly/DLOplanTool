@@ -149,10 +149,12 @@ const ProjectView = ({ open, hide, projectInfo, edit, shared }) => {
                 {projectInfo.medium} Project
               </h3>
             </div>
+            
             <DialogTitle
               id="customized-dialog-title"
               onClose={()=> { clearTags(); hide();}}
             ></DialogTitle>
+            {shared ? null : (
             <DialogContent
               dividers
               style={{ overflow: 'visible' }}
@@ -183,7 +185,7 @@ const ProjectView = ({ open, hide, projectInfo, edit, shared }) => {
                 <SendIcon fontSize="default" />
               </IconButton>
               </div>
-            </DialogContent>
+            </DialogContent>)}
             <DialogActions>
               {shared ? null : (
                 <Button
