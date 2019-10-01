@@ -373,7 +373,17 @@ class Project extends React.Component {
 const steps = [
   {
     selector: '[guide="rootIdea"]',
-    content: (<h5>this is the root idea node of your project!</h5>)
+    content: (<h5>this is the root idea node of your project!</h5>),
+    action: node => {
+      var localCache = window.localStorage;
+      if(localCache.getItem("showProjectTour")) {
+        localCache.removeItem("showProjectTour");
+        console.log("remove local cache showProjectTour");
+      }
+      if (this.props.location.state.shared && localCache.getItem("showSharedProjectsTour")) {
+        localCache.removeItem("showSharedProjectsTour");
+      }
+    }
   },
   {
     selector: '.addSubIdeasButton',
