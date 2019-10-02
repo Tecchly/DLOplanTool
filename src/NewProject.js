@@ -232,6 +232,7 @@ class NewProjectPopup extends React.Component {
                   className="textInput"
                   value={this.state.projectTitle}
                   onChange={this.handleTitleChange}
+                  guide="inputProjectTitle"
                 />
                 <div className="inputTitle">Project Topic</div>
                 <input
@@ -239,6 +240,7 @@ class NewProjectPopup extends React.Component {
                   className="textInput"
                   value={this.state.projectTopic}
                   onChange={this.handleTopicChange}
+                  guide="inputProjectTopic"
                 />
                 {/* <ListItem
                   button
@@ -250,7 +252,7 @@ class NewProjectPopup extends React.Component {
                   // onClick={handleClickListItem}
                 >
                 </ListItem> */}
-                <div > 
+                <div className="chooseMedium"> 
                   <select id="dropdown" class="custom-select" onChange={this.medChange}>
                     <option value="0" disabled selected>Select your medium</option>
                     <option value="Presentation">Presentation</option>
@@ -328,6 +330,7 @@ class NewProjectPopup extends React.Component {
                 </DragAndDrop>
                 <br />
                 <Button
+                guide="newProjectCreateButton"
                 className="newProjectCreateButton"
                   style={{
                     color: "#fff",
