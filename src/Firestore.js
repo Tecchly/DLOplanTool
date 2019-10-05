@@ -119,8 +119,8 @@ class Firestore {
         return getCommendationsReference(userID, projectID, ideaID);
     }
 
-    static saveRecommendation(userID,projectID,ideaID,commenterID,recommendation) {
-        return getRecommendationsReference(userID, projectID, ideaID).doc(commenterID).set(recommendation);
+    static saveRecommendation(userID,projectID,ideaID,commentID,recommendation) {
+        return getRecommendationsReference(userID, projectID, ideaID).doc(commentID).set(recommendation);
     }
 
     static getRecommendations(userID,projectID,ideaID) {

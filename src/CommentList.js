@@ -24,43 +24,45 @@ const StyleTooltip = withStyles(theme => ({
     },
   }))(Tooltip);
 
+//@@TODO make the list scrollable after a point
+
 export default function CommentList(props) {
     const classes = useStyles();
     const [comment, setComment] = React.useState("");
 
-
     const handleChange = event =>{
       if (event.currentTarget.value.length<140){
         setComment(event.currentTarget.value);
-      }      
+      }    
     }
 
-
     const handleClick = () => {
+      var rec = {
+        recommendation: comment,
+        recommendationUser: firebase.auth().currentUser.displayName,
+        recommendationTime: +new Date()
+      }
+      props.newRecommendation(rec);
 
-      props.handleRecommendation(
-        props.uuid,
-        {
-          recommendation: comment,
-          recommendationUser: firebase.auth().currentUser.displayName,
-          recommendationTime: +new Date()
-        }
-      )
+      props.handleRecommendation(props.uuid, rec);
+
       setComment("");
-      //@@TODO, push the comments into the view.
     };
-
+    
 
     return (
       <React.Fragment>
-        <List component = "nav">
-          <ListItem>
+        <List component = "nav" style={{maxHeight:"250px", maxWidth:"400px", overflowY:"auto"}}>
+          {Object.values(props.recommendations).map((item) => (
+            <ListItem key={item.recommendationTime}>
             <ListItemText 
-              primary = "User1" 
-              secondary="comment"
+              primary = {item.recommendationUser} 
+              secondary={item.recommendation}
               />
           </ListItem>
+          ))} 
         </List>
+
         <div style={{display:"block", paddingLeft:5,paddingRight:5}}>
             <textarea 
               onChange = {handleChange}

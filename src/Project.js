@@ -154,6 +154,7 @@ class Project extends React.Component {
 
   //Need to store the recommendation as well as the current user and the commend time
   //Handle recommendations
+  //@@TODO not overwrite
   handleRecommendation = (ideaID, recommendation) => {
     var ownerID = firebase.auth().currentUser.uid; 
     if (this.props.location.state.shared){
@@ -164,7 +165,7 @@ class Project extends React.Component {
       ownerID,
       this.props.location.state.projectID,
       ideaID,
-      firebase.auth().currentUser.uid,
+      Utils.uuid(),
       recommendation
     )
   }

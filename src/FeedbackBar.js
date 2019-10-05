@@ -236,7 +236,9 @@ export default function FeedbackBar(props) {
         }}>
           <CommentList
             uuid = {props.uuid}
+            recommendations = {props.recommendations}
             handleRecommendation={props.handleRecommendation}
+            newRecommendation={props.newRecommendation}
           />
         </Popover>
       
