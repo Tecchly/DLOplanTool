@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import firebase from "firebase";
+import moment from "moment";
 
 
 const useStyles = makeStyles(theme => ({
@@ -17,12 +18,6 @@ const useStyles = makeStyles(theme => ({
     textAlign: "center",
   },
 }));
-
-const StyleTooltip = withStyles(theme => ({
-    tooltip: {
-      fontSize: theme.typography.pxToRem(16),
-    },
-  }))(Tooltip);
 
 //@@TODO make the list scrollable after a point
 
@@ -52,13 +47,17 @@ export default function CommentList(props) {
 
     return (
       <React.Fragment>
-        <List component = "nav" style={{maxHeight:"250px", maxWidth:"400px", overflowY:"auto"}}>
+        <List component = "nav" style={{maxHeight:"250px", overflowY:"auto"}}>
           {Object.values(props.recommendations).map((item) => (
             <ListItem key={item.recommendationTime}>
             <ListItemText 
+              style={{maxWidth:"300px"}}
               primary = {item.recommendationUser} 
               secondary={item.recommendation}
               />
+              <p style={{float:"right"}}>
+                {moment(item.recommendationTime).format("MMM Do YY")}
+              </p>
           </ListItem>
           ))} 
         </List>
@@ -76,7 +75,5 @@ export default function CommentList(props) {
         </div>
          
       </React.Fragment>
-      
-
     )
 }
