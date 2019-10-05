@@ -10,7 +10,7 @@ import Ionicon from "react-ionicons";
 import Utils from "./Utils.js";
 import ListItem from '@material-ui/core/ListItem';
 
-//@@TODO, need to add a medium selector here.
+
 import MessagePopup from "./MessagePopup.js";
 
 class NewProjectPopup extends React.Component {

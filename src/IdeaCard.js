@@ -156,6 +156,8 @@ class IdeaCard extends React.Component {
                     handleDelete = {this.handleDelete}
                     handleCommend ={this.props.handleCommend}
                     loadCommendations = {this.props.loadCommendations}
+                    handleRecommendation = {this.props.handleRecommendation}
+                    loadRecommendations= {this.props.loadRecommendations}
                     availableModes= {this.props.availableModes}
                     closePopup = {this.closePopup}
                     shared = {this.props.shared}
@@ -260,13 +262,14 @@ class IdeaCard extends React.Component {
                                         handleIdeaDeletion = {this.props.handleIdeaDeletion}
                                         handleCommend ={this.props.handleCommend}
                                         loadCommendations = {this.props.loadCommendations}
+                                        handleRecommendation={this.props.handleRecommendation}
+                                        loadRecommendations={this.props.loadRecommendations}
                                         ideas = {this.props.ideas}
                                         parentID = {this.props.uuid} 
                                         availableModes={this.props.availableModes}
                                         level={this.state.level+1}
                                         handleDelete = {this.handleDelete}
-                                        shared = {this.props.shared}>
-                                        
+                                        shared = {this.props.shared}>        
                                     </IdeaCard>)}
                     </div>
                 </div>

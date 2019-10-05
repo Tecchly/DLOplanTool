@@ -10,6 +10,8 @@ import VolumeUp from "@material-ui/icons/VolumeUp";
 import Tooltip from '@material-ui/core/Tooltip';
 import firebase from "firebase";
 import Badge from '@material-ui/core/Badge';
+import CommentList from './CommentList.js'
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,6 +22,7 @@ const useStyles = makeStyles(theme => ({
   button: {
       marginLeft:10,
       marginRight:10,
+      fontSize: "12px",
   },
   selected: {
       backgroundColor: "#1fbf6c",
@@ -46,9 +49,27 @@ export default function FeedbackBar(props) {
   const [personalisation, setPersonalisation] = React.useState(0);
   const [coherence, setCoherance] = React.useState(0);
 
+  //Feedback
+  const [feedEl,setFeedEl] = React.useState(null);
+
+
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
   };
+
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+
+  const feedbackClick = event => {
+    setFeedEl(event.currentTarget);
+  }
+
+  const feedbackClose = () => {
+    setFeedEl(null);
+  }
 
   const handleCommend = event => {
       //TODO handle toggling off.
@@ -67,11 +88,6 @@ export default function FeedbackBar(props) {
       }     
   }
 
-  const handleClose = () => {
-    setAnchorEl(null);
-
-  };
-
   useEffect(()=>{
     var m = 0;
     var a = 0; 
@@ -79,7 +95,6 @@ export default function FeedbackBar(props) {
     var c = 0;
     
     //Commends by the user, updates on change
-    //@@TODO, need to account for if commendations don't exists yet.
     var uid = firebase.auth().currentUser.uid;
     if (commend === undefined && uid in props.commendations) {
       setCommend(props.commendations[uid].commendation);
@@ -137,16 +152,39 @@ export default function FeedbackBar(props) {
     }
   }
 
+  const commendationPlural = (num) =>{
+    if (num === 1) {
+      return " commendation"
+    } else {
+      return " commendations"
+    }
+  }
+  //commendation popover
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? 'commend-popover' : undefined;
+
+  //feedback popover
+  const feedOpen = Boolean(feedEl);
+  const feedID = open ? 'feedback-popover' :undefined;
 
   return (
     <div className = {classes.root}>
-      <Badge color="primary" invisible={anchorEl===null} badgeContent={Object.keys(props.commendations).length}>
+      <Badge 
+        color="primary" 
+        invisible={anchorEl===null}
+        badgeContent={Object.keys(props.commendations).length + commendationPlural(Object.keys(props.commendations).length)}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+        >
         <Button aria-describedby={id} variant="contained"  className = {classes.button} onClick={handleClick}>
           {props.shared ? "Commend Idea": "Commendations"}
         </Button>      
       </Badge>
+      <Button aria-describedby={feedID} variant="contained" className = {classes.button} onClick={feedbackClick}>
+        {props.shared ? "Comment": "Comments"}
+      </Button>
       <Popover
         id={id}
         open={open}
@@ -182,6 +220,25 @@ export default function FeedbackBar(props) {
             </Button>
         </StyleTooltip>    
       </Popover>
+
+      <Popover
+        id={feedID}
+        open={feedOpen}
+        anchorEl={feedEl}
+        onClose={feedbackClose}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}>
+          <CommentList
+            uuid = {props.uuid}
+            handleRecommendation={props.handleRecommendation}
+          />
+        </Popover>
       
     </div>
   );

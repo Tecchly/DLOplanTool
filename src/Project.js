@@ -138,8 +138,6 @@ class Project extends React.Component {
   }
 
   loadCommendations = (ideaID) => {
-    var commendations = [];
-
     var ownerID = firebase.auth().currentUser.uid; 
     if (this.props.location.state.shared){
       var ownerID = this.props.location.state.path.split("/")[1];     
@@ -150,6 +148,38 @@ class Project extends React.Component {
       this.props.location.state.projectID,
       ideaID,
     );
+
+    return ideaQuery;
+  }
+
+  //Need to store the recommendation as well as the current user and the commend time
+  //Handle recommendations
+  handleRecommendation = (ideaID, recommendation) => {
+    var ownerID = firebase.auth().currentUser.uid; 
+    if (this.props.location.state.shared){
+      var ownerID = this.props.location.state.path.split("/")[1];     
+    }
+
+    Firestore.saveRecommendation(
+      ownerID,
+      this.props.location.state.projectID,
+      ideaID,
+      firebase.auth().currentUser.uid,
+      recommendation
+    )
+  }
+
+  loadRecommendations = (ideaID) => {
+    var ownerID = firebase.auth().currentUser.uid; 
+    if (this.props.location.state.shared){
+      var ownerID = this.props.location.state.path.split("/")[1];     
+    }
+    
+    var ideaQuery = Firestore.getRecommendations(
+      ownerID,
+      this.props.location.state.projectID,
+      ideaID,
+    ).orderBy("recommendationTime");
 
     return ideaQuery;
   }
@@ -339,6 +369,8 @@ class Project extends React.Component {
                 handleMainTopicChange={this.handleMainTopicChange}
                 handleCommend={this.handleCommend}
                 loadCommendations = {this.loadCommendations}
+                handleRecommendation = {this.handleRecommendation}
+                loadRecommendations = {this.loadRecommendations}
                 uuid="root"
                 parentID="none"
                 topic={this.state.topic}

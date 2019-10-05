@@ -15,6 +15,7 @@ class IdeaEditPopup extends React.Component {
         notes:'',
         icon:'ios-bulb',
         commendations: [],
+        recommendations: [],
     }
 
     //Use for loading commendations
@@ -56,7 +57,19 @@ class IdeaEditPopup extends React.Component {
                     this.addCommendations(x);
                 })
             }.bind(this)
-        );        
+        );
+        
+        //Load the recommendations too
+        this.props.loadRecommendations(this.props.uuid)
+        .get()
+        .then(
+            function(recommendation){
+                recommendation.forEach(x=>{
+                    console.log(x.data());
+                    //Load this information somewhere
+                })
+            }
+        );
     }
 
     handleTitleChange = (event)=> {
@@ -101,12 +114,14 @@ class IdeaEditPopup extends React.Component {
                         disabled = {this.props.shared ? true: false }
                         guide="inputIdeaNotes"
                         />
+                    
                     <div guide="feedbackbar"><FeedbackBar
                         shared ={this.props.shared} 
                         handleCommend ={this.props.handleCommend}
+                        handleRecommendation = {this.props.handleRecommendation}
                         uuid = {this.props.uuid} 
                         commendations = {this.state.commendations}/>
-                        </div>
+                        </div>                    
                     <div
                     style={{marginLeft:"25%", marginRight:"25%",display:"flex", flexDirection:"row"}}>
                     {this.props.shared ? null : (
