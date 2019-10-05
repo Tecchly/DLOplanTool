@@ -32,17 +32,20 @@ export default function CommentList(props) {
     }
 
     const handleClick = () => {
-      var rec = {
-        recommendation: comment,
-        recommendationUser: firebase.auth().currentUser.displayName,
-        recommendationTime: +new Date()
-      }
-      props.newRecommendation(rec);
 
-      props.handleRecommendation(props.uuid, rec);
-
-      setComment("");
-     
+      if (comment.length > 0){
+        var rec = {
+          recommendation: comment,
+          recommendationUser: firebase.auth().currentUser.displayName,
+          recommendationTime: +new Date()
+        }
+        props.newRecommendation(rec);
+  
+        props.handleRecommendation(props.uuid, rec);
+  
+        setComment("");
+       
+      }   
     };
     
     useEffect(()=>{
