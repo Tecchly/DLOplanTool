@@ -42,8 +42,14 @@ export default function CommentList(props) {
       props.handleRecommendation(props.uuid, rec);
 
       setComment("");
+
+     
     };
     
+    useEffect(()=>{
+      var element = document.getElementById("dummy");
+      element.scrollIntoView();
+    })
 
     return (
       <React.Fragment>
@@ -60,6 +66,7 @@ export default function CommentList(props) {
               </p>
           </ListItem>
           ))} 
+          <div id="dummy"></div>
         </List>
 
         <div style={{display:"block", paddingLeft:5,paddingRight:5}}>
