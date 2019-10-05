@@ -42,7 +42,6 @@ export default function CommentList(props) {
       props.handleRecommendation(props.uuid, rec);
 
       setComment("");
-
      
     };
     
