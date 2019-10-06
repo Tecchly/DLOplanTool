@@ -119,7 +119,7 @@ const Projects = props => {
 
   useEffect(() => {
     var uid = firebase.auth().currentUser.uid;
-    Firestore.getProjects(uid, true)
+    Firestore.getProjects(uid, true, false)
       .then(function(doc) {
         if (doc.empty) toggleNoProjects();
         doc.forEach(x => {

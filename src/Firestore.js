@@ -20,8 +20,9 @@ class Firestore {
      *  Gets the collection for all users
      *  @param orderd: if the output should be ordered by creation time 
      */
-    static getProjects(userID, ordered = false) {
-        let projects = getProjectsReference(userID);
+    static getProjects(userID, ordered = false, archived = false) {
+        //let projects = getProjectsReference(userID);
+        let projects = users.doc(userID).collection("projects").where("archived","==",false);
         if (ordered) {
             projects = projects.orderBy('creationTime', 'asc');
         }
