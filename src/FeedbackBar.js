@@ -172,7 +172,8 @@ export default function FeedbackBar(props) {
       <Badge 
         color="primary" 
         invisible={anchorEl===null}
-        badgeContent={(Object.keys(props.commendations).length+ (commend ? 1:0)) + commendationPlural(Object.keys(props.commendations).length)}
+        badgeContent={(mapping+amplification+personalisation+coherence) +
+                      commendationPlural((mapping+amplification+personalisation+coherence))}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'left'
