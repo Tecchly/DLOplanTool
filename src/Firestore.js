@@ -67,9 +67,9 @@ class Firestore {
     }
 
     static archiveProject(userID, projectID) {
-        return getProjectsReference(userID).doc(projectID).update({
-            archived: true
-        });
+        getProjectsReference(userID).doc(projectID).update({archived: true});
+        getSharedProjectsReference(userID).doc(projectID).update({archived: true});
+        return;
     }
 
     static editProject(userID, projectID, data) {
@@ -89,8 +89,8 @@ class Firestore {
         );
     }
 
-    static getSharedProjects(userID) {
-        return getSharedProjectsReference(userID).orderBy('shareTime', 'desc').get();
+    static getSharedProjects(userID, archived = false) {
+        return getSharedProjectsReference(userID).where("archived","==",false).orderBy('shareTime', 'desc').get();
     };
 
     static saveCommendation(userID, projectID, ideaID, commenterID, commendation) {
