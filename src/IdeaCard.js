@@ -156,6 +156,7 @@ class IdeaCard extends React.Component {
                     handleDelete = {this.handleDelete}
                     handleCommend ={this.props.handleCommend}
                     loadCommendations = {this.props.loadCommendations}
+                    loadAmplifications = {this.props.loadAmplifications}
                     handleRecommendation = {this.props.handleRecommendation}
                     loadRecommendations= {this.props.loadRecommendations}
                     availableModes= {this.props.availableModes}
@@ -262,6 +263,7 @@ class IdeaCard extends React.Component {
                                         handleIdeaDeletion = {this.props.handleIdeaDeletion}
                                         handleCommend ={this.props.handleCommend}
                                         loadCommendations = {this.props.loadCommendations}
+                                        loadAmplifications = {this.props.loadAmplifications}
                                         handleRecommendation={this.props.handleRecommendation}
                                         loadRecommendations={this.props.loadRecommendations}
                                         ideas = {this.props.ideas}

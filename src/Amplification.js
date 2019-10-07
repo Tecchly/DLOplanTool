@@ -39,10 +39,12 @@ const Amplification = ( props ) => {
   const saveTopicAmplifications = (topic, options, next) => {
     amplificationOptions[topic] = options;
     addAmplificationOptions(amplificationOptions);
+
+
     if (next) changeSelect(next)
     //if next is null then it is the last section so all sections
     //are complete so save to firestore here
-    else console.log('this is where it should be saved to firestore')
+    else console.log(amplificationOptions)
   };
 
   useEffect(() => {

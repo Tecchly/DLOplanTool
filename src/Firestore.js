@@ -8,6 +8,7 @@ let users = firestore.collection("users");
 let getProjectsReference = userID => users.doc(userID).collection("projects");
 let getSharedProjectsReference = userID => users.doc(userID).collection("sharedProjects");
 let getIdeasReference = (userID, projectID) => getProjectsReference(userID).doc(projectID).collection("ideas");
+let getAmplificationsReference = (userID, projectID,ideaID) => getIdeasReference(userID, projectID).doc(ideaID).collection("amplifications");
 let getCommendationsReference = (userID, projectID, ideaID) => getIdeasReference(userID, projectID).doc(ideaID).collection("commendations");
 let getRecommendationsReference = (userID, projectID, ideaID) => getIdeasReference(userID, projectID).doc(ideaID).collection("recommendations");
 
@@ -36,6 +37,10 @@ class Firestore {
     static getIdeas(userID, projectID) {
         return getIdeasReference(userID, projectID).get();
     };
+
+    static getAmplifications(userID, projectID,ideaID) {
+        return getAmplificationsReference(userID, projectID,ideaID);
+    }
 
     //save a singular idea to the project.
     static saveIdea(userID, projectID, ideaID, idea) {

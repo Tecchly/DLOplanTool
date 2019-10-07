@@ -152,6 +152,21 @@ class Project extends React.Component {
     return ideaQuery;
   }
 
+  loadAmplifications = (ideaID) => {
+    var ownerID = firebase.auth().currentUser.uid; 
+    if (this.props.location.state.shared){
+      var ownerID = this.props.location.state.path.split("/")[1];     
+    }
+    
+    var ideaQuery = Firestore.getAmplifications(
+      ownerID,
+      this.props.location.state.projectID,
+      ideaID,
+    );
+
+    return ideaQuery;
+  }
+
   //Need to store the recommendation as well as the current user and the commend time
   //Handle recommendations
   //@@TODO not overwrite
@@ -370,6 +385,7 @@ class Project extends React.Component {
                 handleMainTopicChange={this.handleMainTopicChange}
                 handleCommend={this.handleCommend}
                 loadCommendations = {this.loadCommendations}
+                loadAmplifications = {this.loadAmplifications}
                 handleRecommendation = {this.handleRecommendation}
                 loadRecommendations = {this.loadRecommendations}
                 uuid="root"
