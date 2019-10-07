@@ -98,7 +98,7 @@ const Home = ({ history }) => {
   
   useEffect(() => {
     var uid = firebase.auth().currentUser.uid;
-    Firestore.getRecentProjects(uid, 4)
+    Firestore.getRecentProjects(uid, 4, false)
       .then(function(doc) {
         if (doc.empty) toggleNoProjects();
         doc.forEach(x => {

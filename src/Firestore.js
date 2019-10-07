@@ -22,15 +22,20 @@ class Firestore {
      */
     static getProjects(userID, ordered = false, archived = false) {
         //let projects = getProjectsReference(userID);
-        let projects = users.doc(userID).collection("projects").where("archived","==",false);
+        let projects = getProjectsReference(userID).where("archived","==",false);
         if (ordered) {
             projects = projects.orderBy('creationTime', 'asc');
         }
         return projects.get();
     };
 
-    static getRecentProjects(userID, number) {
-        return getProjectsReference(userID).orderBy('creationTime', 'desc').limit(number).get();
+    static getRecentProjects(userID, number, archived = false) {
+        //if (archived) {
+            //@TODO for teachers
+       // } else {
+        let projects = getProjectsReference(userID).where("archived","==",false);
+        return projects.orderBy('creationTime', 'desc').limit(number).get();
+        //}
     };
 
     static getIdeas(userID, projectID) {
