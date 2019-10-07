@@ -10,7 +10,7 @@ import Ionicon from "react-ionicons";
 import Utils from "./Utils.js";
 import ListItem from '@material-ui/core/ListItem';
 
-//@@TODO, need to add a medium selector here.
+
 import MessagePopup from "./MessagePopup.js";
 
 class NewProjectPopup extends React.Component {
@@ -127,6 +127,7 @@ class NewProjectPopup extends React.Component {
     );
   }
 
+  //@@TODO limit title length
   handleTitleChange =(event)=> {
     this.setState({ projectTitle: event.target.value }, function() {
       //Local cache variant
@@ -134,6 +135,7 @@ class NewProjectPopup extends React.Component {
     });
   }
 
+  //@@TODO limit topic change length
   handleTopicChange = (event) => {
     this.setState({ projectTopic: event.target.value }, function() {
       this.localCache.setItem("topic", this.state.projectTopic);

@@ -2,6 +2,7 @@ import React from "react";
 import "./style.scss";
 import ModeSelectionMenu from "./ModeSelectionMenu.js"
 import FeedbackBar from "./FeedbackBar.js"
+import Utils from "./Utils.js"
 
 class IdeaEditPopup extends React.Component {
     constructor(props) {
@@ -15,6 +16,7 @@ class IdeaEditPopup extends React.Component {
         notes:'',
         icon:'ios-bulb',
         commendations: [],
+        recommendations: [],
     }
 
     //Use for loading commendations
@@ -24,6 +26,28 @@ class IdeaEditPopup extends React.Component {
             commendations: {
               ...this.state.commendations,
               [`${x.id}`]: data
+            }
+          });
+    }
+
+    //Use for loading recommendations. Exclusively for loading.
+    addRecommendations = x =>{
+        var data = x.data();
+        this.setState({
+            recommendations: {
+              ...this.state.recommendations,
+              [`${x.id}`]: data
+            }
+          });
+    }
+
+    //Used for live updating of comments from commentlist child component
+    newRecommendation = data =>{
+        this.setState({
+            //Hacky, but for displaying comments made without getting response from DB. 
+            recommendations: {
+              ...this.state.recommendations,
+              [`${Utils.uuid()}`]: data
             }
           });
     }
@@ -46,6 +70,8 @@ class IdeaEditPopup extends React.Component {
             this.setState({availMode:["Audio"]});
         }
 
+
+
         //Loading the commendations of the idea
         this.props.loadCommendations(this.props.uuid)
         .get()
@@ -56,7 +82,20 @@ class IdeaEditPopup extends React.Component {
                     this.addCommendations(x);
                 })
             }.bind(this)
-        );        
+        );
+
+
+        
+        //Load the recommendations of the idea
+        this.props.loadRecommendations(this.props.uuid)
+        .get()
+        .then(
+            function(recommendation){
+                recommendation.forEach(x=>{
+                    this.addRecommendations(x)
+                })
+            }.bind(this)
+        );
     }
 
     handleTitleChange = (event)=> {
@@ -101,12 +140,17 @@ class IdeaEditPopup extends React.Component {
                         disabled = {this.props.shared ? true: false }
                         guide="inputIdeaNotes"
                         />
+                    
                     <div guide="feedbackbar"><FeedbackBar
                         shared ={this.props.shared} 
                         handleCommend ={this.props.handleCommend}
+                        handleRecommendation = {this.props.handleRecommendation}
                         uuid = {this.props.uuid} 
-                        commendations = {this.state.commendations}/>
-                        </div>
+                        commendations = {this.state.commendations}
+                        recommendations = {this.state.recommendations}
+                        newRecommendation = {this.newRecommendation}
+                        />
+                        </div>                    
                     <div
                     style={{marginLeft:"25%", marginRight:"25%",display:"flex", flexDirection:"row"}}>
                     {this.props.shared ? null : (
