@@ -92,6 +92,7 @@ const ProjectView = ({ open, hide, projectInfo, edit, shared }) => {
   };
   const shareProject = () => {
     var data = {
+      archived: false,
       id: projectInfo.projectID,
       title: projectInfo.title,
       subtitle: projectInfo.subtitle,

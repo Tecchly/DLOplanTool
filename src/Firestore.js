@@ -68,8 +68,19 @@ class Firestore {
 
     static archiveProject(userID, projectID) {
         getProjectsReference(userID).doc(projectID).update({archived: true});
-        getSharedProjectsReference(userID).doc(projectID).update({archived: true});
-        return;
+
+        return users.get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(documentSnapshot) {
+                users.doc(documentSnapshot.id).collection('sharedProjects').doc(projectID).update({archived: true}).then(() => {
+                }).catch(error => {
+                  //if (!error.startsWith("No document to update")) {
+                    console.error("Shared project archive failure, " + error);
+                  //}
+                })
+            })
+        });
+
+    
     }
 
     static editProject(userID, projectID, data) {
@@ -90,6 +101,7 @@ class Firestore {
     }
 
     static getSharedProjects(userID, archived = false) {
+        //return getSharedProjectsReference(userID).orderBy('shareTime', 'desc').get();
         return getSharedProjectsReference(userID).where("archived","==",false).orderBy('shareTime', 'desc').get();
     };
 
