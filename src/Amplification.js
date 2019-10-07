@@ -36,15 +36,34 @@ const Amplification = ( props ) => {
 
   const [amplificationOptions, addAmplificationOptions] = useState({});
 
-  const saveTopicAmplifications = (topic, options, next) => {
+  const saveTopicAmplifications = (topic, location, options, next) => {
     amplificationOptions[topic] = options;
+    amplificationOptions[topic].location = location;
     addAmplificationOptions(amplificationOptions);
-
-
     if (next) changeSelect(next)
     //if next is null then it is the last section so all sections
     //are complete so save to firestore here
-    else console.log(amplificationOptions)
+    else {
+      for (const [key, value] of Object.entries(amplificationOptions)) {
+        for (const [key2, value2] of Object.entries(value)) {
+          if (key2 != "location"){
+            console.log(firebase.auth().currentUser.uid,props.location.state.projectID);
+            console.log(value["location"]);
+            console.log(Utils.uuid());
+            console.log(value2);
+            Firestore.saveAmplification(
+              firebase.auth().currentUser.uid,props.location.state.projectID,
+              value["location"],
+              Utils.uuid(),
+              value2
+            );
+          }
+
+        }
+      }
+      console.log(amplificationOptions);
+      console.log('this is where it should be saved to firestore');
+    }
   };
 
   useEffect(() => {
@@ -55,13 +74,13 @@ const Amplification = ( props ) => {
     words(ideas).then(function (result){
       var mainTopic = topic(result["topic"]);
 
-      Object.values(result["ideas"]).forEach(info => {
+      Object.keys(result["ideas"]).forEach(info => {
 
         keyWordList = [];
         retext()
           .use(pos)
           .use(keywords)
-          .process(info.notes, (err, file) => {
+          .process(result["ideas"][info].notes, (err, file) => {
             if (err) throw err;
             //keywords
             file.data.keywords.forEach(function(keyword) {
@@ -75,8 +94,9 @@ const Amplification = ( props ) => {
               }
             });
           });
-        info.keywords = keyWordList;
-        addIdea(info);
+        result["ideas"][info].keywords = keyWordList;
+        result["ideas"][info].location = info;
+        addIdea(result["ideas"][info]);
       });
       retext()
         .use(pos)
@@ -142,7 +162,8 @@ const Amplification = ( props ) => {
       medium: topic.medium,
       title: props.location.state.title,
       subtitle: topic.subtitle,
-      notes: ""
+      notes: "",
+      location: "root"
     };
     return topicInfo;
   }

@@ -155,6 +155,7 @@ const AplificationTile = props => {
                   onClick={() => {
                     props.setAmplificationOptions(
                       props.words.title,
+                      props.words.location,
                       selected,
                       !props.last ? props.index + 1 : null
                     );
