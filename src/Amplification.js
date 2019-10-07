@@ -47,16 +47,12 @@ const Amplification = ( props ) => {
       for (const [key, value] of Object.entries(amplificationOptions)) {
         for (const [key2, value2] of Object.entries(value)) {
           if (key2 != "location"){
-            console.log(firebase.auth().currentUser.uid,props.location.state.projectID);
-            console.log(value["location"]);
-            console.log(Utils.uuid());
-            console.log(value2);
             Firestore.saveAmplification(
               firebase.auth().currentUser.uid,props.location.state.projectID,
               value["location"],
               Utils.uuid(),
               value2
-            );
+            )
           }
 
         }
