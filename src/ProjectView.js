@@ -55,6 +55,7 @@ const archive = projectID => {
   }).catch(error => {
     console.error("Archive project failure, " + error);
   });
+  
 };
 
 const DialogContent = withStyles(theme => ({
@@ -70,7 +71,7 @@ const DialogActions = withStyles(theme => ({
   }
 }))(MuiDialogActions);
 
-const ProjectView = ({ open, hide, projectInfo, edit, shared }) => {
+const ProjectView = ({ open, hide, projectInfo, removeProject, edit, shared }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [tags, addTags] = useState([]);
 
@@ -192,6 +193,7 @@ const ProjectView = ({ open, hide, projectInfo, edit, shared }) => {
                 <Button
                   onClick={() => {
                     archive(projectInfo.projectID);
+                    removeProject(projectInfo.projectID);
                     clearTags();
                     hide();
                   }}

@@ -92,6 +92,16 @@ const Home = ({ history }) => {
   const addRecentProject = project => {
     pushRecentProjects(oldArray => [...oldArray, project]);
   };
+
+  const removeProject = id => {
+    if (recentProjects.length === 1) {
+      setNoProjects(true);
+    }
+
+    let filteredArray = recentProjects.filter(project => project.projectID !== id)
+    pushRecentProjects(filteredArray);
+
+  }
   const clickedProject = project => {
     setCurrentProject(project);
   };
@@ -212,6 +222,7 @@ const Home = ({ history }) => {
           open={open}
           hide={toggle}
           projectInfo={currentProject}
+          removeProject={removeProject}
           edit={editProject}
         />
         <SettingsDialog open={settingsOpen} hide={toggleSettings} />

@@ -117,6 +117,15 @@ const Projects = props => {
     pushProjects(oldArray => [...oldArray, project]);
   };
 
+  const removeProject = id =>{
+    if (allProjects.length === 1){
+      setNoProjects(true);
+    }
+    
+    let filteredArray = allProjects.filter(project => project.projectID !== id)
+    pushProjects(filteredArray);
+  }
+
   useEffect(() => {
     var uid = firebase.auth().currentUser.uid;
     Firestore.getProjects(uid, true, false)
@@ -203,6 +212,7 @@ const Projects = props => {
           open={open}
           hide={toggle}
           projectInfo={currentProject}
+          removeProject={removeProject}
           edit={editProject}
         />
         <Container
