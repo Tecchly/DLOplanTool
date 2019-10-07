@@ -66,6 +66,14 @@ class Firestore {
         });
     }
 
+    /**
+     * Function is called when user clicks archive button on project
+     * Sets project to archived: true in firebase. Combs through database 
+     * setting shared projects to archived: true 
+     * 
+     * @param {*} userID the user who created the project
+     * @param {*} projectID the id of the project
+     */
     static archiveProject(userID, projectID) {
         getProjectsReference(userID).doc(projectID).update({archived: true});
 
@@ -74,7 +82,7 @@ class Firestore {
                 users.doc(documentSnapshot.id).collection('sharedProjects').doc(projectID).update({archived: true}).then(() => {
                 }).catch(error => {
                   //if (!error.startsWith("No document to update")) {
-                    console.error("Shared project archive failure, " + error);
+                  //  console.error("Shared project archive failure, " + error);
                   //}
                 })
             })
