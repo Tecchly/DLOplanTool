@@ -156,6 +156,7 @@ const AplificationTile = props => {
                     props.setAmplificationOptions(
                       props.words.title,
                       props.words.location,
+                      props.words.project,
                       selected,
                       !props.last ? props.index + 1 : null
                     );

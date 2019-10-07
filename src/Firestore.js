@@ -129,11 +129,6 @@ class Firestore {
     }
 
     static saveAmplification(projectID,ideaID,amplificationID,amplification) {
-        console.log(user);
-        console.log(projectID);
-        console.log(ideaID);
-        console.log(amplificationID);
-        console.log(amplification);
         var user = firebase.auth().currentUser.uid;
         return getAmplificationsReference(user, projectID, ideaID).doc(amplificationID).set(amplification);
     }

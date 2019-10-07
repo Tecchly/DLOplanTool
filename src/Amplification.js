@@ -36,7 +36,7 @@ const Amplification = ( props ) => {
 
   const [amplificationOptions, addAmplificationOptions] = useState({});
 
-  const saveTopicAmplifications = (topic, location, options, next) => {
+  const saveTopicAmplifications = (topic, location, project, options, next) => {
     amplificationOptions[topic] = options;
     amplificationOptions[topic].location = location;
     addAmplificationOptions(amplificationOptions);
@@ -48,7 +48,7 @@ const Amplification = ( props ) => {
         for (const [key2, value2] of Object.entries(value)) {
           if (key2 != "location"){
             Firestore.saveAmplification(
-              firebase.auth().currentUser.uid,props.location.state.projectID,
+              project,
               value["location"],
               Utils.uuid(),
               value2
@@ -57,8 +57,6 @@ const Amplification = ( props ) => {
 
         }
       }
-      console.log(amplificationOptions);
-      console.log('this is where it should be saved to firestore');
     }
   };
 
@@ -92,6 +90,7 @@ const Amplification = ( props ) => {
           });
         result["ideas"][info].keywords = keyWordList;
         result["ideas"][info].location = info;
+        result["ideas"][info].project = mainTopic.project;
         addIdea(result["ideas"][info]);
       });
       retext()
@@ -153,13 +152,13 @@ const Amplification = ( props ) => {
   }
 
   function topic(topic) {
-
     var topicInfo = {
       medium: topic.medium,
       title: props.location.state.title,
       subtitle: topic.subtitle,
       notes: "",
-      location: "root"
+      location: "root",
+      project: props.location.state.projectID
     };
     return topicInfo;
   }
