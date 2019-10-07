@@ -118,6 +118,12 @@ const Home = ({ history }) => {
         console.log("Error getting document:", error);
         toggleNoProjects();
       });
+    var localCache = window.localStorage;
+    return function cleanup() {
+      if (localCache.getItem("showOtherGuide")) {
+        localCache.removeItem("showOtherGuide");
+      }
+    }
   }, []);
 
   function togglePopup() {
@@ -139,12 +145,13 @@ const Home = ({ history }) => {
       html.style.setProperty(property, selectedTheme[property]);
     });
   }
-  const IconButton = ({ icon, text, nav, classVal }) => (
+  const IconButton = ({ icon, text, nav, classVal, guide }) => (
     <Col>
       <Button
         type="primary"
         size={"large"}
         className={classVal}
+        guide={guide}
         onClick={() => {
           nav === "/" ? setShowNewProject(true) : history.push(nav);
         }}
@@ -199,7 +206,7 @@ const Home = ({ history }) => {
 
   return (
     <React.Fragment>
-      <HeaderBar />
+      <HeaderBar steps={steps} />
       <Container fluid={true}>
         <ProjectView
           open={open}
@@ -208,10 +215,10 @@ const Home = ({ history }) => {
           edit={editProject}
         />
         <SettingsDialog open={settingsOpen} hide={toggleSettings} />
-        {showNewProject ? (
+        <div className="newProjectPopup">{showNewProject ? (
           //Popup will live here.
           <NewProjectPopup togglePopup={togglePopup} />
-        ) : null}
+        ) : null} </div>
         <Row>
           <Container fluid={true} className="welcomeTile">
             <Row style={{ height: 200 }}>
@@ -247,29 +254,34 @@ const Home = ({ history }) => {
                 icon="plus-circle"
                 nav="/"
                 text="New Project"
+                guide="newProject"
               />
               <IconButton
                 classVal="homeButton"
                 icon="reconciliation"
                 nav="/feedback"
                 text="Feedback"
+                guide="feedback"
               />
               <IconButton
                 classVal="homeButton"
                 icon="project"
                 nav="/projects"
                 text="Your Projects"
+                guide="yourProjects"
               />
               <IconButton
                 classVal="homeButton"
                 icon="project"
                 nav="/sharedprojects"
                 text="Shared Projects"
+                guide="sharedProjects"
               />
               <IconButton
                 classVal="homeButton"
                 icon="question-circle"
                 text="Help"
+                guide="help"
               />
             </Row>
           </Container>
@@ -291,7 +303,7 @@ const Home = ({ history }) => {
           </Row>
         </Container>
 
-        <Container style={{ marginTop: 40 }} fluid>
+        <Container style={{ marginTop: 40 }} fluid className="recentProjects">
           <Row style={{ marginLeft: 80, marginRight: 80 }}>
             {recentProjects.length == 0 && !noProjects ? (
               <ProjectLoader />
@@ -330,5 +342,82 @@ const Home = ({ history }) => {
     </React.Fragment>
   );
 };
+
+const steps = [
+  {
+    selector: '.welcomestep',
+    content: (<h3>Welcome to DLOPlanTool!</h3>),
+  },
+  {
+    selector: '[guide="newProject"]',
+    content: (<h5>Now lets start with creating a new project!</h5>),
+    observe: '.newProjectPopup',
+  },
+  {
+    selector: '[guide="inputProjectTitle"]',
+    content: (<h5>input your meaningful project title here! such as "The Water Cycle"</h5>),
+    action: node => {
+      try {
+        node.focus();
+      } catch (e) {
+        console.log(e)
+      }
+      // node.value="the water cycle";
+    }
+  },
+  {
+    selector: '[guide="inputProjectTopic"]',
+    content: (<h5>input your short description for the project here!</h5>),
+    action: node => {
+      try {
+        node.focus();
+      } catch (e) {
+        console.log(e)
+      }
+      // node.value="rain, river, ocean, cloud"
+    }
+  },
+  {
+    selector: '.chooseMedium',
+    content: (<h6>Choose which type of medium you like to use in this project!</h6>),
+    action: node => {
+      try {
+        node.focus();
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  },
+  {
+    selector: '.draggedImage',
+    content: (<h6>You can drag an image from you local disk to here to represent your main idea of this project or just skip this step!</h6>)
+  },
+  {
+    selector: '[guide="newProjectCreateButton"]',
+    content: (<h6>Now click here to finish initializing your project!</h6>)
+  },
+  {
+    selector: '[guide="yourProjects"]',
+    content: (<h6>You can find the projects you created here! Or...</h6>),
+    action: () => {
+      var localCache = window.localStorage;
+      if (localCache.getItem("showOtherGuide")) {
+        localCache.removeItem("showOtherGuide");
+      }
+    }
+  },
+  {
+    selector: '.recentProjects',
+    content: (<h6>Find your latest 4 projects here!</h6>)
+  },
+  {
+    selector: '[guide="sharedProjects"]',
+    content: (<h6>Your friends may share projects with you, you can find them here!</h6>)
+  },
+  {
+    selector: '.bell',
+    content: (<h6>Also, you will receive a notice when your friend shared a project with you!</h6>)
+  }
+];
 
 export default Home;

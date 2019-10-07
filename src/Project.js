@@ -233,7 +233,16 @@ class Project extends React.Component {
     }
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    var localCache = window.localStorage;
+    if(localCache.getItem("showProjectTour")) {
+      localCache.removeItem("showProjectTour");
+      console.log("remove local cache showProjectTour");
+    }
+    if (this.props.location.state.shared && localCache.getItem("showSharedProjectsTour")) {
+      localCache.removeItem("showSharedProjectsTour");
+    }
+  }
 
   componentDidUpdate (prevProps) {
     if (prevProps.location.state.projectID !== this.props.location.state.projectID) {
@@ -252,12 +261,12 @@ class Project extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <HeaderBar />
+        <HeaderBar steps={steps}/>
         <Container fluid={true}>
           <Row
             style={{ textAlign: "center", marginTop: 40, position: "relative" }}
           >
-            <div style={{ display: "flex", position: "absolute", left: 100 }}>
+            <div style={{ display: "flex", position: "absolute", left: 100 }} guide="goBack">
               <Icon
                 type="arrow-left"
                 onClick={() => {
@@ -281,7 +290,7 @@ class Project extends React.Component {
               </h3>
             </div>
             {this.props.location.state.shared ? null : (
-            <div style={{ display: "flex", position: "absolute", right: 150 }}>
+            <div style={{ display: "flex", position: "absolute", right: 150 }} guide="goToAmplify">
               <h3
                 style={{
                   color: "#2F4858",
@@ -321,6 +330,7 @@ class Project extends React.Component {
           </h1>
           <div
             style={{ marginLeft: "15%", marginRight: "15%", maxWidth: "70%" }}
+            guide="rootIdea"
           >
             {this.state.loaded ? (
               <IdeaCard
@@ -359,5 +369,76 @@ class Project extends React.Component {
     );
   }
 }
+
+const steps = [
+  {
+    selector: '[guide="rootIdea"]',
+    content: (<h5>this is the root idea node of your project!</h5>),
+    action: node => {
+      var localCache = window.localStorage;
+      if(localCache.getItem("showProjectTour")) {
+        localCache.removeItem("showProjectTour");
+        console.log("remove local cache showProjectTour");
+      }
+      // if (this.props.location.state.shared && localCache.getItem("showSharedProjectsTour")) {
+      //   localCache.removeItem("showSharedProjectsTour");
+      // }
+    }
+  },
+  {
+    selector: '.addSubIdeasButton',
+    content: (<h5>click here to map your first sub idea of this project!</h5>)
+  },
+  {
+    selector: '[guide="chooseModeType"]',
+    content: (<h5>choose the mode type of this idea here!</h5>),
+    action: node => {
+      try {
+        node.focus();
+      } catch (e) {
+        console.log(e)
+      }
+    }
+  },
+  {
+    selector: '[guide="inputIdeaTitle"]',
+    content: (<h6>give a title of your idea here!</h6>),
+    action: node => {
+      try {
+        node.focus();
+      } catch (e) {
+        console.log(e)
+      }
+      // node.value="Rain";
+    }
+  },
+  {
+    selector: '[guide="inputIdeaNotes"]',
+    content: (<h6>add more detailed informations for this idea here!</h6>),
+    action: node => {
+      try {
+        node.focus();
+      } catch (e) {
+        console.log(e)
+      }
+      // node.value="rain is a type of water falls from sky";
+    }
+  },
+  {
+    selector: '[guide="feedbackbar"]',
+    content: (<h6>Your friend can commend your ideas if you share this project with them, after they commended, you can find them here!</h6>)
+  },
+  {
+    selector: '[guide="doneButton"]',
+    content: (<h6>click here to finish editing this idea!</h6>)
+  },
+  {
+    selector: '[guide="goBack"]',
+    content: (<h6>You may add more ideas later, but now lets click here and go back to the home page!</h6>),
+    action: node => {
+      window.localStorage.setItem("showOtherGuide", true);
+    }
+  }
+];
 
 export default withRouter(Project);

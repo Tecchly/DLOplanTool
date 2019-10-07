@@ -76,14 +76,15 @@ class IdeaEditPopup extends React.Component {
     render(){
         return(
             <React.Fragment>
-            <div className="popup">
+            <div className="popup" >
                 <div className="inner">
-                    <div className = {this.state.availMode}>
+                    <div className = {this.state.availMode} guide="chooseModeType">
                         <ModeSelectionMenu 
                             availableModes = {this.props.shared ? [this.state.mode] : this.props.availableModes}
                             handleModeChange = {this.handleModeChange} 
                             currentMode = {this.state.mode}
                             disabled = {this.props.shared ? true: false }
+                            className="modeTypeMenu"
                             />
                     </div>
                     <input 
@@ -92,21 +93,25 @@ class IdeaEditPopup extends React.Component {
                         value={this.state.title} 
                         onChange={this.handleTitleChange} 
                         disabled = {this.props.shared ? true: false }
+                        guide="inputIdeaTitle"
                         />
                     <textarea 
                         value={this.state.notes} 
                         onChange={this.handleNotesChange}
                         disabled = {this.props.shared ? true: false }
+                        guide="inputIdeaNotes"
                         />
-                    <FeedbackBar
+                    <div guide="feedbackbar"><FeedbackBar
                         shared ={this.props.shared} 
                         handleCommend ={this.props.handleCommend}
                         uuid = {this.props.uuid} 
                         commendations = {this.state.commendations}/>
+                        </div>
                     <div
                     style={{marginLeft:"25%", marginRight:"25%",display:"flex", flexDirection:"row"}}>
                     {this.props.shared ? null : (
                         <button
+                            guide="doneButton"
                             className= "selectButton"
                             onClick ={()=>{
                                this.props.handleEdit(this.state.title,this.state.notes, this.state.mode);                                
@@ -114,6 +119,7 @@ class IdeaEditPopup extends React.Component {
                             Done
                         </button>)}
                         <button
+                            guide="cancelButton"
                             className= "selectButton"
                             onClick ={()=>{
                                 this.props.closePopup();

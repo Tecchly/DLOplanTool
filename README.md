@@ -5,7 +5,10 @@ This is the repository containing all code for the project DLO plan Tool by team
 
 Naomi has worked extensively  with 1:1 initiatives (1 device per student) in schools and part of her research involves how the design and creation of Digital learning objects can benefit student learning. Digital learning objects (DLOs) refer to a digital project that students create with the intent on sharing knowledge with their peers. As such, this project seeks to create a framework, with which students of upper primary school age can use to plan out effective DLOs.
 
-### Execution Instructions
+### Check out this project at
+https://dloplantool.web.app/login
+
+### Execution Instructions if you choose to clone/pull this repository
 
 1. Ensure npm is installed on your machine, you can get it from here https://www.npmjs.com/get-npm
 2. Download/clone this repository

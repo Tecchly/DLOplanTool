@@ -12,10 +12,11 @@ import useSettingsDialog from "./useSettingsDialog";
 import SettingsDialog from "./SettingsDialog";
 import IconButton from "@material-ui/core/IconButton";
 import BrushIcon from "@material-ui/icons/ColorLens";
+import Guidance from "./Guidance";
 //Reusable headerbar component
-const HeaderBar = () => {
-  const { settingsOpen, toggleSettings } = useSettingsDialog();
-  return (
+const HeaderBar = (props) => {
+    const { settingsOpen, toggleSettings } = useSettingsDialog();
+    return (
     <React.Fragment>
       <SettingsDialog open={settingsOpen} hide={toggleSettings} />
       <Navbar
@@ -62,14 +63,16 @@ const HeaderBar = () => {
           <Col style={{}}>
             <Nav className="mr-auto"></Nav>
             <div className="customiseButton">
-              <IconButton
+
+            <IconButton
                 aria-label="notifications"
                 onClick={() => toggleSettings()}
                 className="bell"
-              >
+                >
                 <BrushIcon fontSize="default" />
-              </IconButton>
+            </IconButton>    
             </div>
+            {props.steps ? <div className="guidanceButton"><Guidance steps={props.steps} isTourOpen={props.isTourOpen} goToStep={props.goToStep}/> </div> : null}
             <Nav>
               <img
                 alt="profile"
