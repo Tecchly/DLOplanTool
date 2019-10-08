@@ -1,5 +1,6 @@
 import { app } from "./Firebase";
 import firebase from "firebase";
+import { resolve } from "path";
 
 let firestore = app.firestore();
 
@@ -161,6 +162,32 @@ class Firestore {
 
     static getAmplifications(userID,projectID,ideaID) {
         return getAmplificationsReference(userID,projectID,ideaID);
+    }
+
+    static deleteAmplifications(projectID,ideaID) {
+        var user = firebase.auth().currentUser.uid;
+        console.log(user);
+        console.log(projectID);
+        console.log(ideaID);
+        var promise = new Promise(function(resolve){
+            var amplifications = getAmplificationsReference(user,projectID,ideaID);
+            amplifications.get()
+            .then(function(querySnapshot) {
+                // Once we get the results, begin a batch
+                var batch = firestore.batch();
+        
+                querySnapshot.forEach(function(doc) {
+                    // For each doc, add a delete operation to the batch
+                    batch.delete(doc.ref);
+                });
+        
+                // Commit the batch
+                    batch.commit().then(function() {
+                        resolve();
+                    }); 
+            });
+        });
+        return promise;
     }
 
     static getProjectsCollection(userID) {
