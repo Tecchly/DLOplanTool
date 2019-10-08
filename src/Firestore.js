@@ -1,5 +1,6 @@
 import { app } from "./Firebase";
 import firebase from "firebase";
+import { resolve } from "path";
 
 let firestore = app.firestore();
 
@@ -10,6 +11,7 @@ let getSharedProjectsReference = userID => users.doc(userID).collection("sharedP
 let getIdeasReference = (userID, projectID) => getProjectsReference(userID).doc(projectID).collection("ideas");
 let getCommendationsReference = (userID, projectID, ideaID) => getIdeasReference(userID, projectID).doc(ideaID).collection("commendations");
 let getRecommendationsReference = (userID, projectID, ideaID) => getIdeasReference(userID, projectID).doc(ideaID).collection("recommendations");
+let getAmplificationsReference = (userID, projectID, ideaID) => getIdeasReference(userID, projectID).doc(ideaID).collection("amplifications");
 
 class Firestore {
     
@@ -151,6 +153,41 @@ class Firestore {
 
     static getRecommendations(userID,projectID,ideaID) {
         return getRecommendationsReference(userID,projectID,ideaID);
+    }
+
+    static saveAmplification(projectID,ideaID,amplificationID,amplification) {
+        var user = firebase.auth().currentUser.uid;
+        return getAmplificationsReference(user, projectID, ideaID).doc(amplificationID).set(amplification);
+    }
+
+    static getAmplifications(userID,projectID,ideaID) {
+        return getAmplificationsReference(userID,projectID,ideaID);
+    }
+
+    static deleteAmplifications(projectID,ideaID) {
+        var user = firebase.auth().currentUser.uid;
+        console.log(user);
+        console.log(projectID);
+        console.log(ideaID);
+        var promise = new Promise(function(resolve){
+            var amplifications = getAmplificationsReference(user,projectID,ideaID);
+            amplifications.get()
+            .then(function(querySnapshot) {
+                // Once we get the results, begin a batch
+                var batch = firestore.batch();
+        
+                querySnapshot.forEach(function(doc) {
+                    // For each doc, add a delete operation to the batch
+                    batch.delete(doc.ref);
+                });
+        
+                // Commit the batch
+                    batch.commit().then(function() {
+                        resolve();
+                    }); 
+            });
+        });
+        return promise;
     }
 
     static getProjectsCollection(userID) {

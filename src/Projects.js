@@ -141,7 +141,6 @@ const Projects = props => {
             .then(function(url) {
               proj.image = url;
               addProject(proj);
-              // console.log(proj);
             });
         });
       })

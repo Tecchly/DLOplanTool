@@ -315,13 +315,13 @@ const FeedbackContent = (props) => {
   function switchCommend(commendType) {
     switch(commendType) {
       case 'mapping':
-        return (<Typography color="textSecondary" variant="body1"> <Map /> Good mapping to mode! </Typography>);
+        return (<Typography color="textSecondary" variant="body1" classes={{body1: "feedback-cell-body"}}> <Map /> Good mapping to mode! </Typography>);
       case 'amplification':
-        return (<Typography color="textSecondary" variant="body1"> <VolumeUp/> Good amplification of keywords!</Typography>);
+        return (<Typography color="textSecondary" variant="body1" classes={{body1: "feedback-cell-body"}}> <VolumeUp/> Good amplification of keywords!</Typography>);
       case 'personalisation':
-        return (<Typography color="textSecondary" variant="body1"> <Face /> Good personalisation, looks pretty! </Typography>);
+        return (<Typography color="textSecondary" variant="body1" classes={{body1: "feedback-cell-body"}}> <Face /> Good personalisation, looks pretty! </Typography>);
       case 'coherence':
-        return (<Typography color="textSecondary" variant="body1"> <Autorenew /> Good coherence to the main topic! </Typography>);
+        return (<Typography color="textSecondary" variant="body1" classes={{body1: "feedback-cell-body"}}> <Autorenew /> Good coherence to the main topic! </Typography>);
     }
   }
 
@@ -421,10 +421,10 @@ const FeedbackContent = (props) => {
                         />
                       </TableCell> */}
                       {/* <TableCell /> */}
-                      <TableCell component="th" id={labelId} scope="row" padding="none">  
+                      <TableCell component="th" id={labelId} scope="row" padding="none" classes={{ root: "feedbackTableCell" }}>  
                         { row.type === "commend" ? (
-                          <div  style={{ float: "left" }}>              
-                            <Typography gutterBottom variant="h6">
+                          <div  style={{ float: "left" }} >              
+                            <Typography gutterBottom variant="h6" classes={{h6: "feedback-cell"}}>
                               {row.reviewerName + " commended your idea "}
                               <a className="sharedProjectLink" onClick={() => {props.loadProject(row);}}> {row.idea.title} </a> {" of project "}
                               <a
@@ -441,8 +441,8 @@ const FeedbackContent = (props) => {
                             }
                           </div>    
                           ) : 
-                          (<div style={{ float: "left" }}>
-                            <Typography gutterBottom variant="h6">
+                          (<div style={{ float: "left" }} >
+                            <Typography gutterBottom variant="h6" classes={{h6: "feedback-cell"}}>
                               {row.reviewerName + " left feedback on your idea "}
                               <a className="sharedProjectLink" onClick={() => {props.loadProject(row);}}> {row.idea.title} </a> {" of project "}
                               <a
@@ -454,7 +454,7 @@ const FeedbackContent = (props) => {
                                 {row.project.title}
                               </a>
                             </Typography> 
-                            <Typography color="textSecondary" variant="body1">{row.comment}</Typography>
+                            <Typography color="textSecondary" variant="body1" classes={{body1: "feedback-cell-body"}}>|        {row.comment}</Typography>
                           </div>) }
                         <h6 style={{ textAlign: "right", float: "right" }}>
                           {moment(row.reviewTime).isSame(moment(), 'day') ? moment(row.reviewTime).format('LT') : moment(row.reviewTime).format('MMM D')}

@@ -15,14 +15,15 @@ import CommentList from './CommentList.js'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    marginLeft: "10%",
+    marginLeft: "8%",
     marginRight: "10%",
     textAlign: "center",
+    float: 'left',
   },
   button: {
       marginLeft:10,
       marginRight:10,
-      fontSize: "12px",
+      fontSize: "0.875rem",
   },
   selected: {
       backgroundColor: "#1fbf6c",
@@ -176,14 +177,14 @@ export default function FeedbackBar(props) {
                       commendationPlural((mapping+amplification+personalisation+coherence))}
         anchorOrigin={{
           vertical: 'top',
-          horizontal: 'left'
+          horizontal: 'right'
         }}
         >
-        <Button aria-describedby={id} variant="contained"  className = {classes.button} onClick={handleClick}>
+        <Button aria-describedby={id}   className = {classes.button} onClick={handleClick}>
           {props.shared ? "Commend Idea": "Commendations"}
         </Button>      
       </Badge>
-      <Button aria-describedby={feedID} variant="contained" className = {classes.button} onClick={feedbackClick}>
+      <Button aria-describedby={feedID}  className = {classes.button} onClick={feedbackClick}>
         {props.shared ? "Comment": "Comments"}
       </Button>
       <Popover

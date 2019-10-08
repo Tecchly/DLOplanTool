@@ -17,7 +17,8 @@ import pos from "retext-pos";
 import keywords from "retext-keywords";
 import toString from "nlcst-to-string";
 import Utils from "./Utils";
-
+import IconButton from "@material-ui/core/IconButton";
+import BackIcon from "@material-ui/icons/ArrowBack";
 const Amplification = ( props ) => {
   const [ideaKeyWords, pushIdeaKeyWords] = useState([]);
   const addIdea = ideas => {
@@ -36,13 +37,44 @@ const Amplification = ( props ) => {
 
   const [amplificationOptions, addAmplificationOptions] = useState({});
 
-  const saveTopicAmplifications = (topic, options, next) => {
+  const saveTopicAmplifications = (topic, location, project, options, next) => {
     amplificationOptions[topic] = options;
+    amplificationOptions[topic].location = location;
     addAmplificationOptions(amplificationOptions);
     if (next) changeSelect(next)
     //if next is null then it is the last section so all sections
     //are complete so save to firestore here
-    else console.log('this is where it should be saved to firestore')
+    else {
+      for (const [key, value] of Object.entries(amplificationOptions)) {
+        // console.log(value["location"]);
+        Firestore.deleteAmplifications(
+          project,
+          value["location"]
+        ).then(function(){
+          for (const [key2, value2] of Object.entries(value)) {
+            if (key2 != "location"){
+              Firestore.saveAmplification(
+                project,
+                value["location"],
+                Utils.uuid(),
+                value2
+              )
+            }
+
+        }}).then(function(){
+          props.history.push({
+            pathname: "./project",
+            state:{
+              projectID: props.location.state.projectID,
+              title: props.location.state.title,
+              topic: props.location.state.topic,
+              medium: props.location.state.medium,
+              image: props.location.state.image
+            }
+          })
+        });
+      }
+    }
   };
 
   useEffect(() => {
@@ -53,13 +85,13 @@ const Amplification = ( props ) => {
     words(ideas).then(function (result){
       var mainTopic = topic(result["topic"]);
 
-      Object.values(result["ideas"]).forEach(info => {
+      Object.keys(result["ideas"]).forEach(info => {
 
         keyWordList = [];
         retext()
           .use(pos)
           .use(keywords)
-          .process(info.notes, (err, file) => {
+          .process(result["ideas"][info].notes, (err, file) => {
             if (err) throw err;
             //keywords
             file.data.keywords.forEach(function(keyword) {
@@ -73,8 +105,10 @@ const Amplification = ( props ) => {
               }
             });
           });
-        info.keywords = keyWordList;
-        addIdea(info);
+        result["ideas"][info].keywords = keyWordList;
+        result["ideas"][info].location = info;
+        result["ideas"][info].project = mainTopic.project;
+        addIdea(result["ideas"][info]);
       });
       retext()
         .use(pos)
@@ -135,12 +169,13 @@ const Amplification = ( props ) => {
   }
 
   function topic(topic) {
-
     var topicInfo = {
       medium: topic.medium,
       title: props.location.state.title,
       subtitle: topic.subtitle,
-      notes: ""
+      notes: "",
+      location: "root",
+      project: props.location.state.projectID
     };
     return topicInfo;
   }
@@ -169,6 +204,7 @@ const Amplification = ( props ) => {
           backgroundColor: "transparent"
         }}
       >
+        
         <Container
           fluid
           style={{
@@ -178,16 +214,37 @@ const Amplification = ( props ) => {
             flexWrap: "nowrap"
           }}
         >
-          <Col />
+          <Col>
+            <IconButton
+                aria-label="send"
+                onClick={() => {
+                  //props.history.goBack();
+                  props.history.push({
+                    pathname: "./project",
+                    state:{
+                      projectID: props.location.state.projectID,
+                      title: props.location.state.title,
+                      topic: props.location.state.topic,
+                      medium: props.location.state.medium,
+                      image: props.location.state.image
+                    }
+                  })
+                }}
+                className="backArrowButton"
+              >
+                <BackIcon fontSize="large" />
+              </IconButton>
+            </Col>
           <Col
             className="justify-content-md-center"
-            xs={11}
+            xs={9}
             style={{ textAlign: "center" }}
           >
+
             <Navbar.Brand
               style={{
                 textAlign: "center",
-                color: "#FFF",
+                color: "#000",
                 fontFamily: "Montserrat",
                 fontWeight: "600",
                 fontSize: 22,
@@ -201,12 +258,12 @@ const Amplification = ( props ) => {
                 src={require("./assets/images/orange_logo_white.png")}
                 style={{ height: 30, marginLeft: 5, marginBottom: 2 }}
               />
-              Digital Learning
+              MAPIC: A digital-learning object (DLO) Design Tool for Students
             </Navbar.Brand>
           </Col>
           <Col style={{}}>
-            <Nav className="mr-auto"></Nav>
-            <Nav>
+
+            <Nav style={{float:"right"}}>
               <img
                 alt="profile"
                 src={app.auth().currentUser.photoURL}

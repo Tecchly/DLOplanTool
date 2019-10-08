@@ -67,6 +67,7 @@ const StyledMenuItem = withStyles(theme => ({
 }))(MenuItem);
 const AplificationTile = props => {
   const [anchorEl, setAnchorEl] = useState(null);
+  const [clicked, setClicked] = useState(false);
   const [currentSelection, setCurrentSelection] = useState(null);
   const [selected, pushSelected] = useState({});
   const selectLimit =
@@ -82,7 +83,7 @@ const AplificationTile = props => {
     selected[idea] = {
       type: "basic amplification",
       keyword: props.words.keywords[idea],
-      icon: "cancel"
+      icon: "highlight"
     };
     pushSelected(selected);
   };
@@ -90,6 +91,16 @@ const AplificationTile = props => {
     delete selected[idea];
     pushSelected({ ...selected });
   };
+  const clickedButton = () => {
+    setClicked(true);
+    setTimeout(
+      function() {
+        setClicked(false);
+      }
+      .bind(this),
+      1000
+  );
+  }
   const setAmplificationType = (index, type, icon) => {
     selected[index].type = type;
     selected[index].icon = icon;
@@ -144,6 +155,7 @@ const AplificationTile = props => {
                   size="small"
                   aria-label="add"
                   className={classes.chip2}
+                  disabled={!clicked && selected && Object.keys(selected).length == selectLimit ? false : true}
                   classes={
                     selected && Object.keys(selected).length == selectLimit
                       ? { root: "amplificationDone", sizeSmall: "smallFab" }
@@ -153,8 +165,11 @@ const AplificationTile = props => {
                         }
                   }
                   onClick={() => {
+                    clickedButton();
                     props.setAmplificationOptions(
                       props.words.title,
+                      props.words.location,
+                      props.words.project,
                       selected,
                       !props.last ? props.index + 1 : null
                     );

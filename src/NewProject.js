@@ -204,7 +204,7 @@ class NewProjectPopup extends React.Component {
     return (
       <React.Fragment>
         <div className="popup">
-          <div className="inner">
+          <div className="inner newProjectPopup">
             {this.state.showMessagePopup ?
               <MessagePopup
                 text='Images have to be 5MB or smaller. Please upload an image with a smaller file size.'
