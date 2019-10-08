@@ -21,16 +21,22 @@ class Firestore {
      *  Gets the collection for all users
      *  @param orderd: if the output should be ordered by creation time 
      */
-    static getProjects(userID, ordered = false) {
-        let projects = getProjectsReference(userID);
+    static getProjects(userID, ordered = false, archived = false) {
+        //let projects = getProjectsReference(userID);
+        let projects = getProjectsReference(userID).where("archived","==",false);
         if (ordered) {
             projects = projects.orderBy('creationTime', 'asc');
         }
         return projects.get();
     };
 
-    static getRecentProjects(userID, number) {
-        return getProjectsReference(userID).orderBy('creationTime', 'desc').limit(number).get();
+    static getRecentProjects(userID, number, archived = false) {
+        //if (archived) {
+            //@TODO for teachers
+       // } else {
+        let projects = getProjectsReference(userID).where("archived","==",false);
+        return projects.orderBy('creationTime', 'desc').limit(number).get();
+        //}
     };
 
     static getIdeas(userID, projectID) {
@@ -61,10 +67,29 @@ class Firestore {
         });
     }
 
+    /**
+     * Function is called when user clicks archive button on project
+     * Sets project to archived: true in firebase. Combs through database 
+     * setting shared projects to archived: true 
+     * 
+     * @param {*} userID the user who created the project
+     * @param {*} projectID the id of the project
+     */
     static archiveProject(userID, projectID) {
-        return getProjectsReference(userID).doc(projectID).update({
-            archived: true
+        getProjectsReference(userID).doc(projectID).update({archived: true});
+
+        return users.get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(documentSnapshot) {
+                users.doc(documentSnapshot.id).collection('sharedProjects').doc(projectID).update({archived: true}).then(() => {
+                }).catch(error => {
+                  //if (!error.startsWith("No document to update")) {
+                  //  console.error("Shared project archive failure, " + error);
+                  //}
+                })
+            })
         });
+
+    
     }
 
     static editProject(userID, projectID, data) {
@@ -84,8 +109,9 @@ class Firestore {
         );
     }
 
-    static getSharedProjects(userID) {
-        return getSharedProjectsReference(userID).orderBy('shareTime', 'desc').get();
+    static getSharedProjects(userID, archived = false) {
+        //return getSharedProjectsReference(userID).orderBy('shareTime', 'desc').get();
+        return getSharedProjectsReference(userID).where("archived","==",false).orderBy('shareTime', 'desc').get();
     };
 
     static saveCommendation(userID, projectID, ideaID, commenterID, commendation) {

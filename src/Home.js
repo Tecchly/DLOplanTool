@@ -92,13 +92,23 @@ const Home = ({ history }) => {
   const addRecentProject = project => {
     pushRecentProjects(oldArray => [...oldArray, project]);
   };
+
+  const removeProject = id => {
+    if (recentProjects.length === 1) {
+      setNoProjects(true);
+    }
+
+    let filteredArray = recentProjects.filter(project => project.projectID !== id)
+    pushRecentProjects(filteredArray);
+
+  }
   const clickedProject = project => {
     setCurrentProject(project);
   };
   
   useEffect(() => {
     var uid = firebase.auth().currentUser.uid;
-    Firestore.getRecentProjects(uid, 4)
+    Firestore.getRecentProjects(uid, 4, false)
       .then(function(doc) {
         if (doc.empty) toggleNoProjects();
         doc.forEach(x => {
@@ -212,6 +222,7 @@ const Home = ({ history }) => {
           open={open}
           hide={toggle}
           projectInfo={currentProject}
+          removeProject={removeProject}
           edit={editProject}
         />
         <SettingsDialog open={settingsOpen} hide={toggleSettings} />
