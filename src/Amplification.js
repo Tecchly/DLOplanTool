@@ -45,17 +45,22 @@ const Amplification = ( props ) => {
     //are complete so save to firestore here
     else {
       for (const [key, value] of Object.entries(amplificationOptions)) {
-        for (const [key2, value2] of Object.entries(value)) {
-          if (key2 != "location"){
-            Firestore.saveAmplification(
-              project,
-              value["location"],
-              Utils.uuid(),
-              value2
-            )
-          }
+        // console.log(value["location"]);
+        Firestore.deleteAmplifications(
+          project,
+          value["location"]
+        ).then(function(){
+          for (const [key2, value2] of Object.entries(value)) {
+            if (key2 != "location"){
+              Firestore.saveAmplification(
+                project,
+                value["location"],
+                Utils.uuid(),
+                value2
+              )
+            }
 
-        }
+        }});
       }
     }
   };
