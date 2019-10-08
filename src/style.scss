@@ -755,3 +755,24 @@ padding: 0 16px 0 16px !important;
 .backArrowButton {
   color: #fff !important;
 }
+
+.notification-success, .notification-success .timer-item {
+  background-color: var(--primary) !important;
+  border-left: 0px !important
+}
+
+.feedback-cell {
+  font: 500 16px "Montserrat", sans-serif !important;
+  padding-bottom: 10px !important;
+}
+
+.feedback-cell-body {
+  font: 500 14px "Montserrat", sans-serif !important;
+
+}
+
+.feedbackTableCell {
+  border-bottom: none !important;
+  font: 500 22px "Montserrat", sans-serif !important;
+  padding: 20px 11px 20px 18px !important
+}

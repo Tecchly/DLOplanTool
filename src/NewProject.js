@@ -158,6 +158,7 @@ class NewProjectPopup extends React.Component {
     */
 
     var data = {
+      archived: false,
       medium: this.state.medium,
       title: this.state.projectTitle,
       subtitle: this.state.projectTopic,
