@@ -81,6 +81,11 @@ html, body, #app, #app>div, #root,#login {
 -moz-box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
 box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
 }
+
+.newProjectPopup {
+  bottom: 15% !important;
+}
+
 .navbar {
   background: none !important;
 }
