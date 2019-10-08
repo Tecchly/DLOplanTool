@@ -82,7 +82,7 @@ const AplificationTile = props => {
     selected[idea] = {
       type: "basic amplification",
       keyword: props.words.keywords[idea],
-      icon: "cancel"
+      icon: "highlight"
     };
     pushSelected(selected);
   };

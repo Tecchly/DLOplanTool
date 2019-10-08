@@ -3,7 +3,16 @@ import "./style.scss";
 import ModeSelectionMenu from "./ModeSelectionMenu.js";
 import FeedbackBar from "./FeedbackBar.js";
 import Utils from "./Utils.js";
-
+import ExpansionPanel from "@material-ui/core/ExpansionPanel";
+import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
+import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
+import Button from "@material-ui/core/Button";
+import DialogActions from "@material-ui/core/DialogActions";
+import Avatar from "@material-ui/core/Avatar";
+import Chip from "@material-ui/core/Chip";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import theme from "./styling/theme.scss";
+import Icon from "@material-ui/core/Icon";
 class IdeaEditPopup extends React.Component {
   constructor(props) {
     super(props);
@@ -164,17 +173,46 @@ class IdeaEditPopup extends React.Component {
               disabled={this.props.shared ? true : false}
               guide="inputIdeaNotes"
             />
-            <div className="amplificationList">
+            <ExpansionPanel classes={{ root: "expansionPanel-root" }}>
+              <ExpansionPanelSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+                classes={{ root: "expansionPanelSummary-root" }}
+              >
                 <h3>Amplifications</h3>
+              </ExpansionPanelSummary>
+              <ExpansionPanelDetails>
+                {/* <div className="amplificationList"> */}
                 <div>
-
-              {Object.values(this.state.amplifications).map(item => (
-                  (item.keyword)+" "
+                  {Object.values(this.state.amplifications).map(item => ( 
+                    <Chip
+                      elevation={0}
+                      style={{ margin: "5px 5px 5px 5px" }}
+                      key={item.keyword}
+                      label={item.keyword}
+                      avatar={
+                        <Avatar
+                          className="amplificationChipAvatar"
+                          style={{
+                            backgroundColor: theme.backgroundColor,
+                            color: "#ffffff67"
+                          }}
+                        >
+                          <Icon>{item.icon}</Icon>
+                        </Avatar>
+                      }
+                      // className={classes.chip}
+                      classes={{ root: "chipClicked" }}
+                      clickable={false}
+                    />
                   ))}
-                  </div>
-            </div>
+                </div>
+                {/* </div> */}
+              </ExpansionPanelDetails>
+            </ExpansionPanel>
 
-            <div guide="feedbackbar">
+            <div guide="feedbackbar" style={{paddingBottom: 20}}>
               <FeedbackBar
                 shared={this.props.shared}
                 handleCommend={this.props.handleCommend}
@@ -184,19 +222,22 @@ class IdeaEditPopup extends React.Component {
                 recommendations={this.state.recommendations}
                 newRecommendation={this.newRecommendation}
               />
-            </div>
-            <div
-              style={{
-                marginLeft: "25%",
-                marginRight: "25%",
-                display: "flex",
-                flexDirection: "row"
-              }}
-            >
+            <DialogActions classes={{root: 'dialogactions-inner'}} >
+            {/* <Button
+                  classes={{ root: "leftButton" }}
+                >
+                  Comments
+                </Button> */}
+              <Button
+                onClick={() => {
+                  this.props.closePopup();
+                }}
+                classes={{ root: "projectViewSecondary" }}
+              >
+                {this.props.shared ? "Close" : "Cancel"}
+              </Button>
               {this.props.shared ? null : (
-                <button
-                  guide="doneButton"
-                  className="selectButton"
+                <Button
                   onClick={() => {
                     this.props.handleEdit(
                       this.state.title,
@@ -204,19 +245,13 @@ class IdeaEditPopup extends React.Component {
                       this.state.mode
                     );
                   }}
+                  classes={{ root: "projectViewPrimary" }}
                 >
                   Done
-                </button>
+                </Button>
               )}
-              <button
-                guide="cancelButton"
-                className="selectButton"
-                onClick={() => {
-                  this.props.closePopup();
-                }}
-              >
-                {this.props.shared ? "Close" : "Cancel"}
-              </button>
+
+            </DialogActions>
             </div>
           </div>
         </div>

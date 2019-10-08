@@ -17,7 +17,8 @@ import pos from "retext-pos";
 import keywords from "retext-keywords";
 import toString from "nlcst-to-string";
 import Utils from "./Utils";
-
+import IconButton from "@material-ui/core/IconButton";
+import BackIcon from "@material-ui/icons/ArrowBack";
 const Amplification = ( props ) => {
   const [ideaKeyWords, pushIdeaKeyWords] = useState([]);
   const addIdea = ideas => {
@@ -201,12 +202,24 @@ const Amplification = ( props ) => {
             flexWrap: "nowrap"
           }}
         >
-          <Col />
+          <Col>
+
+            <IconButton
+                aria-label="send"
+                onClick={() => {
+                  props.history.goBack();
+                }}
+                className="backArrowButton"
+              >
+                <BackIcon fontSize="large" />
+              </IconButton>
+            </Col>
           <Col
             className="justify-content-md-center"
-            xs={11}
+            xs={9}
             style={{ textAlign: "center" }}
           >
+
             <Navbar.Brand
               style={{
                 textAlign: "center",
@@ -228,8 +241,8 @@ const Amplification = ( props ) => {
             </Navbar.Brand>
           </Col>
           <Col style={{}}>
-            <Nav className="mr-auto"></Nav>
-            <Nav>
+
+            <Nav style={{float:"right"}}>
               <img
                 alt="profile"
                 src={app.auth().currentUser.photoURL}
