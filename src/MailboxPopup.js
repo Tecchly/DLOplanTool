@@ -88,7 +88,7 @@ class MailboxPopup extends React.Component {
     return (
       
       <ButtonToolbar className="buttonToolbar">
-        <ReactNotification />
+        <ReactNotification className="notificationTest" />
         <IconButton
           aria-label="notifications"
           onClick={() => this.toggleMailPopup()}
