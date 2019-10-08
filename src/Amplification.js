@@ -204,6 +204,7 @@ const Amplification = ( props ) => {
           backgroundColor: "transparent"
         }}
       >
+        
         <Container
           fluid
           style={{
@@ -214,7 +215,6 @@ const Amplification = ( props ) => {
           }}
         >
           <Col>
-
             <IconButton
                 aria-label="send"
                 onClick={() => {
