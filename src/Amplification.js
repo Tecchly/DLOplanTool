@@ -61,7 +61,9 @@ const Amplification = ( props ) => {
               )
             }
 
-        }});
+        }}).then(function(){
+          props.history.goBack();
+        });
       }
     }
   };
