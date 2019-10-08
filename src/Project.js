@@ -317,7 +317,7 @@ class Project extends React.Component {
                 type="arrow-left"
                 onClick={() => {
                   const { history } = this.props;
-                  history.goBack();
+                  this.props.history.push("/");
                 }}
                 style={{
                   fontSize: 30,
@@ -332,7 +332,7 @@ class Project extends React.Component {
                   fontWeight: "700"
                 }}
               >
-                Back
+                Home
               </h3>
             </div>
             {this.props.location.state.shared ? null : (

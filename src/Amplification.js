@@ -62,7 +62,16 @@ const Amplification = ( props ) => {
             }
 
         }}).then(function(){
-          props.history.goBack();
+          props.history.push({
+            pathname: "./project",
+            state:{
+              projectID: props.location.state.projectID,
+              title: props.location.state.title,
+              topic: props.location.state.topic,
+              medium: props.location.state.medium,
+              image: props.location.state.image
+            }
+          })
         });
       }
     }
@@ -209,7 +218,17 @@ const Amplification = ( props ) => {
             <IconButton
                 aria-label="send"
                 onClick={() => {
-                  props.history.goBack();
+                  //props.history.goBack();
+                  props.history.push({
+                    pathname: "./project",
+                    state:{
+                      projectID: props.location.state.projectID,
+                      title: props.location.state.title,
+                      topic: props.location.state.topic,
+                      medium: props.location.state.medium,
+                      image: props.location.state.image
+                    }
+                  })
                 }}
                 className="backArrowButton"
               >
