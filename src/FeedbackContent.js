@@ -8,12 +8,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import Firestore from "./Firestore";
@@ -21,7 +19,10 @@ import firebase from "firebase";
 import moment from "moment";
 import {withRouter} from "react-router";
 import { Container, Row, Image } from "react-bootstrap";
-import history from "./history";
+import Map from "@material-ui/icons/Map";
+import Face from "@material-ui/icons/Face";
+import Autorenew from "@material-ui/icons/Autorenew";
+import VolumeUp from "@material-ui/icons/VolumeUp";
 
 
 function desc(a, b, orderBy) {
@@ -246,11 +247,27 @@ const FeedbackContent = (props) => {
                       idea: idea.data(),
                       reviewerName: doc.data().commendUser,
                       reviewTime: doc.data().commendTime,
-                      comment: doc.data().comment,
-                      type: doc.data().commendation,
-                      id: doc.id + "-" + idea.id,
+                      comment: '',
+                      commendType: doc.data().commendation,
+                      id: doc.id + "-commend-" + idea.id,
                       projectId:  project.id,
                       project: project.data(),
+                      type: "commend"
+                    };
+                    addRows(feedback);
+                  });});
+                ideas.doc(idea.id).collection("recommendations").get().then(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let feedback = {
+                      ideaId: idea.id,
+                      idea: idea.data(),
+                      reviewerName: doc.data().recommendationUser,
+                      reviewTime: doc.data().recommendationTime,
+                      comment: doc.data().recommendation,
+                      id: doc.id + "-recommend-" + idea.id,
+                      projectId:  project.id,
+                      project: project.data(),
+                      type: "recommend"
                     };
                     addRows(feedback);
                   });});
@@ -293,6 +310,19 @@ const FeedbackContent = (props) => {
   function handleChangeRowsPerPage(event) {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  }
+
+  function switchCommend(commendType) {
+    switch(commendType) {
+      case 'mapping':
+        return (<Typography color="textSecondary" variant="body1" classes={{body1: "feedback-cell-body"}}> <Map /> Good mapping to mode! </Typography>);
+      case 'amplification':
+        return (<Typography color="textSecondary" variant="body1" classes={{body1: "feedback-cell-body"}}> <VolumeUp/> Good amplification of keywords!</Typography>);
+      case 'personalisation':
+        return (<Typography color="textSecondary" variant="body1" classes={{body1: "feedback-cell-body"}}> <Face /> Good personalisation, looks pretty! </Typography>);
+      case 'coherence':
+        return (<Typography color="textSecondary" variant="body1" classes={{body1: "feedback-cell-body"}}> <Autorenew /> Good coherence to the main topic! </Typography>);
+    }
   }
 
   const isSelected = name => selected.indexOf(name) !== -1;
@@ -391,25 +421,46 @@ const FeedbackContent = (props) => {
                         />
                       </TableCell> */}
                       {/* <TableCell /> */}
-                      <TableCell component="th" id={labelId} scope="row" padding="none">                      
-                      <h6 style={{ float: "left" }}>
-                          {row.reviewerName + " thought your idea "}
-                          <a className="sharedProjectLink" onClick={() => {props.loadProject(row);}}> {row.idea.title} </a> {" of project "}
-                          <a
-                          className="sharedProjectLink"
-                            onClick={() => {
-                              props.loadProject(row);
-                            } }
-                          >
-                            {row.project.title}
-                          </a>
-                          {" has a good " + row.type + "."}
-                        </h6>
+                      <TableCell component="th" id={labelId} scope="row" padding="none" classes={{ root: "feedbackTableCell" }}>  
+                        { row.type === "commend" ? (
+                          <div  style={{ float: "left" }} >              
+                            <Typography gutterBottom variant="h6" classes={{h6: "feedback-cell"}}>
+                              {row.reviewerName + " commended your idea "}
+                              <a className="sharedProjectLink" onClick={() => {props.loadProject(row);}}> {row.idea.title} </a> {" of project "}
+                              <a
+                              className="sharedProjectLink"
+                                onClick={() => {
+                                  props.loadProject(row);
+                                } }
+                              >
+                                {row.project.title}
+                              </a>
+                            </Typography> 
+                            {
+                              switchCommend(row.commendType)
+                            }
+                          </div>    
+                          ) : 
+                          (<div style={{ float: "left" }} >
+                            <Typography gutterBottom variant="h6" classes={{h6: "feedback-cell"}}>
+                              {row.reviewerName + " left feedback on your idea "}
+                              <a className="sharedProjectLink" onClick={() => {props.loadProject(row);}}> {row.idea.title} </a> {" of project "}
+                              <a
+                              className="sharedProjectLink"
+                                onClick={() => {
+                                  props.loadProject(row);
+                                } }
+                              >
+                                {row.project.title}
+                              </a>
+                            </Typography> 
+                            <Typography color="textSecondary" variant="body1" classes={{body1: "feedback-cell-body"}}>|        {row.comment}</Typography>
+                          </div>) }
                         <h6 style={{ textAlign: "right", float: "right" }}>
                           {moment(row.reviewTime).isSame(moment(), 'day') ? moment(row.reviewTime).format('LT') : moment(row.reviewTime).format('MMM D')}
 
                         </h6>
-                        </TableCell>
+                      </TableCell>
                       {/* <TableCell align="right">{row.calories}</TableCell>
                       <TableCell align="right">{row.fat}</TableCell>
                       <TableCell align="right">{row.carbs}</TableCell>

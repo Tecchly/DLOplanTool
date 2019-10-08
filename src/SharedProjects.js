@@ -156,6 +156,7 @@ const SharedProjects = props => {
         image: x.image,
         shared: true,
         path: x.path,
+        archived: x.archived,
       }
     });
   };
