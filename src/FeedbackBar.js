@@ -177,7 +177,7 @@ export default function FeedbackBar(props) {
                       commendationPlural((mapping+amplification+personalisation+coherence))}
         anchorOrigin={{
           vertical: 'top',
-          horizontal: 'left'
+          horizontal: 'right'
         }}
         >
         <Button aria-describedby={id}   className = {classes.button} onClick={handleClick}>
