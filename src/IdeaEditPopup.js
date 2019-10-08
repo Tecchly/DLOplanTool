@@ -144,7 +144,7 @@ class IdeaEditPopup extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div className="popup">
+        <div className="popup" onClick={this.props.closePopupClick}>
           <div className="inner">
             <div className={this.state.availMode} guide="chooseModeType">
               <ModeSelectionMenu
