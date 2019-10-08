@@ -56,7 +56,7 @@ const HeaderBar = (props) => {
                   ".png")}
                 style={{ height: 30, marginLeft: 5, marginBottom: 2 }}
               />
-              Digital Learning
+              MAPIC: A digital-learning object (DLO) Design Tool for Students
             </Navbar.Brand>
             <MailboxPopup />
           </Col>

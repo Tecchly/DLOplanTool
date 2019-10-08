@@ -244,7 +244,7 @@ const Amplification = ( props ) => {
             <Navbar.Brand
               style={{
                 textAlign: "center",
-                color: "#FFF",
+                color: "#000",
                 fontFamily: "Montserrat",
                 fontWeight: "600",
                 fontSize: 22,
@@ -258,7 +258,7 @@ const Amplification = ( props ) => {
                 src={require("./assets/images/orange_logo_white.png")}
                 style={{ height: 30, marginLeft: 5, marginBottom: 2 }}
               />
-              Digital Learning
+              MAPIC: A digital-learning object (DLO) Design Tool for Students
             </Navbar.Brand>
           </Col>
           <Col style={{}}>
