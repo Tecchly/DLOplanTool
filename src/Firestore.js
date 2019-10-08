@@ -10,6 +10,7 @@ let getSharedProjectsReference = userID => users.doc(userID).collection("sharedP
 let getIdeasReference = (userID, projectID) => getProjectsReference(userID).doc(projectID).collection("ideas");
 let getCommendationsReference = (userID, projectID, ideaID) => getIdeasReference(userID, projectID).doc(ideaID).collection("commendations");
 let getRecommendationsReference = (userID, projectID, ideaID) => getIdeasReference(userID, projectID).doc(ideaID).collection("recommendations");
+let getAmplificationsReference = (userID, projectID, ideaID) => getIdeasReference(userID, projectID).doc(ideaID).collection("amplifications");
 
 class Firestore {
     
@@ -151,6 +152,15 @@ class Firestore {
 
     static getRecommendations(userID,projectID,ideaID) {
         return getRecommendationsReference(userID,projectID,ideaID);
+    }
+
+    static saveAmplification(projectID,ideaID,amplificationID,amplification) {
+        var user = firebase.auth().currentUser.uid;
+        return getAmplificationsReference(user, projectID, ideaID).doc(amplificationID).set(amplification);
+    }
+
+    static getAmplifications(userID,projectID,ideaID) {
+        return getAmplificationsReference(userID,projectID,ideaID);
     }
 
     static getProjectsCollection(userID) {
