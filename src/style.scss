@@ -66,7 +66,7 @@ html, body, #app, #app>div, #root,#login {
   position: absolute;
   left: 30%;
   width: 50%;
-  height: 75%;
+  height: auto !important;
   right: 30%;
   top: 10%;
   /* bottom: 30%; */
@@ -92,30 +92,42 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
     .popup .inner {  
       width: 25% !important;
     }
+    .dialogactions-inner {
+      margin-left: 8% !important; 
+      margin-right: 0% !important;
+      float: left; 
+    }
+  }
+  @media only screen and (max-width: 1075px) {
+    .dialogactions-inner {
+      margin-left: 10% !important; 
+      margin-right: 0% !important;
+      float: left; 
+    }
   }
 @media only screen and (min-height: 1200px) {
   .popup .inner {  
-    height: 50%;
+    // height: 50%;
     top: 20%;
   }
 }
 @media only screen and (max-height: 1200px) {
   .popup .inner {  
-    height: 60%;
+    // height: 60%;
     top: 20%;
   }
 }
 
 @media only screen and (max-height: 1000px) {
   .popup .inner {  
-    height: 70% !important;
+    // height: 70% !important;
     top: 20%;
   }
 }
 
 @media only screen and (max-height: 850px) {
   .popup .inner {  
-    height: 80% !important;
+    // height: 80% !important;
     top: 10%;
   }
 
@@ -125,7 +137,7 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
 }
 @media only screen and (max-height: 750px) {
   .popup .inner {  
-    height: 85% !important;
+    // height: 85% !important;
     top: 8%;
   }
   .popup h1 {
@@ -168,7 +180,7 @@ box-shadow: 0px 5px 14px -4px rgba(0,0,0,0.4);
 
 .popup textarea{
   width: 80%;
-  height: 45%;
+  height: 180px;
   margin-right: 10%;
   margin-left: 10%;
   resize: none;
@@ -697,4 +709,48 @@ margin-left: 30px;
 
 .notificationsTitle {
   font: 600 30px "Montserrat", sans-serif !important;
+}
+
+.expansionPanel-root {
+  margin: 0 auto !important;
+  width: 80% !important;
+  margin-bottom: 23px !important;
+  box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.1) !important;
+}
+
+
+
+
+.expansionPanelSummary-root {
+padding: 0 16px 0 16px !important;
+}
+.popup h3 {
+  font: 500 17px "Montserrat", sans-serif;
+}
+
+.chiproot {
+  margin: 0 5px 0 5px !important;
+}
+
+.leftButton{
+  color: var(--primary) !important;
+  left: 9% !important;
+  position: absolute !important;
+
+}
+
+.dialogactions-inner {
+  margin-right: 8%; 
+  padding: 0 !important;
+}
+
+.commentPlane {
+  color: var(--primary) !important;
+  float: left;
+  left: 10px;
+  bottom: 5px;
+}
+
+.backArrowButton {
+  color: #fff !important;
 }

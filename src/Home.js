@@ -277,12 +277,6 @@ const Home = ({ history }) => {
                 text="Shared Projects"
                 guide="sharedProjects"
               />
-              <IconButton
-                classVal="homeButton"
-                icon="question-circle"
-                text="Help"
-                guide="help"
-              />
             </Row>
           </Container>
         </Row>
