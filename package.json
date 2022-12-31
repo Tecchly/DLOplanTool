@@ -25,7 +25,7 @@
     "react-ionicons": "^2.1.6",
     "react-notifications-component": "^2.1.0",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.1.2",
+    "react-scripts": "5.0.1",
     "retext": "^7.0.0",
     "retext-keywords": "^5.0.0",
     "retext-pos": "^2.0.2",
